@@ -19,6 +19,7 @@ const pool = new Pool({
 const schema = buildSchema(`
   type Query {
     hello: String
+    now: String
   }
 `);
 
