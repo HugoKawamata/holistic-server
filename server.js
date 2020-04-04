@@ -26,12 +26,12 @@ const schema = buildSchema(`
 // The root provides a resolver function for each API endpoint
 const root = {
   hello: () => 'Hello world!',
-  now: () => {
+  now: async () => {
     let time;
-    pool.query('SELECT NOW()', (err, res) => {
+    await pool.query('SELECT NOW()', (err, res) => {
       console.log(err, res);
       if (res) {
-        time = res;
+        [time] = res.rows;
       }
       pool.end();
     });
