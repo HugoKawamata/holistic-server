@@ -1,0 +1,34 @@
+{
+  "name": "holistic-server",
+  "version": "1.0.0",
+  "description": "A backend for a holistic japanese learning application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests\"",
+    "flow": "flow",
+    "lint": "eslint",
+    "start": "node -r esm server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoKawamata/holistic-server.git"
+  },
+  "author": "Hugo Kawamata",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HugoKawamata/holistic-server/issues"
+  },
+  "homepage": "https://github.com/HugoKawamata/holistic-server#readme",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "flow-bin": "^0.122.0",
+    "graphql": "^15.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  }
+}

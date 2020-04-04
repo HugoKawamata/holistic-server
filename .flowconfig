@@ -1,0 +1,124 @@
+; This is the flow config for Tanda, remove things as needed
+[ignore]
+; TANDA: ------ START REACT NATIVE FLOW CONFIG ------
+; TANDA: This is the flow config directly from react-native - you should update this
+; TANDA: based on https://github.com/facebook/react-native/blob/v0.58.0/local-cli/templates/HelloWorld/_flowconfig
+; TANDA: when you upgrade the version
+
+; TANDA: We fork some components by platform
+.*/*[.]android.js
+
+; TANDA: Ignore "BUCK" generated dirs
+<PROJECT_ROOT>/\.buckd/
+
+; TANDA: Ignore unexpected extra "@providesModule"
+.*/node_modules/.*/node_modules/fbjs/.*
+
+; TANDA: Ignore duplicate module providers
+; TANDA: For RN Apps installed via npm, "Libraries" folder is inside
+; TANDA: "node_modules/react-native" but in the source repo it is in the root
+.*/Libraries/react-native/React.js
+
+; TANDA: Flow doesn't support platforms
+.*/Libraries/Utilities/LoadingView.js
+
+; TANDA: Ignore metro
+.*/node_modules/metro/.*
+
+; TANDA: ------ END REACT NATIVE FLOW CONFIG ------
+
+; TANDA: ------ START LOCAL FLOW CONFIG ------
+
+; TANDA: ignore react-native-linear-gradient - the types are quite old
+.*/node_modules/react-native-linear-gradient/.*
+
+; TANDA: Ignore this lib - it hates me
+.*/node_modules/generator-rn-toolbox/.*
+
+; TANDA: This trash library is trash
+.*/node_modules/translation-io/.*
+.*/node_modules/react-native-country-picker-modal/.*
+
+; TANDA: Error-filled modules
+.*/node_modules/react-native-keyboard-aware-scroll-view/.*
+.*/node_modules/react-native-camera/.*
+
+; TANDA: Some files in this version of react-native-firebase aren't great
+.*/node_modules/react-native-firebase/dist/modules/firestore/Query.js.flow
+.*/node_modules/react-native-firebase/dist/modules/storage/reference.js.flow
+.*/node_modules/react-native-firebase/dist/modules/database/index.js.flow
+
+; TANDA: problems with apollo
+.*/node_modules/@apollographql/graphql-language-service-interface/dist/autocompleteUtils.js.flow
+
+; TANDA: This library is trouble https://github.com/facebook/react-native/issues/19812
+.*/node_modules/react-native/Libraries/react-native/react-native-implementation.js
+
+; TANDA: Ignore react-native-image-picker bugs: https://github.com/react-native-community/react-native-image-picker/issues/1207
+.*/node_modules/react-native-image-picker/lib/commonjs/index.js.flow 
+.*/node_modules/react-native-image-picker/lib/commonjs/internal/nativeInterface.js.flow
+
+
+; TANDA: ------ END LOCAL FLOW CONFIG ------
+
+[libs]
+; TANDA: ------ START REACT NATIVE FLOW CONFIG ------
+node_modules/react-native/Libraries/react-native/react-native-interface.js
+node_modules/react-native/flow/
+node_modules/react-native/flow-github/
+; TANDA: ------ END REACT NATIVE FLOW CONFIG ------
+
+[options]
+; TANDA: ------ START REACT NATIVE FLOW CONFIG ------
+emoji=true
+
+esproposal.optional_chaining=enable
+esproposal.nullish_coalescing=enable
+
+module.system=haste
+module.system.haste.use_name_reducers=true
+# get basename
+module.system.haste.name_reducers='^.*/\([a-zA-Z0-9$_.-]+\.js\(\.flow\)?\)$' -> '\1'
+# strip .js or .js.flow suffix
+module.system.haste.name_reducers='^\(.*\)\.js\(\.flow\)?$' -> '\1'
+# strip .ios suffix
+module.system.haste.name_reducers='^\(.*\)\.ios$' -> '\1'
+module.system.haste.name_reducers='^\(.*\)\.android$' -> '\1'
+module.system.haste.name_reducers='^\(.*\)\.native$' -> '\1'
+module.system.haste.paths.blacklist=.*/__tests__/.*
+module.system.haste.paths.blacklist=.*/__mocks__/.*
+module.system.haste.paths.blacklist=<PROJECT_ROOT>/node_modules/react-native/Libraries/Animated/src/polyfills/.*
+module.system.haste.paths.whitelist=<PROJECT_ROOT>/node_modules/react-native/Libraries/.*
+
+munge_underscores=true
+
+module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> 'RelativeImageStub'
+
+module.file_ext=.js
+module.file_ext=.jsx
+module.file_ext=.json
+module.file_ext=.native.js
+
+suppress_type=$FlowIssue
+suppress_type=$FlowFixMe
+suppress_type=$FlowFixMeProps
+suppress_type=$FlowFixMeState
+
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)?:? #[0-9]+
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
+suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
+; TANDA: ------ END REACT NATIVE FLOW CONFIG ------
+
+; TANDA: ------ START LOCAL FLOW CONFIG ------
+module.file_ext=.ios.js
+suppress_comment=\\(.\\|\n\\)*\\$ExpectError\\($\\|[^(]\\|(\\(>=0\\.\\(4[0-5]\\|[1-3][0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)
+module.name_mapper='^types/store/\(.*\)$' -> '<PROJECT_ROOT>/src/store/types/\1.js'
+module.name_mapper='^types/\(.*\)$' -> '<PROJECT_ROOT>/src/types/\1.js'
+; TANDA: ------ END LOCAL FLOW CONFIG ------
+
+[untyped]
+.*/node_modules/**/.*
+
+[version]
+^0.112.0
