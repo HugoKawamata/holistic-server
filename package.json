@@ -7,7 +7,7 @@
     "test": "echo \"No tests\"",
     "flow": "flow",
     "lint": "eslint",
-    "start": "node -r esm index.js"
+    "start": "node -r esm server.js"
   },
   "repository": {
     "type": "git",
