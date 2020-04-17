@@ -9,7 +9,7 @@ export const nextLessonResolver = (pg) => {
       }
 
       return {
-        contentType: "OTHER",
+        content: "OTHER",
         preface: [],
         testables: [],
       };
@@ -28,7 +28,7 @@ const getKanaLesson = (kana_level) => {
 
 const getHiraganaALesson = () => {
   return {
-    contentType: "HIRAGANA_A",
+    content: "HIRAGANA_A",
     testables: [
       {
         question: {

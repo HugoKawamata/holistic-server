@@ -39,7 +39,7 @@ const KANA_LEVEL = `
 `;
 
 export const typeDefs = gql`
-  enum LessonContentType {
+  enum LessonContent {
     ${KANA_LEVEL}
     OTHER
   }
@@ -70,7 +70,7 @@ export const typeDefs = gql`
   }
 
   type Lesson {
-    contentType: LessonContentType # How to determine what to show at the end of the lesson
+    content: LessonContent # How to determine what to show at the end of the lesson
     preface: [LessonPreface]
     testables: [Testable]
   }
