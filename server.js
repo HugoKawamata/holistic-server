@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from "apollo-server";
 import knex from "knex";
-import { userResolver } from "./src/resolvers";
+import { userResolver, nextLessonResolver } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
 require("dotenv").config();
