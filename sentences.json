@@ -1,0 +1,832 @@
+[
+  {
+    "sentence": "君の気持ちをなんとなく分かる",
+    "patterns": ["OV", "C-PF"],
+    "verbs": ["分かる"]
+  },
+  {
+    "sentence": "その2時間は速く経ったから突然に遅れた",
+    "patterns": ["KARA", "C-PPF"],
+    "verbs": ["遅れる"]
+  },
+  {
+    "sentence": "この家は立派で、家賃が安いです。私は絶対に断ることができません。",
+    "patterns": ["ADJDE", "DEKIRU"],
+    "verbs": ["断る", "できる"]
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+  {
+    "sentence": "",
+    "patterns": [],
+    "verbs": []
+  },
+]
