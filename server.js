@@ -42,7 +42,7 @@ const resolvers = {
     user: async (obj, args, context, info) =>
       await pg("accounts")
         .where("id", args.id)
-        .then((user) => user),
+        .then((users) => users[0]),
     users: () => [],
   },
 };
