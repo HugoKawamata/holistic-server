@@ -1,79 +1,54 @@
-// @flow
-import express from "express";
-import graphqlHTTP from "express-graphql";
-import graphql, { buildSchema } from "graphql";
-import joinMonster from "join-monster";
-import { Pool, Client } from "pg";
+import { ApolloServer, gql } from "apollo-server";
+import knex from "knex";
 
 require("dotenv").config();
 
-const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+const pg = knex({
+  client: "pg",
+  connection: {
+    user: process.env.PGUSER,
+    host: process.env.PGHOST,
+    database: process.env.PGDATABASE,
+    password: process.env.PGPASSWORD,
+    port: process.env.PGPORT,
+  },
 });
 
-const client = new Client({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
-});
+// A schema is a collection of type definitions (hence "typeDefs")
+// that together define the "shape" of queries that are executed against
+// your data.
+const typeDefs = gql`
+  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-const QueryRoot = new graphql.GraphQLObjectType({
-  name: "Query",
-  fields: () => ({
-    hello: {
-      type: graphql.GraphQLString,
-      resolve: () => "Hello world!",
-    },
-    user: {
-      type: User,
-      args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
-      where: (userTable, args, context) => `${userTable}.id = ${args.id}`,
-      resolve: (parent, args, context, resolveInfo) => {
-        return joinMonster.default(resolveInfo, {}, (sql) => {
-          return client.query(sql);
-        });
-      },
-    },
-    users: {
-      type: new graphql.GraphQLList(User),
-      resolve: (parent, args, context, resolveInfo) => {
-        return joinMonster.default(resolveInfo, {}, (sql) => {
-          return client.query(sql);
-        });
-      },
-    },
-  }),
-});
+  type User {
+    id: ID
+    name: String
+    email: String
+  }
 
-const User = new grapqhql.GraphQLObjectType({
-  name: "User",
-  fields: () => ({
-    id: { type: graphql.GraphQLString },
-    name: { type: graphql.GraphQLString },
-    email: { type: graphql.GraphQLString },
-  }),
-});
+  # The "Query" type is special: it lists all of the available queries that
+  # clients can execute, along with the return type for each. In this
+  # case, the "books" query returns an array of zero or more Books (defined above).
+  type Query {
+    hello: String
+    user(id: ID!): User
+    users: [User]
+  }
+`;
 
-User._typeConfig = {
-  sqlTable: "accounts",
-  uniqueKey: "id",
+const resolvers = {
+  Query: {
+    hello: () => "hello",
+    user: async (obj, args, context, info) =>
+      await pg("accounts")
+        .where("id", args.id)
+        .then((user) => user),
+    users: () => [],
+  },
 };
 
-const schema = new graphql.GraphQLSchema({ query: QueryRoot });
+const server = new ApolloServer({ typeDefs, resolvers });
 
-const app = express();
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    graphiql: true,
-  })
-);
-app.listen(4000);
-console.log("Running a GraphQL API server at http://localhost:4000/graphql");
+server.listen().then(({ url }) => {
+  console.log(`running apollo server at ${url}`);
+});
