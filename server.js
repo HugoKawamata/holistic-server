@@ -2,6 +2,7 @@
 import express from "express";
 import graphqlHTTP from "express-graphql";
 import graphql, { buildSchema } from "graphql";
+import joinMonster from "join-monster";
 import { Pool, Client } from "pg";
 
 require("dotenv").config();
@@ -22,30 +23,6 @@ const client = new Client({
   port: process.env.PGPORT,
 });
 
-// Construct a schema, using GraphQL schema language
-const schema = buildSchema(`
-  type Query {
-    hello: String
-    now: String
-  }
-`);
-
-// The root provides a resolver function for each API endpoint
-const root = {
-  hello: () => "Hello world!",
-  now: async () => {
-    let time;
-    await pool.query("SELECT NOW()", (err, res) => {
-      console.log(err, res);
-      if (res) {
-        [time] = res.rows[0].now;
-      }
-      pool.end();
-    });
-    return time;
-  },
-};
-
 const QueryRoot = new graphql.GraphQLObjectType({
   name: "Query",
   fields: () => ({
@@ -53,8 +30,40 @@ const QueryRoot = new graphql.GraphQLObjectType({
       type: graphql.GraphQLString,
       resolve: () => "Hello world!",
     },
+    user: {
+      type: User,
+      args: { id: { type: graphql.GraphQLNonNull(graphql.GraphQLInt) } },
+      where: (userTable, args, context) => `${userTable}.id = ${args.id}`,
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster.default(resolveInfo, {}, (sql) => {
+          return client.query(sql);
+        });
+      },
+    },
+    users: {
+      type: new graphql.GraphQLList(User),
+      resolve: (parent, args, context, resolveInfo) => {
+        return joinMonster.default(resolveInfo, {}, (sql) => {
+          return client.query(sql);
+        });
+      },
+    },
   }),
 });
+
+const User = new grapqhql.GraphQLObjectType({
+  name: "User",
+  fields: () => ({
+    id: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString },
+    email: { type: graphql.GraphQLString },
+  }),
+});
+
+User._typeConfig = {
+  sqlTable: "accounts",
+  uniqueKey: "id",
+};
 
 const schema = new graphql.GraphQLSchema({ query: QueryRoot });
 
