@@ -99,17 +99,20 @@ const getHiraganaALesson = () => {
       {
         text:
           "Hiragana consists of 5 characters that represent vowel sounds (A, I, U, E, O) and 40 characters that represent a consonant-plus-a-vowel-sound (K, S, T, N, H, M, Y, ɾ, and W), as well as a single lone consonant (N).",
-        image: null,
+        image:
+          "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/preface-1.png",
       },
       {
         text:
-          'Because the characters represent syllables, they are always pronounced the same. Unlike in english, where "same" is pronouned with a long A sound, the Japanese "さめ" (sa・me) is pronounced "sah-meh".',
-        image: null,
+          'Because the characters represent syllables, they are always pronounced the same. Unlike in English, where "same" is pronouned with a long A sound, the Japanese "さめ" 🦈 (sa・me) is pronounced "sah-meh".',
+        image:
+          "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262012/lessons/hiragana-a/preface-2.png",
       },
       {
         text:
           "Let's start learning the first 5 hiragana, which represent just the vowel sounds by themselves!",
-        image: null,
+        image:
+          "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-a/preface-3.png",
       },
     ],
   };
