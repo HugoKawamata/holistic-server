@@ -89,13 +89,13 @@ export const typeDefs = gql`
 
   type Question {
     type: QuestionType!
-    image: String!
+    image: String
     text: String!
   }
 
   type Answer {
     type: AnswerType!
-    image: String!
+    image: String
     text: String!
   }
 
