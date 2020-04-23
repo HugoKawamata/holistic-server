@@ -73,7 +73,7 @@ export const typeDefs = gql`
     content: LessonContent # How to determine what to show at the end of the lesson
     preface: [LessonPreface]
     testables: [Testable]
-    title: TitleScreenInfo
+    titleScreen: TitleScreenInfo
   }
 
   type LessonPreface {
