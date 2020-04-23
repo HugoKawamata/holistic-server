@@ -90,12 +90,12 @@ export const typeDefs = gql`
   type Question {
     type: QuestionType!
     image: String
+    emoji: String
     text: String!
   }
 
   type Answer {
     type: AnswerType!
-    image: String
     text: String!
   }
 

@@ -34,12 +34,12 @@ const getHiraganaALesson = () => {
         question: {
           type: "J_WORD",
           image: null,
+          emoji: "🔵",
           text: "あお",
         },
         answer: {
           type: "ROMAJI",
           text: "a,o",
-          audio: null,
         },
         notes: {
           text:
@@ -50,12 +50,12 @@ const getHiraganaALesson = () => {
         question: {
           type: "J_WORD",
           image: null,
+          emoji: "🏠",
           text: "いえ",
         },
         answer: {
           type: "ROMAJI",
           text: "i,e",
-          audio: null,
         },
         notes: {
           text:
@@ -66,12 +66,12 @@ const getHiraganaALesson = () => {
         question: {
           type: "J_WORD",
           image: null,
+          emoji: "🙅‍♀️",
           text: "いいえ",
         },
         answer: {
           type: "ROMAJI",
           text: "i,i,e",
-          audio: null,
         },
         notes: {
           text:
@@ -82,12 +82,12 @@ const getHiraganaALesson = () => {
         question: {
           type: "J_WORD",
           image: null,
+          emoji: "⬆️",
           text: "うえ",
         },
         answer: {
           type: "ROMAJI",
           text: "u,e",
-          audio: null,
         },
         notes: {
           text:
