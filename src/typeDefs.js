@@ -63,49 +63,49 @@ export const typeDefs = gql`
   }
 
   type User {
-    id: ID
+    id: !ID
     name: String
     email: String
     nextLesson: Lesson
   }
 
   type Lesson {
-    content: LessonContent # How to determine what to show at the end of the lesson
-    preface: [LessonPreface]
-    testables: [Testable]
+    content: !LessonContent # How to determine what to show at the end of the lesson
+    preface: [!LessonPreface]
+    testables: [!Testable]
     titleScreen: TitleScreenInfo
   }
 
   type LessonPreface {
-    text: String
+    text: !String
     image: String
   }
 
   type Testable {
-    question: Question
-    answer: Answer
+    question: !Question
+    answer: !Answer
     notes: TestableNote
   }
 
   type Question {
-    type: QuestionType
-    image: String
-    text: String
+    type: !QuestionType
+    image: !String
+    text: !String
   }
 
   type Answer {
-    type: AnswerType
-    image: String
-    text: String
+    type: !AnswerType
+    image: !String
+    text: !String
   }
 
   type TestableNote {
-    text: String
+    text: !String
   }
 
   type TitleScreenInfo {
     image: String
-    title: String
+    title: !String
   }
 `;
 
