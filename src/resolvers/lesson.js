@@ -108,12 +108,11 @@ const getHiraganaALesson = () => {
         image:
           "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262012/lessons/hiragana-a/preface-2.png",
       },
-      {
-        text:
-          "Let's start learning the first 5 hiragana, which represent just the vowel sounds by themselves!",
-        image:
-          "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-a/preface-3.png",
-      },
     ],
+    titleScreen: {
+      title: "Hiragana Lesson 1",
+      image:
+        "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-a/preface-3.png",
+    },
   };
 };
