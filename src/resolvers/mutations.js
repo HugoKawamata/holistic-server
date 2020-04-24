@@ -86,7 +86,7 @@ export const marshalResults = (results, userId, now) => {
     word_id: result.objectId,
     answers: result.answers,
     marks: result.marks,
-    createdAt: now,
+    created_at: now,
     proficiency: 1,
   }));
 };
