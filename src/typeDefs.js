@@ -130,7 +130,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addLessonResults(results: [Result], userId: ID!, content: LessonContent): Boolean
+    addLessonResults(results: [Result]!, userId: ID!, content: LessonContent!): Boolean
   }
 `;
 
