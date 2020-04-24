@@ -93,7 +93,7 @@ export const marshalInputResultsToWordResults = (results, userId, now) => {
 
 export const addLessonResultsResolver = (pg) => {
   return (_, { results, userId, content }) => {
-    pg.transaction(async (trx) => {
+    pg.transaction((trx) => {
       const wordResults = results.filter((res) => res.objectType === "WORD");
       console.log(wordResults);
 
@@ -104,12 +104,13 @@ export const addLessonResultsResolver = (pg) => {
       );
       console.log(marshalledWordResults);
 
-      trx("word_results")
+      pg("word_results")
         .insert([marshalledWordResults], ["id"])
+        .transacting(trx)
         .then((wordResultIds) => {
           console.log(wordResultIds);
 
-          trx("user_words")
+          return pg("user_words")
             .insert(
               wordResults.map((res, i) => ({
                 user_id: userId,
@@ -118,15 +119,19 @@ export const addLessonResultsResolver = (pg) => {
                 proficiency: 1,
               }))
             )
-            .then(() => {
-              // Update kana level if applicable
-              if (content !== "OTHER") {
-                trx("accounts")
-                  .where({ id: userId })
-                  .update({ kana_level: content });
-              }
-            });
-        });
+            .transacting(trx);
+        })
+        .then(() => {
+          // Update kana level if applicable
+          if (content !== "OTHER") {
+            pg("accounts")
+              .where({ id: userId })
+              .update({ kana_level: content })
+              .transacting(trx);
+          }
+        })
+        .then(trx.commit)
+        .catch(trx.rollback);
     });
 
     return true;
