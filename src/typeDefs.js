@@ -121,7 +121,7 @@ export const typeDefs = gql`
     title: String!
   }
 
-  type Result {
+  input Result {
     userId: ID!
     objectId: ID
     objectType: TestableObject!
