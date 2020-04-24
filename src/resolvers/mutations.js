@@ -87,7 +87,6 @@ export const marshalInputResultsToWordResults = (results, userId, now) => {
     answers: result.answers,
     marks: result.marks,
     created_at: now,
-    proficiency: 1,
   }));
 };
 
@@ -105,7 +104,7 @@ export const addLessonResultsResolver = (pg) => {
       console.log(marshalledWordResults);
 
       pg("word_results")
-        .insert(marshalledWordResults)
+        .insert(marshalledWordResults, ["id"])
         .transacting(trx)
         .then((wordResultIds) => {
           return pg("user_words")
@@ -114,6 +113,7 @@ export const addLessonResultsResolver = (pg) => {
                 user_id: userId,
                 word_id: res.objectId,
                 proficiency: 1,
+                result_ids: [wordResultIds[i]],
               }))
             )
             .transacting(trx);
