@@ -126,7 +126,7 @@ export const typeDefs = gql`
     objectType: TestableObject!
     text: String
     answers: [String]
-    results: [Mark]
+    marks: [Mark]
   }
 
   type Mutation {
