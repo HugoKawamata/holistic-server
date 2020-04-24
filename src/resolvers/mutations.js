@@ -82,8 +82,8 @@ export const kanaLevelToIntMap = {
 
 export const marshalInputResultsToWordResults = (results, userId, now) => {
   return results.map((result) => ({
-    user_id: userId,
-    word_id: result.objectId,
+    user_id: parseInt(userId),
+    word_id: parseInt(result.objectId),
     answers: result.answers,
     marks: result.marks,
     created_at: now,
@@ -100,22 +100,19 @@ export const addLessonResultsResolver = (pg) => {
       const marshalledWordResults = marshalInputResultsToWordResults(
         wordResults,
         userId,
-        pg.fn.now()
+        +new Date()
       );
       console.log(marshalledWordResults);
 
       pg("word_results")
-        .insert([marshalledWordResults], ["id"])
+        .insert([marshalledWordResults])
         .transacting(trx)
         .then((wordResultIds) => {
-          console.log(wordResultIds);
-
           return pg("user_words")
             .insert(
               wordResults.map((res, i) => ({
                 user_id: userId,
                 word_id: res.objectId,
-                results_ids: [wordResultIds[i]],
                 proficiency: 1,
               }))
             )
