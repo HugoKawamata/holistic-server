@@ -94,14 +94,6 @@ export const marshalInputResultsToWordResults = (results, userId, now) => {
 export const addLessonResultsResolver = (pg) => {
   return (_, { results, userId, content }) => {
     pg.transaction(async (trx) => {
-      // Update kana level if applicable
-      if (content !== "OTHER") {
-        const newKanaLevel = content;
-        await trx("accounts")
-          .where({ id: userId })
-          .update({ kana_level: newKanaLevel });
-      }
-
       const wordResults = results.filter((res) => res.objectType === "WORD");
       console.log(wordResults);
 
@@ -117,14 +109,23 @@ export const addLessonResultsResolver = (pg) => {
         .then((wordResultIds) => {
           console.log(wordResultIds);
 
-          trx("user_words").insert(
-            wordResults.map((res, i) => ({
-              user_id: userId,
-              word_id: res.objectId,
-              results_ids: [wordResultIds[i]],
-              proficiency: 1,
-            }))
-          );
+          trx("user_words")
+            .insert(
+              wordResults.map((res, i) => ({
+                user_id: userId,
+                word_id: res.objectId,
+                results_ids: [wordResultIds[i]],
+                proficiency: 1,
+              }))
+            )
+            .then(() => {
+              // Update kana level if applicable
+              if (content !== "OTHER") {
+                trx("accounts")
+                  .where({ id: userId })
+                  .update({ kana_level: content });
+              }
+            });
         });
     });
 
