@@ -99,7 +99,7 @@ export const addLessonResultsResolver = (pg) => {
       const marshalledWordResults = marshalInputResultsToWordResults(
         wordResults,
         userId,
-        +new Date()
+        pg.fn.now()
       );
       console.log(marshalledWordResults);
 
