@@ -44,6 +44,12 @@ export const typeDefs = gql`
     OTHER
   }
 
+  enum TestableObject {
+    CHARACTER
+    WORD
+    SENTENCE
+  }
+
   enum QuestionType {
     J_WORD
     J_SENTENCE
@@ -56,6 +62,11 @@ export const typeDefs = gql`
     HIRAGANA
     JAPANESE
     MC
+  }
+
+  enum Mark {
+    CORRECT
+    INCORRECT
   }
 
   type Query {
@@ -82,6 +93,8 @@ export const typeDefs = gql`
   }
 
   type Testable {
+    objectId: ID!
+    objectType: TestableObject!
     question: Question!
     answer: Answer!
     notes: TestableNote
@@ -106,6 +119,17 @@ export const typeDefs = gql`
   type TitleScreenInfo {
     image: String
     title: String!
+  }
+
+  type Result {
+    objectId: ID!
+    objectType: TestableObject!
+    answers: [String]
+    marks: [Mark]
+  }
+
+  type Mutation {
+    addLessonResults(results: [Result])
   }
 `;
 
