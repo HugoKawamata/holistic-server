@@ -112,20 +112,20 @@ export const addLessonResultsResolver = (pg) => {
       );
       console.log(marshalledWordResults);
 
-      const wordResultIds = await trx("word_results").insert(
-        [marshalledWordResults],
-        ["id"]
-      );
-      console.log(wordResultIds);
+      trx("word_results")
+        .insert([marshalledWordResults], ["id"])
+        .then((wordResultIds) => {
+          console.log(wordResultIds);
 
-      trx("user_words").insert(
-        wordResults.map((res, i) => ({
-          user_id: userId,
-          word_id: res.objectId,
-          results_ids: [wordResultIds[i]],
-          proficiency: 1,
-        }))
-      );
+          trx("user_words").insert(
+            wordResults.map((res, i) => ({
+              user_id: userId,
+              word_id: res.objectId,
+              results_ids: [wordResultIds[i]],
+              proficiency: 1,
+            }))
+          );
+        });
     });
 
     return true;
