@@ -21,6 +21,8 @@ const getKanaLesson = (kana_level) => {
   switch (kana_level) {
     case null:
       return getHiraganaALesson();
+    case "HIRAGANA-A":
+      return getHiraganaALesson();
     default:
       throw new Error("Invalid kana level");
   }
