@@ -80,9 +80,9 @@ export const kanaLevelToIntMap = {
   complete: 35,
 };
 
-export const addLessonResultsResolver = (pg: any) => {
+export const addLessonResultsResolver = (pg) => {
   return (_, { results, userId, content }) => {
-    pg.transaction(async (trx: any) => {
+    pg.transaction(async (trx) => {
       // Update kana level if applicable
       if (content !== "OTHER") {
         const newKanaLevel = kanaLevelArray[kanaLevelToIntMap[content] + 1];
