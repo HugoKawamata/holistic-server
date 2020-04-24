@@ -128,9 +128,9 @@ export const typeDefs = gql`
     marks: [Mark]
   }
 
-  type Mutation {
-    addLessonResults(results: [Result])
-  }
+  # type Mutation {
+  #   addLessonResults(results: [Result])
+  # }
 `;
 
 export default typeDefs;
