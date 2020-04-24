@@ -106,7 +106,7 @@ export const addLessonResultsResolver = (pg) => {
       console.log(wordResults);
 
       const marshalledWordResults = marshalInputResultsToWordResults(
-        results,
+        wordResults,
         userId,
         pg.fn.now()
       );
