@@ -122,15 +122,16 @@ export const typeDefs = gql`
   }
 
   type Result {
-    objectId: ID!
+    userId: ID!
+    objectId: ID
     objectType: TestableObject!
     answers: [String]
     marks: [Mark]
   }
 
-  # type Mutation {
-  #   addLessonResults(results: [Result])
-  # }
+  type Mutation {
+    addLessonResults(results: [Result], userId: ID!, content: LessonContent): Boolean
+  }
 `;
 
 export default typeDefs;

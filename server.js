@@ -1,6 +1,10 @@
 import { ApolloServer, gql } from "apollo-server";
 import knex from "knex";
-import { userResolver, nextLessonResolver } from "./src/resolvers";
+import {
+  userResolver,
+  nextLessonResolver,
+  addLessonResultsResolver,
+} from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
 require("dotenv").config();
@@ -22,6 +26,9 @@ const resolvers = {
   },
   User: {
     nextLesson: nextLessonResolver(pg),
+  },
+  Mutation: {
+    addLessonResults: addLessonResultsResolver(pg),
   },
 };
 
