@@ -122,11 +122,11 @@ export const typeDefs = gql`
   }
 
   input Result {
-    userId: ID!
     objectId: ID
     objectType: TestableObject!
+    text: String
     answers: [String]
-    marks: [Mark]
+    results: [Mark]
   }
 
   type Mutation {
