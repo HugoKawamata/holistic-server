@@ -105,7 +105,7 @@ export const addLessonResultsResolver = (pg) => {
       console.log(marshalledWordResults);
 
       pg("word_results")
-        .insert([marshalledWordResults])
+        .insert(marshalledWordResults)
         .transacting(trx)
         .then((wordResultIds) => {
           return pg("user_words")
