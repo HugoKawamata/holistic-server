@@ -85,7 +85,7 @@ export const addLessonResultsResolver = (pg) => {
     pg.transaction(async (trx) => {
       // Update kana level if applicable
       if (content !== "OTHER") {
-        const newKanaLevel = kanaLevelArray[kanaLevelToIntMap[content] + 1];
+        const newKanaLevel = content;
         await trx("user")
           .where({ id: userId })
           .update({ kana_level: newKanaLevel });
