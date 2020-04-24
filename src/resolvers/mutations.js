@@ -86,7 +86,7 @@ export const addLessonResultsResolver = (pg) => {
       // Update kana level if applicable
       if (content !== "OTHER") {
         const newKanaLevel = content;
-        await trx("user")
+        await trx("accounts")
           .where({ id: userId })
           .update({ kana_level: newKanaLevel });
       }
@@ -100,7 +100,7 @@ export const addLessonResultsResolver = (pg) => {
       );
       console.log(wordResultIds);
 
-      trx("userWord").insert(
+      trx("user_words").insert(
         wordResults.map((res, i) => ({
           userId: userId,
           wordId: res.objectId,
