@@ -80,7 +80,7 @@ export const kanaLevelToIntMap = {
   COMPLETE: 35,
 };
 
-export const marshalResults = (results, userId, now) => {
+export const marshalInputResultsToWordResults = (results, userId, now) => {
   return results.map((result) => ({
     user_id: userId,
     word_id: result.objectId,
@@ -101,15 +101,19 @@ export const addLessonResultsResolver = (pg) => {
           .where({ id: userId })
           .update({ kana_level: newKanaLevel });
       }
-      const marshalledResults = marshalResults(results, userId, pg.fn.now());
 
-      const wordResults = marshalledResults.filter(
-        (res) => res.type === "WORD"
-      );
+      const wordResults = results.filter((res) => res.objectType === "WORD");
       console.log(wordResults);
 
+      const marshalledWordResults = marshalInputResultsToWordResults(
+        results,
+        userId,
+        pg.fn.now()
+      );
+      console.log(marshalledWordResults);
+
       const wordResultIds = await trx("word_results").insert(
-        [wordResults],
+        [marshalledWordResults],
         ["id"]
       );
       console.log(wordResultIds);
