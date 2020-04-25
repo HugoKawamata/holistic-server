@@ -90,14 +90,26 @@ export const marshalInputResultsToWordResults = (results, userId, now) => {
   }));
 };
 
-export const marshalInputResultsToCharacterResults = (results, userId, now) => {
-  return results.map((result) => ({
-    user_id: parseInt(userId),
-    character_id: parseInt(result.objectId),
-    answers: result.answers,
-    marks: result.marks,
-    created_at: now,
-  }));
+export const marshalInputResultsToCharacterResults = async (
+  results,
+  userId,
+  pg
+) => {
+  await pg("characters")
+    .columns("id", "character")
+    .select()
+    .whereIn("character", results)
+    .then((characters) => {
+      return results.map((result) => ({
+        user_id: parseInt(userId),
+        character_id: parseInt(
+          characters.find(([id, char]) => char === result.text)[0]
+        ),
+        answers: result.answers,
+        marks: result.marks,
+        created_at: pg.fn.now(),
+      }));
+    });
 };
 
 export const addLessonResultsResolver = (pg) => {
@@ -107,22 +119,22 @@ export const addLessonResultsResolver = (pg) => {
       const characterResults = results.filter(
         (res) => res.objectType === "CHARACTER"
       );
-      console.log(wordResults);
-      console.log(characterResults);
+      console.log("wordresults", wordResults);
+      console.log("characterresults", characterResults);
 
       const marshalledWordResults = marshalInputResultsToWordResults(
         wordResults,
         userId,
         pg.fn.now()
       );
-      console.log(marshalledWordResults);
+      console.log("marshalledWordResults", marshalledWordResults);
 
       const marshalledCharacterResults = marshalInputResultsToCharacterResults(
         characterResults,
         userId,
-        pg.fn.now()
+        trx
       );
-      console.log(marshalledCharacterResults);
+      console.log("marshalledCharacterResults", marshalledCharacterResults);
 
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
@@ -140,7 +152,7 @@ export const addLessonResultsResolver = (pg) => {
             .transacting(trx);
         })
         .then(() => {
-          return pg("character_results")
+          pg("character_results")
             .insert(marshalledCharacterResults, ["id"])
             .transacting(trx)
             .then((characterResultIds) => {
