@@ -106,7 +106,7 @@ export const marshalInputResultsToCharacterResults = async (
       return results.map((result) => ({
         user_id: parseInt(userId),
         character_id: parseInt(
-          characters.find(({ id, char }) => char === result.text).id
+          characters.find(({ id, character }) => character === result.text).id
         ),
         answers: result.answers,
         marks: result.marks,
