@@ -165,7 +165,7 @@ export const addLessonResultsResolver = (pg) => {
                     user_id: userId,
                     character_id: res.character_id,
                     proficiency: 1,
-                    result_ids: [characterResultIds[i]],
+                    result_ids: [characterResultIds[i].id],
                   }))
                 )
                 .transacting(trx);
