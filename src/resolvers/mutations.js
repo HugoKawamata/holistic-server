@@ -117,28 +117,28 @@ export const marshalInputResultsToCharacterResults = async (
 
 export const addLessonResultsResolver = (pg) => {
   return (_, { results, userId, content }) => {
+    const wordResults = results.filter((res) => res.objectType === "WORD");
+    const characterResults = results.filter(
+      (res) => res.objectType === "CHARACTER"
+    );
+    console.log("wordresults", wordResults);
+    console.log("characterresults", characterResults);
+
+    const marshalledWordResults = marshalInputResultsToWordResults(
+      wordResults,
+      userId,
+      pg.fn.now()
+    );
+    console.log("marshalledWordResults", marshalledWordResults);
+
+    const marshalledCharacterResults = await marshalInputResultsToCharacterResults(
+      characterResults,
+      userId,
+      pg
+    );
+    console.log("marshalledCharacterResults", marshalledCharacterResults);
+
     pg.transaction(async (trx) => {
-      const wordResults = results.filter((res) => res.objectType === "WORD");
-      const characterResults = results.filter(
-        (res) => res.objectType === "CHARACTER"
-      );
-      console.log("wordresults", wordResults);
-      console.log("characterresults", characterResults);
-
-      const marshalledWordResults = marshalInputResultsToWordResults(
-        wordResults,
-        userId,
-        trx.fn.now()
-      );
-      console.log("marshalledWordResults", marshalledWordResults);
-
-      const marshalledCharacterResults = await marshalInputResultsToCharacterResults(
-        characterResults,
-        userId,
-        trx
-      );
-      console.log("marshalledCharacterResults", marshalledCharacterResults);
-
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
