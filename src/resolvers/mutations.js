@@ -180,16 +180,37 @@ export const addLessonResultsResolver = (pg) => {
             .insert(marshalledCharacterResults, ["id"])
             .transacting(trx)
             .then((characterResultIds) => {
-              return pg("user_characters")
-                .insert(
-                  marshalledCharacterResults.map((res, i) => ({
+              // This is an N+1 query - should try to optimise in the future
+              marshalledCharacterResults.map((res, i) => {
+                const insert = pg("user_characters")
+                  .insert({
                     user_id: userId,
                     character_id: res.character_id,
                     proficiency: 1,
                     result_ids: [characterResultIds[i].id],
-                  }))
-                )
-                .transacting(trx);
+                  })
+                  .toString();
+
+                const update = pg("user_characters")
+                  .update({
+                    user_id: userId,
+                    character_id: res.character_id,
+                    proficiency: 0.5,
+                    result_ids: pg.raw("array_append(colName, ?)", [
+                      characterResultIds[i].id,
+                    ]),
+                  })
+                  .whereRaw(
+                    `user_characters.character_id = '${res.character_id}' AND user_characters.user_id = '${userId}'`
+                  )
+                  .toString();
+
+                return pg
+                  .raw(
+                    `${insert} ON CONFLICT (user_id, character_id) UPDATE SET ${update}`
+                  )
+                  .transacting(trx);
+              });
             });
         })
         .then(() => {
