@@ -98,12 +98,15 @@ export const marshalInputResultsToCharacterResults = async (
   await pg("characters")
     .columns("id", "character")
     .select()
-    .whereIn("character", results)
+    .whereIn(
+      "character",
+      results.map((result) => result.text)
+    )
     .then((characters) => {
       return results.map((result) => ({
         user_id: parseInt(userId),
         character_id: parseInt(
-          characters.find(([id, char]) => char === result.text)[0]
+          characters.find(({ id, char }) => char === result.text).id
         ),
         answers: result.answers,
         marks: result.marks,
