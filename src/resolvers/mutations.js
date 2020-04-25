@@ -160,8 +160,10 @@ export const addLessonResultsResolver = (pg) => {
               wordResults.map((res, i) => ({
                 user_id: userId,
                 word_id: res.objectId,
-                proficiency: 1,
-                result_ids: [wordResultIds[i].id],
+                proficiency: 0.5,
+                result_ids: pg.raw("array_append(colName, ?)", [
+                  wordResultIds[i].id,
+                ]),
               }))
             )
             .transacting(trx)
