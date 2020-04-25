@@ -33,7 +33,7 @@ const getHiraganaALesson = () => {
     content: "HIRAGANA_A",
     testables: [
       {
-        objectId: 0,
+        objectId: 1,
         objectType: "WORD",
         question: {
           type: "J_WORD",
@@ -51,7 +51,7 @@ const getHiraganaALesson = () => {
         },
       },
       {
-        objectId: 1,
+        objectId: 2,
         objectType: "WORD",
         question: {
           type: "J_WORD",
@@ -69,7 +69,7 @@ const getHiraganaALesson = () => {
         },
       },
       {
-        objectId: 2,
+        objectId: 3,
         objectType: "WORD",
         question: {
           type: "J_WORD",
@@ -87,7 +87,7 @@ const getHiraganaALesson = () => {
         },
       },
       {
-        objectId: 3,
+        objectId: 4,
         objectType: "WORD",
         question: {
           type: "J_WORD",
