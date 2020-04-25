@@ -159,16 +159,16 @@ export const addLessonResultsResolver = (pg) => {
             .insert(marshalledCharacterResults, ["id"])
             .transacting(trx)
             .then((characterResultIds) => {
-              return pg("user_characters").insert(
-                characterResults
-                  .map((res, i) => ({
+              return pg("user_characters")
+                .insert(
+                  characterResults.map((res, i) => ({
                     user_id: userId,
                     word_id: res.objectId,
                     proficiency: 1,
                     result_ids: [characterResultIds[i]],
                   }))
-                  .transacting(trx)
-              );
+                )
+                .transacting(trx);
             });
         })
         .then(() => {
