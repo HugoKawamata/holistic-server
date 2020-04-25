@@ -143,7 +143,7 @@ export const addLessonResultsResolver = (pg) => {
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
         .then((wordResultIds) => {
-          return pg("user_words")
+          const insert = pg("user_words")
             .insert(
               wordResults.map((res, i) => ({
                 user_id: userId,
@@ -152,6 +152,23 @@ export const addLessonResultsResolver = (pg) => {
                 result_ids: [wordResultIds[i].id],
               }))
             )
+            .transacting(trx)
+            .toString();
+
+          const update = pg("user_words")
+            .update(
+              wordResults.map((res, i) => ({
+                user_id: userId,
+                word_id: res.objectId,
+                proficiency: 1,
+                result_ids: [wordResultIds[i].id],
+              }))
+            )
+            .transacting(trx)
+            .toString();
+
+          return pg
+            .raw(`${insert} ON DUPLICATE KEY UPDATE SET ${update}`)
             .transacting(trx);
         })
         .then(() => {
