@@ -161,9 +161,9 @@ export const addLessonResultsResolver = (pg) => {
             .then((characterResultIds) => {
               return pg("user_characters")
                 .insert(
-                  characterResults.map((res, i) => ({
+                  marshalledCharacterResults.map((res, i) => ({
                     user_id: userId,
-                    word_id: res.objectId,
+                    character_id: res.character_id,
                     proficiency: 1,
                     result_ids: [characterResultIds[i]],
                   }))
