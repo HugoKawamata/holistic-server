@@ -143,35 +143,37 @@ export const addLessonResultsResolver = (pg) => {
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
         .then((wordResultIds) => {
-          const insert = pg("user_words")
-            .insert(
-              wordResults.map((res, i) => ({
+          // This is an N+1 query - should try to optimise in the future
+          marshalledWordResults.map((res, i) => {
+            const insert = pg("user_words")
+              .insert({
                 user_id: userId,
-                word_id: res.objectId,
+                word_id: res.word_id,
                 proficiency: 1,
                 result_ids: [wordResultIds[i].id],
-              }))
-            )
-            .transacting(trx)
-            .toString();
+              })
+              .toString();
 
-          const update = pg("user_words")
-            .update(
-              wordResults.map((res, i) => ({
+            const update = pg("user_words")
+              .update({
                 user_id: userId,
-                word_id: res.objectId,
+                word_id: res.word_id,
                 proficiency: 0.5,
                 result_ids: pg.raw("array_append(colName, ?)", [
                   wordResultIds[i].id,
                 ]),
-              }))
-            )
-            .transacting(trx)
-            .toString();
+              })
+              .whereRaw(
+                `user_words.word_id = '${res.word_id}' AND user_words.user_id = '${userId}'`
+              )
+              .toString();
 
-          return pg
-            .raw(`${insert} ON DUPLICATE KEY UPDATE SET ${update}`)
-            .transacting(trx);
+            return pg
+              .raw(
+                `${insert} ON CONFLICT (user_id, word_id) UPDATE SET ${update}`
+              )
+              .transacting(trx);
+          });
         })
         .then(() => {
           return pg("character_results")
