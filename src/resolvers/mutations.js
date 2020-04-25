@@ -128,14 +128,14 @@ export const addLessonResultsResolver = (pg) => {
       const marshalledWordResults = marshalInputResultsToWordResults(
         wordResults,
         userId,
-        pg.fn.now()
+        trx.fn.now()
       );
       console.log("marshalledWordResults", marshalledWordResults);
 
       const marshalledCharacterResults = await marshalInputResultsToCharacterResults(
         characterResults,
         userId,
-        pg
+        trx
       );
       console.log("marshalledCharacterResults", marshalledCharacterResults);
 
@@ -155,7 +155,7 @@ export const addLessonResultsResolver = (pg) => {
             .transacting(trx);
         })
         .then(() => {
-          pg("character_results")
+          return pg("character_results")
             .insert(marshalledCharacterResults, ["id"])
             .transacting(trx)
             .then((characterResultIds) => {
