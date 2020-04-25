@@ -116,7 +116,7 @@ export const marshalInputResultsToCharacterResults = async (
 };
 
 export const addLessonResultsResolver = (pg) => {
-  return (_, { results, userId, content }) => {
+  return async (_, { results, userId, content }) => {
     const wordResults = results.filter((res) => res.objectType === "WORD");
     const characterResults = results.filter(
       (res) => res.objectType === "CHARACTER"
@@ -138,7 +138,7 @@ export const addLessonResultsResolver = (pg) => {
     );
     console.log("marshalledCharacterResults", marshalledCharacterResults);
 
-    pg.transaction(async (trx) => {
+    pg.transaction((trx) => {
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
