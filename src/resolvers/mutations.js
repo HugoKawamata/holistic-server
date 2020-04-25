@@ -95,7 +95,7 @@ export const marshalInputResultsToCharacterResults = async (
   userId,
   pg
 ) => {
-  await pg("characters")
+  return await pg("characters")
     .columns("id", "character")
     .select()
     .whereIn(
@@ -117,7 +117,7 @@ export const marshalInputResultsToCharacterResults = async (
 
 export const addLessonResultsResolver = (pg) => {
   return (_, { results, userId, content }) => {
-    pg.transaction((trx) => {
+    pg.transaction(async (trx) => {
       const wordResults = results.filter((res) => res.objectType === "WORD");
       const characterResults = results.filter(
         (res) => res.objectType === "CHARACTER"
@@ -132,10 +132,10 @@ export const addLessonResultsResolver = (pg) => {
       );
       console.log("marshalledWordResults", marshalledWordResults);
 
-      const marshalledCharacterResults = marshalInputResultsToCharacterResults(
+      const marshalledCharacterResults = await marshalInputResultsToCharacterResults(
         characterResults,
         userId,
-        trx
+        pg
       );
       console.log("marshalledCharacterResults", marshalledCharacterResults);
 
@@ -149,7 +149,7 @@ export const addLessonResultsResolver = (pg) => {
                 user_id: userId,
                 word_id: res.objectId,
                 proficiency: 1,
-                result_ids: [wordResultIds[i]],
+                result_ids: [wordResultIds[i].id],
               }))
             )
             .transacting(trx);
