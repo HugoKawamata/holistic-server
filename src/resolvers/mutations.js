@@ -90,11 +90,25 @@ export const marshalInputResultsToWordResults = (results, userId, now) => {
   }));
 };
 
+export const marshalInputResultsToCharacterResults = (results, userId, now) => {
+  return results.map((result) => ({
+    user_id: parseInt(userId),
+    character_id: parseInt(result.objectId),
+    answers: result.answers,
+    marks: result.marks,
+    created_at: now,
+  }));
+};
+
 export const addLessonResultsResolver = (pg) => {
   return (_, { results, userId, content }) => {
     pg.transaction((trx) => {
       const wordResults = results.filter((res) => res.objectType === "WORD");
+      const characterResults = results.filter(
+        (res) => res.objectType === "CHARACTER"
+      );
       console.log(wordResults);
+      console.log(characterResults);
 
       const marshalledWordResults = marshalInputResultsToWordResults(
         wordResults,
@@ -102,6 +116,13 @@ export const addLessonResultsResolver = (pg) => {
         pg.fn.now()
       );
       console.log(marshalledWordResults);
+
+      const marshalledCharacterResults = marshalInputResultsToCharacterResults(
+        characterResults,
+        userId,
+        pg.fn.now()
+      );
+      console.log(marshalledCharacterResults);
 
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
@@ -117,6 +138,23 @@ export const addLessonResultsResolver = (pg) => {
               }))
             )
             .transacting(trx);
+        })
+        .then(() => {
+          return pg("character_results")
+            .insert(marshalledCharacterResults, ["id"])
+            .transacting(trx)
+            .then((characterResultIds) => {
+              return pg("user_characters").insert(
+                characterResults
+                  .map((res, i) => ({
+                    user_id: userId,
+                    word_id: res.objectId,
+                    proficiency: 1,
+                    result_ids: [characterResultIds[i]],
+                  }))
+                  .transacting(trx)
+              );
+            });
         })
         .then(() => {
           // Update kana level if applicable
