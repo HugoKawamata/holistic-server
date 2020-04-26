@@ -169,20 +169,19 @@ export const insertOrUpdateUserWordOrCharacter = (
         const update = pg(`user_${objectName}s`)
           .update({
             ...baseTuple,
-            result_ids: pg
-              .raw("array_append(result_ids, ?)", [resultIds[i].id])
-              .transacting(trx),
+            result_ids: [resultIds[i].id],
           })
           .whereRaw(
-            `user_${objectName}s.${objectName}_id = '${
+            `user_${objectName}s.${objectName}_id = ${
               res[`${objectName}_id`]
-            }' AND user_${objectName}s.user_id = '${res.user_id}'`
+            } AND user_${objectName}s.user_id = ${res.user_id}`
           )
-          .toString();
+          .toString()
+	      .replace(/^update(.*?)set\s/gi, '');
 
         return pg
           .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
+            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE user_${objectName}s SET ${update}`
           )
           .transacting(trx);
       });
