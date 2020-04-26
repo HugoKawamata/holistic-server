@@ -117,53 +117,65 @@ export const marshalInputResultsToCharacterResults = async (
 
 export const calcProficiency = (results) => {
   const tec = 0.7; // Time emphasis coefficient
-  console.log("BIG CUM");
-  console.log(results);
-  console.log(results[0].created_at);
+  const mostRecentTestDate = Math.max(results.map((r) => r.created_at));
+  let summedDailyWeights = 0;
+  const summedDailyProficiencies = results.reduce((sum, result) => {
+    const timesWrong = result.marks.filter((m) => m === "INCORRECT").length;
+    const daysFromMostRecentTest = Math.ceil(
+      (+result.created_at - +mostRecentTestDate) / (1000 * 60 * 60 * 24)
+    );
+    const dailyWeight = Math.pow(tec, daysFromMostRecentTest);
+    summedDailyWeights += dailyWeight;
+    return (1 / (1 + timesWrong)) * dailyWeight;
+  }, 0);
+  return summedDailyProficiencies / summedDailyWeights;
 };
 
 // This is an N+1 query - should try to optimise in the future
 export const insertOrUpdateUserWordOrCharacter = (
   pg,
   trx,
-  tableName,
   resultIds,
   unmarshalledResults,
   userId,
-  objectIdName
+  objectName
 ) => {
   unmarshalledResults.map((res, i) => {
-    pg(tableName)
+    pg(`${objectName}_results`)
       .select(["id", "marks", "created_at"])
-      .where({ user_id: userId, [objectIdName]: res.objectId })
+      .where({ user_id: userId, [`${objectName}_id`]: res.objectId })
+      .transacting(trx)
       .then((allResults) => {
         const proficiency = calcProficiency(allResults);
+        console.log(proficiency);
 
         const baseTuple = {
           user_id: userId,
-          [objectIdName]: res.objectId,
-          proficiency: 1,
+          [`${objectName}_id`]: res.objectId,
+          proficiency: proficiency,
         };
 
-        const insert = pg(tableName)
+        const insert = pg(`user_${objectName}s`)
           .insert({
             ...baseTuple,
             result_ids: [resultIds[i].id],
           })
           .toString();
 
-        const update = pg(tableName)
+        const update = pg(`user${objectName}s`)
           .update({
             ...baseTuple,
             result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
           })
           .whereRaw(
-            `${tableName}.${objectIdName} = '${res.objectId}' AND ${tableName}.user_id = '${userId}'`
+            `user_${objectName}s.${objectName}_id = '${res.objectId}' AND user_${objectName}s.user_id = '${userId}'`
           )
           .toString();
 
         return pg
-          .raw(`${insert} ON CONFLICT (user_id, word_id) UPDATE SET ${update}`)
+          .raw(
+            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
+          )
           .transacting(trx);
       });
   });
@@ -200,11 +212,10 @@ export const addLessonResultsResolver = (pg) => {
           return insertOrUpdateUserWordOrCharacter(
             pg,
             trx,
-            "user_words",
             newWordResultIds,
             wordResults,
             userId,
-            "word_id"
+            "word"
           );
         })
         .then(() => {
@@ -215,11 +226,10 @@ export const addLessonResultsResolver = (pg) => {
               return insertOrUpdateUserWordOrCharacter(
                 pg,
                 trx,
-                "user_characters",
                 characterResultIds,
                 characterResults,
                 userId,
-                "character_id"
+                "character"
               );
             });
         })
