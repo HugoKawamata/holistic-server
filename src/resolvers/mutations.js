@@ -140,12 +140,14 @@ export const insertOrUpdateUserWordOrCharacter = (
   resultIds,
   unmarshalledResults,
   userId,
-  objectName
+  objectIdName,
+  tableName,
+  resultsTableName
 ) => {
   unmarshalledResults.map((res, i) => {
-    pg(`${objectName}_results`)
+    pg(resultsTableName)
       .select(["id", "marks", "created_at"])
-      .where({ user_id: userId, [`${objectName}_id`]: res.objectId })
+      .where({ user_id: userId, [objectIdName]: res.objectId })
       .transacting(trx)
       .then((allResults) => {
         const proficiency = calcProficiency(allResults);
@@ -153,30 +155,30 @@ export const insertOrUpdateUserWordOrCharacter = (
 
         const baseTuple = {
           user_id: userId,
-          [`${objectName}_id`]: res.objectId,
+          [objectIdName]: res.objectId,
           proficiency: proficiency,
         };
 
-        const insert = pg(`user_${objectName}s`)
+        const insert = pg(tableName)
           .insert({
             ...baseTuple,
             result_ids: [resultIds[i].id],
           })
           .toString();
 
-        const update = pg(`user_${objectName}s`)
+        const update = pg(tableName)
           .update({
             ...baseTuple,
             result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
           })
           .whereRaw(
-            `user_${objectName}s.${objectName}_id = '${res.objectId}' AND user_${objectName}s.user_id = '${userId}'`
+            `${tableName}.${objectIdName} = '${res.objectId}' AND ${tableName}.user_id = '${userId}'`
           )
           .toString();
 
         return pg
           .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
+            `${insert} ON CONFLICT (user_id, ${objectIdName}) UPDATE SET ${update}`
           )
           .transacting(trx);
       });
@@ -217,7 +219,9 @@ export const addLessonResultsResolver = (pg) => {
             newWordResultIds,
             wordResults,
             userId,
-            "word"
+            "word_id",
+            "user_words",
+            "word_results"
           );
         })
         .then(() => {
@@ -231,7 +235,9 @@ export const addLessonResultsResolver = (pg) => {
                 characterResultIds,
                 characterResults,
                 userId,
-                "character"
+                "character_id",
+                "user_characters",
+                "character_results"
               );
             });
         })
