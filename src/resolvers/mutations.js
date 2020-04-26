@@ -170,7 +170,9 @@ export const insertOrUpdateUserWordOrCharacter = (
           .update({
             ...baseTuple,
             result_ids: pg
-              .raw("array_append(result_ids, ?)", [resultIds[i].id])
+              .raw(`array_append(user_${objectName}s.result_ids, ?)`, [
+                resultIds[i].id,
+              ])
               .transacting(trx),
           })
           .whereRaw(
@@ -179,7 +181,6 @@ export const insertOrUpdateUserWordOrCharacter = (
             } AND user_${objectName}s.user_id = ${res.user_id}`
           )
           .toString()
-          .replace(/"result_ids"/, `user_${objectName}s."result_ids"`)
           .replace(/^update(.*?)set\s/gi, "");
 
         return pg
