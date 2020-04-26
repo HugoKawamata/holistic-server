@@ -115,6 +115,13 @@ export const marshalInputResultsToCharacterResults = async (
     });
 };
 
+export const calcProficiency = (results) => {
+  const tec = 0.7; // Time emphasis coefficient
+  console.log("BIG CUM");
+  console.log(results);
+  console.log(results[0].created_at);
+};
+
 // This is an N+1 query - should try to optimise in the future
 export const insertOrUpdateUserWordOrCharacter = (
   pg,
@@ -126,39 +133,39 @@ export const insertOrUpdateUserWordOrCharacter = (
   objectIdName
 ) => {
   unmarshalledResults.map((res, i) => {
-    const baseTuple =
-      tableName == "user_words"
-        ? {
-            user_id: userId,
-            word_id: res.objectId,
-            proficiency: 1,
-          }
-        : {
-            user_id: userId,
-            character_id: res.objectId,
-            proficiency: 1,
-          };
+    pg(tableName)
+      .select(["id", "marks", "created_at"])
+      .where({ user_id: userId, [objectIdName]: res.objectId })
+      .then((allResults) => {
+        const proficiency = calcProficiency(allResults);
 
-    const insert = pg(tableName)
-      .insert({
-        ...baseTuple,
-        result_ids: [resultIds[i].id],
-      })
-      .toString();
+        const baseTuple = {
+          user_id: userId,
+          [objectIdName]: res.objectId,
+          proficiency: 1,
+        };
 
-    const update = pg(tableName)
-      .update({
-        ...baseTuple,
-        result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
-      })
-      .whereRaw(
-        `${tableName}.${objectIdName} = '${res.objectId}' AND ${tableName}.user_id = '${userId}'`
-      )
-      .toString();
+        const insert = pg(tableName)
+          .insert({
+            ...baseTuple,
+            result_ids: [resultIds[i].id],
+          })
+          .toString();
 
-    return pg
-      .raw(`${insert} ON CONFLICT (user_id, word_id) UPDATE SET ${update}`)
-      .transacting(trx);
+        const update = pg(tableName)
+          .update({
+            ...baseTuple,
+            result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
+          })
+          .whereRaw(
+            `${tableName}.${objectIdName} = '${res.objectId}' AND ${tableName}.user_id = '${userId}'`
+          )
+          .toString();
+
+        return pg
+          .raw(`${insert} ON CONFLICT (user_id, word_id) UPDATE SET ${update}`)
+          .transacting(trx);
+      });
   });
 };
 
@@ -189,12 +196,12 @@ export const addLessonResultsResolver = (pg) => {
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
-        .then((wordResultIds) => {
+        .then((newWordResultIds) => {
           return insertOrUpdateUserWordOrCharacter(
             pg,
             trx,
             "user_words",
-            wordResultIds,
+            newWordResultIds,
             wordResults,
             userId,
             "word_id"
