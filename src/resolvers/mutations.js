@@ -142,46 +142,45 @@ export const insertOrUpdateUserWordOrCharacter = (
   userId,
   objectName
 ) => {
-  marshalledResults.map((res, i) => {
-    pg(`${objectName}_results`)
+  marshalledResults.map(async (res, i) => {
+    const allResults = await pg(`${objectName}_results`)
       .select(["id", "marks", "created_at"])
       .where({ user_id: userId, [`${objectName}_id`]: res[`${objectName}_id`] })
-      .transacting(trx)
-      .then((allResults) => {
-        const proficiency = calcProficiency(allResults);
-        console.log(proficiency);
+      .transacting(trx);
 
-        const baseTuple = {
-          user_id: userId,
-          [`${objectName}_id`]: res[`${objectName}_id`],
-          proficiency: proficiency,
-        };
+    const proficiency = calcProficiency(allResults);
+    console.log(proficiency);
 
-        const insert = pg(`user_${objectName}s`)
-          .insert({
-            ...baseTuple,
-            result_ids: [resultIds[i].id],
-          })
-          .toString();
+    const baseTuple = {
+      user_id: userId,
+      [`${objectName}_id`]: res[`${objectName}_id`],
+      proficiency: proficiency,
+    };
 
-        const update = pg(`user_${objectName}s`)
-          .update({
-            ...baseTuple,
-            result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
-          })
-          .whereRaw(
-            `user_${objectName}s.${objectName}_id = '${
-              res[`${objectName}_id`]
-            }' AND user_${objectName}s.user_id = '${userId}'`
-          )
-          .toString();
+    const insert = pg(`user_${objectName}s`)
+      .insert({
+        ...baseTuple,
+        result_ids: [resultIds[i].id],
+      })
+      .toString();
 
-        return pg
-          .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
-          )
-          .transacting(trx);
-      });
+    const update = pg(`user_${objectName}s`)
+      .update({
+        ...baseTuple,
+        result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
+      })
+      .whereRaw(
+        `user_${objectName}s.${objectName}_id = '${
+          res[`${objectName}_id`]
+        }' AND user_${objectName}s.user_id = '${userId}'`
+      )
+      .toString();
+
+    return pg
+      .raw(
+        `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
+      )
+      .transacting(trx);
   });
 };
 
