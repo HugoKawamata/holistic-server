@@ -174,15 +174,15 @@ export const insertOrUpdateUserWordOrCharacter = (
               .transacting(trx),
           })
           .whereRaw(
-            `user_${objectName}s.${objectName}_id = '${
+            `user_${objectName}s.${objectName}_id = ${
               res[`${objectName}_id`]
-            }' AND user_${objectName}s.user_id = '${res.user_id}'`
+            } AND user_${objectName}s.user_id = ${res.user_id}`
           )
           .toString();
 
         return pg
           .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
+            `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET ${update}`
           )
           .transacting(trx);
       });
