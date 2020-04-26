@@ -222,7 +222,6 @@ export const addLessonResultsResolver = (pg) => {
             trx,
             newWordResultIds,
             marshalledWordResults,
-            userId,
             "word"
           );
         })
@@ -236,7 +235,6 @@ export const addLessonResultsResolver = (pg) => {
                 trx,
                 characterResultIds,
                 marshalledCharacterResults,
-                userId,
                 "character"
               );
             });
