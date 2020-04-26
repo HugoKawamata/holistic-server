@@ -164,6 +164,7 @@ export const insertOrUpdateUserWordOrCharacter = (
             ...baseTuple,
             result_ids: [resultIds[i].id],
           })
+	      .transacting(trx)
           .toString();
 
         const update = pg(`user_${objectName}s`)
@@ -176,12 +177,13 @@ export const insertOrUpdateUserWordOrCharacter = (
               res[`${objectName}_id`]
             } AND user_${objectName}s.user_id = ${res.user_id}`
           )
+	      .transacting(trx)
           .toString()
 	      .replace(/^update(.*?)set\s/gi, '');
 
         return pg
           .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE user_${objectName}s SET ${update}`
+            `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET ${update}`
           )
           .transacting(trx);
       });
