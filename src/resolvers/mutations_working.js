@@ -138,54 +138,41 @@ export const insertOrUpdateUserWordOrCharacter = (
   pg,
   trx,
   resultIds,
-  marshalledResults,
+  unmarshalledResults,
+  userId,
   objectName
 ) => {
-  marshalledResults.map((res, i) => {
-    pg(`${objectName}_results`)
-      .select(["id", "marks", "created_at"])
-      .where({
-        user_id: res.user_id,
-        [`${objectName}_id`]: res[`${objectName}_id`],
+  unmarshalledResults.map((res, i) => {
+    const proficiency = 1;
+    const baseTuple = {
+      user_id: userId,
+      [`${objectName}_id`]: res.objectId,
+      proficiency: proficiency,
+    };
+
+    const insert = pg(`user_${objectName}s`)
+      .insert({
+        ...baseTuple,
+        result_ids: [resultIds[i].id],
       })
-      .transacting(trx)
-      .then((allResults) => {
-        const proficiency = calcProficiency(allResults);
-        console.log(proficiency);
+      .toString();
 
-        const baseTuple = {
-          user_id: res.user_id,
-          [`${objectName}_id`]: res[`${objectName}_id`],
-          proficiency: proficiency,
-        };
+    const update = pg(`user_${objectName}s`)
+      .update({
+        ...baseTuple,
+        result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
+      })
+      .whereRaw(
+        `user_${objectName}s.${objectName}_id = '${res.objectId}' AND user_${objectName}s.user_id = '${userId}'`
+      )
+      .toString();
 
-        const insert = pg(`user_${objectName}s`)
-          .insert({
-            ...baseTuple,
-            result_ids: [resultIds[i].id],
-          })
-          .toString();
-
-        const update = pg(`user_${objectName}s`)
-          .update({
-            ...baseTuple,
-            result_ids: pg
-              .raw("array_append(result_ids, ?)", [resultIds[i].id])
-              .transacting(trx),
-          })
-          .whereRaw(
-            `user_${objectName}s.${objectName}_id = '${
-              res[`${objectName}_id`]
-            }' AND user_${objectName}s.user_id = '${res.user_id}'`
-          )
-          .toString();
-
-        return pg
-          .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
-          )
-          .transacting(trx);
-      });
+    return pg
+      .raw(
+        `${insert} ON CONFLICT (user_id, ${objectName}_id) UPDATE SET ${update}`
+      )
+      .transacting(trx);
+    //});
   });
 };
 
@@ -221,7 +208,7 @@ export const addLessonResultsResolver = (pg) => {
             pg,
             trx,
             newWordResultIds,
-            marshalledWordResults,
+            wordResults,
             userId,
             "word"
           );
@@ -235,7 +222,7 @@ export const addLessonResultsResolver = (pg) => {
                 pg,
                 trx,
                 characterResultIds,
-                marshalledCharacterResults,
+                characterResults,
                 userId,
                 "character"
               );
