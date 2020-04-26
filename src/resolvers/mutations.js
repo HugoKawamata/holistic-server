@@ -150,23 +150,26 @@ export const insertOrUpdateUserWordOrCharacter = (
       })
       .transacting(trx)
       .then((allResults) => {
+        const tableName = `user_${objectName}s`;
+        const objectIdName = `${objectName}_id`;
         const proficiency = calcProficiency(allResults);
         console.log(proficiency);
 
         const baseTuple = {
           user_id: res.user_id,
-          [`${objectName}_id`]: res[`${objectName}_id`],
+          [objectIdName]: res[objectIdName],
           proficiency: proficiency,
         };
 
-        const insert = pg(`user_${objectName}s`)
+        const insert = pg(tableName)
           .insert({
             ...baseTuple,
             result_ids: [resultIds[i].id],
           })
+          .transacting(trx)
           .toString();
 
-        const update = pg(`user_${objectName}s`)
+        const update = pg(tableName)
           .update({
             ...baseTuple,
             result_ids: pg
@@ -176,10 +179,9 @@ export const insertOrUpdateUserWordOrCharacter = (
               .transacting(trx),
           })
           .whereRaw(
-            `user_${objectName}s.${objectName}_id = ${
-              res[`${objectName}_id`]
-            } AND user_${objectName}s.user_id = ${res.user_id}`
+            `user_${objectName}s.${objectName}_id = ${res[objectIdName]} AND user_${objectName}s.user_id = ${res.user_id}`
           )
+          .transacting(trx)
           .toString()
           .replace(/^update(.*?)set\s/gi, "");
 
