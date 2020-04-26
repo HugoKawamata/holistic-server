@@ -178,7 +178,8 @@ export const insertOrUpdateUserWordOrCharacter = (
               res[`${objectName}_id`]
             } AND user_${objectName}s.user_id = ${res.user_id}`
           )
-          .toString();
+          .toString()
+          .replace(/^update(.*?)set\s/gi, "");
 
         return pg
           .raw(
