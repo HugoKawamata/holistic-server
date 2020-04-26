@@ -173,26 +173,9 @@ export const insertOrUpdateUserWordOrCharacter = (
         .transacting(trx)
         .toString();
 
-      const update = pg(tableName)
-        .update(
-          marshalledResults.map((res, i) => ({
-            proficiency: calcProficiency(
-              allResults.filter((r) => r[objectIdName] === res[objectIdName])
-            ),
-            result_ids: pg
-              .raw(`array_append(user_${objectName}s.result_ids, ?)`, [
-                resultIds[i].id,
-              ])
-              .transacting(trx),
-          }))
-        )
-        .transacting(trx)
-        .toString()
-        .replace(/^update(.*?)set\s/gi, "");
-
       return pg
         .raw(
-          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET ${update}`
+          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET proficiency = EXCLUDED.proficiency, result_ids = EXCLUDED.result_ids`
         )
         .transacting(trx);
     });
