@@ -117,7 +117,9 @@ export const marshalInputResultsToCharacterResults = async (
 
 export const calcProficiency = (results) => {
   const tec = 0.7; // Time emphasis coefficient
-  const mostRecentTestTimestamp = Math.max(results.map((r) => +r.created_at));
+  const mostRecentTestTimestamp = Math.max(
+    ...results.map((r) => +r.created_at)
+  );
   let summedDailyWeights = 0;
   const summedDailyProficiencies = results.reduce((sum, result) => {
     const timesWrong = result.marks.filter((m) => m === "INCORRECT").length;
@@ -126,7 +128,7 @@ export const calcProficiency = (results) => {
     );
     const dailyWeight = Math.pow(tec, daysFromMostRecentTest);
     summedDailyWeights += dailyWeight;
-    return (1 / (1 + timesWrong)) * dailyWeight;
+    return sum + (1 / (1 + timesWrong)) * dailyWeight;
   }, 0);
   return summedDailyProficiencies / summedDailyWeights;
 };
