@@ -164,7 +164,7 @@ export const insertOrUpdateUserWordOrCharacter = (
           })
           .toString();
 
-        const update = pg(`user${objectName}s`)
+        const update = pg(`user_${objectName}s`)
           .update({
             ...baseTuple,
             result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
