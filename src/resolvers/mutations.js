@@ -138,14 +138,14 @@ export const insertOrUpdateUserWordOrCharacter = (
   pg,
   trx,
   resultIds,
-  unmarshalledResults,
+  marshalledResults,
   userId,
   objectName
 ) => {
-  unmarshalledResults.map((res, i) => {
+  marshalledResults.map((res, i) => {
     pg(`${objectName}_results`)
       .select(["id", "marks", "created_at"])
-      .where({ user_id: userId, [`${objectName}_id`]: res.objectId })
+      .where({ user_id: userId, [`${objectName}_id`]: res[`${objectName}_id`] })
       .transacting(trx)
       .then((allResults) => {
         const proficiency = calcProficiency(allResults);
@@ -153,7 +153,7 @@ export const insertOrUpdateUserWordOrCharacter = (
 
         const baseTuple = {
           user_id: userId,
-          [`${objectName}_id`]: res.objectId,
+          [`${objectName}_id`]: res[`${objectName}_id`],
           proficiency: proficiency,
         };
 
@@ -170,7 +170,9 @@ export const insertOrUpdateUserWordOrCharacter = (
             result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
           })
           .whereRaw(
-            `user_${objectName}s.${objectName}_id = '${res.objectId}' AND user_${objectName}s.user_id = '${userId}'`
+            `user_${objectName}s.${objectName}_id = '${
+              res[`${objectName}_id`]
+            }' AND user_${objectName}s.user_id = '${userId}'`
           )
           .toString();
 
@@ -215,7 +217,7 @@ export const addLessonResultsResolver = (pg) => {
             pg,
             trx,
             newWordResultIds,
-            wordResults,
+            marshalledWordResults,
             userId,
             "word"
           );
@@ -229,7 +231,7 @@ export const addLessonResultsResolver = (pg) => {
                 pg,
                 trx,
                 characterResultIds,
-                characterResults,
+                marshalledCharacterResults,
                 userId,
                 "character"
               );
