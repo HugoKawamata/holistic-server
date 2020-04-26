@@ -150,7 +150,10 @@ export const insertOrUpdateUserWordOrCharacter = (
     .where({
       user_id: userId,
     })
-    .whereIn(objectIdName, marshalledResults.map([objectIdName]))
+    .whereIn(
+      objectIdName,
+      marshalledResults.map((marsh) => marsh[objectIdName])
+    )
     .transacting(trx)
     .then((allResults) => {
       const proficiency = calcProficiency(allResults);
@@ -228,7 +231,8 @@ export const addLessonResultsResolver = (pg) => {
             trx,
             newWordResultIds,
             marshalledWordResults,
-            "word"
+            "word",
+            userId
           );
         })
         .then(() => {
@@ -241,7 +245,8 @@ export const addLessonResultsResolver = (pg) => {
                 trx,
                 characterResultIds,
                 marshalledCharacterResults,
-                "character"
+                "character",
+                userId
               );
             });
         })
