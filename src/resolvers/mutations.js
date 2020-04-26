@@ -146,7 +146,7 @@ export const insertOrUpdateUserWordOrCharacter = (
   const objectIdName = `${objectName}_id`;
 
   return pg(`${objectName}_results`)
-    .select(["id", "marks", "created_at"])
+    .select(["id", "marks", "created_at", objectIdName])
     .where({
       user_id: userId,
     })
