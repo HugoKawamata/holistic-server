@@ -115,6 +115,53 @@ export const marshalInputResultsToCharacterResults = async (
     });
 };
 
+// This is an N+1 query - should try to optimise in the future
+export const insertOrUpdateUserWordOrCharacter = (
+  pg,
+  trx,
+  tableName,
+  resultIds,
+  unmarshalledResults,
+  userId,
+  objectIdName
+) => {
+  unmarshalledResults.map((res, i) => {
+    const baseTuple =
+      tableName == "user_words"
+        ? {
+            user_id: userId,
+            word_id: res.objectId,
+            proficiency: 1,
+          }
+        : {
+            user_id: userId,
+            character_id: res.objectId,
+            proficiency: 1,
+          };
+
+    const insert = pg(tableName)
+      .insert({
+        ...baseTuple,
+        result_ids: [resultIds[i].id],
+      })
+      .toString();
+
+    const update = pg(tableName)
+      .update({
+        ...baseTuple,
+        result_ids: pg.raw("array_append(colName, ?)", [resultIds[i].id]),
+      })
+      .whereRaw(
+        `${tableName}.${objectIdName} = '${res.objectId}' AND ${tableName}.user_id = '${userId}'`
+      )
+      .toString();
+
+    return pg
+      .raw(`${insert} ON CONFLICT (user_id, word_id) UPDATE SET ${update}`)
+      .transacting(trx);
+  });
+};
+
 export const addLessonResultsResolver = (pg) => {
   return async (_, { results, userId, content }) => {
     const wordResults = results.filter((res) => res.objectType === "WORD");
@@ -143,74 +190,30 @@ export const addLessonResultsResolver = (pg) => {
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
         .then((wordResultIds) => {
-          // This is an N+1 query - should try to optimise in the future
-          marshalledWordResults.map((res, i) => {
-            const insert = pg("user_words")
-              .insert({
-                user_id: userId,
-                word_id: res.word_id,
-                proficiency: 1,
-                result_ids: [wordResultIds[i].id],
-              })
-              .toString();
-
-            const update = pg("user_words")
-              .update({
-                user_id: userId,
-                word_id: res.word_id,
-                proficiency: 0.5,
-                result_ids: pg.raw("array_append(colName, ?)", [
-                  wordResultIds[i].id,
-                ]),
-              })
-              .whereRaw(
-                `user_words.word_id = '${res.word_id}' AND user_words.user_id = '${userId}'`
-              )
-              .toString();
-
-            return pg
-              .raw(
-                `${insert} ON CONFLICT (user_id, word_id) UPDATE SET ${update}`
-              )
-              .transacting(trx);
-          });
+          return insertOrUpdateUserWordOrCharacter(
+            pg,
+            trx,
+            "user_words",
+            wordResultIds,
+            wordResults,
+            userId,
+            "word_id"
+          );
         })
         .then(() => {
           return pg("character_results")
             .insert(marshalledCharacterResults, ["id"])
             .transacting(trx)
             .then((characterResultIds) => {
-              // This is an N+1 query - should try to optimise in the future
-              marshalledCharacterResults.map((res, i) => {
-                const insert = pg("user_characters")
-                  .insert({
-                    user_id: userId,
-                    character_id: res.character_id,
-                    proficiency: 1,
-                    result_ids: [characterResultIds[i].id],
-                  })
-                  .toString();
-
-                const update = pg("user_characters")
-                  .update({
-                    user_id: userId,
-                    character_id: res.character_id,
-                    proficiency: 0.5,
-                    result_ids: pg.raw("array_append(colName, ?)", [
-                      characterResultIds[i].id,
-                    ]),
-                  })
-                  .whereRaw(
-                    `user_characters.character_id = '${res.character_id}' AND user_characters.user_id = '${userId}'`
-                  )
-                  .toString();
-
-                return pg
-                  .raw(
-                    `${insert} ON CONFLICT (user_id, character_id) UPDATE SET ${update}`
-                  )
-                  .transacting(trx);
-              });
+              return insertOrUpdateUserWordOrCharacter(
+                pg,
+                trx,
+                "user_characters",
+                characterResultIds,
+                characterResults,
+                userId,
+                "character_id"
+              );
             });
         })
         .then(() => {
