@@ -117,12 +117,12 @@ export const marshalInputResultsToCharacterResults = async (
 
 export const calcProficiency = (results) => {
   const tec = 0.7; // Time emphasis coefficient
-  const mostRecentTestDate = Math.max(results.map((r) => r.created_at));
+  const mostRecentTestTimestamp = Math.max(results.map((r) => +r.created_at));
   let summedDailyWeights = 0;
   const summedDailyProficiencies = results.reduce((sum, result) => {
     const timesWrong = result.marks.filter((m) => m === "INCORRECT").length;
     const daysFromMostRecentTest = Math.ceil(
-      (+result.created_at - +mostRecentTestDate) / (1000 * 60 * 60 * 24)
+      (+result.created_at - mostRecentTestTimestamp) / (1000 * 60 * 60 * 24)
     );
     const dailyWeight = Math.pow(tec, daysFromMostRecentTest);
     summedDailyWeights += dailyWeight;
