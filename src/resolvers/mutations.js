@@ -139,59 +139,60 @@ export const insertOrUpdateUserWordOrCharacter = (
   trx,
   resultIds,
   marshalledResults,
-  objectName
+  objectName,
+  userId
 ) => {
-  marshalledResults.map((res, i) => {
-    pg(`${objectName}_results`)
-      .select(["id", "marks", "created_at"])
-      .where({
-        user_id: res.user_id,
-        [`${objectName}_id`]: res[`${objectName}_id`],
-      })
-      .transacting(trx)
-      .then((allResults) => {
-        const tableName = `user_${objectName}s`;
-        const objectIdName = `${objectName}_id`;
-        const proficiency = calcProficiency(allResults);
-        console.log(proficiency);
+  const tableName = `user_${objectName}s`;
+  const objectIdName = `${objectName}_id`;
 
-        const baseTuple = {
-          user_id: res.user_id,
-          [objectIdName]: res[objectIdName],
-          proficiency: proficiency,
-        };
+  return pg(`${objectName}_results`)
+    .select(["id", "marks", "created_at"])
+    .where({
+      user_id: userId,
+    })
+    .whereIn(objectIdName, marshalledResults.map([objectIdName]))
+    .transacting(trx)
+    .then((allResults) => {
+      const proficiency = calcProficiency(allResults);
+      console.log(proficiency);
 
-        const insert = pg(tableName)
-          .insert({
-            ...baseTuple,
+      const insert = pg(tableName)
+        .insert(
+          marshalledResults.map((res, i) => ({
+            user_id: res.user_id,
+            [objectIdName]: res[objectIdName],
+            proficiency: calcProficiency(
+              allResults.filter((r) => r[objectIdName] === res[objectIdName])
+            ),
             result_ids: [resultIds[i].id],
-          })
-          .transacting(trx)
-          .toString();
+          }))
+        )
+        .transacting(trx)
+        .toString();
 
-        const update = pg(tableName)
-          .update({
-            ...baseTuple,
+      const update = pg(tableName)
+        .update(
+          marshalledResults.map((res, i) => ({
+            proficiency: calcProficiency(
+              allResults.filter((r) => r[objectIdName] === res[objectIdName])
+            ),
             result_ids: pg
               .raw(`array_append(user_${objectName}s.result_ids, ?)`, [
                 resultIds[i].id,
               ])
               .transacting(trx),
-          })
-          .whereRaw(
-            `user_${objectName}s.${objectName}_id = ${res[objectIdName]} AND user_${objectName}s.user_id = ${res.user_id}`
-          )
-          .transacting(trx)
-          .toString()
-          .replace(/^update(.*?)set\s/gi, "");
+          }))
+        )
+        .transacting(trx)
+        .toString()
+        .replace(/^update(.*?)set\s/gi, "");
 
-        return pg
-          .raw(
-            `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET ${update}`
-          )
-          .transacting(trx);
-      });
-  });
+      return pg
+        .raw(
+          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET ${update}`
+        )
+        .transacting(trx);
+    });
 };
 
 export const addLessonResultsResolver = (pg) => {
