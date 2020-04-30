@@ -1,5 +1,6 @@
 import express from "express";
 import { ApolloServer, gql } from "apollo-server-express";
+import session from "express-session";
 import knex from "knex";
 import {
   userResolver,
@@ -8,6 +9,7 @@ import {
 } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
+require("./src/auth");
 require("dotenv").config();
 
 const pg = knex({
@@ -36,6 +38,26 @@ const resolvers = {
 const server = new ApolloServer({ typeDefs, resolvers });
 
 const app = express();
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.session());
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })
+);
+
 server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () =>
