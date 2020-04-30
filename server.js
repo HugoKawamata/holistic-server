@@ -55,11 +55,10 @@ app.post(
   "/login",
   passport.authenticate("google", {
     scope: ["profile"],
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true,
   })
 );
+
+app.post("/return", () => {});
 
 server.applyMiddleware({ app });
 
