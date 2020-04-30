@@ -39,5 +39,7 @@ const app = express();
 server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () =>
-  console.log(`running apollo server at ${url}`)
+  console.log(
+    `running apollo server at http://localhost:4000${server.graphqlPath}`
+  )
 );
