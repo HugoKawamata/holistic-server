@@ -38,6 +38,6 @@ const server = new ApolloServer({ typeDefs, resolvers });
 const app = express();
 server.applyMiddleware({ app });
 
-server.listen().then(({ url }) => {
+app.listen().then(({ url }) => {
   console.log(`running apollo server at ${url}`);
 });
