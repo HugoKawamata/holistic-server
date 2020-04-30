@@ -53,7 +53,8 @@ app.use(passport.session());
 
 app.post(
   "/login",
-  passport.authenticate("local", {
+  passport.authenticate("google", {
+    scope: ["profile"],
     successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true,
