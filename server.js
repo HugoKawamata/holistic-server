@@ -1,6 +1,7 @@
 import express from "express";
 import { ApolloServer, gql } from "apollo-server-express";
 import session from "express-session";
+import passport from "passport";
 import knex from "knex";
 import {
   userResolver,
@@ -47,6 +48,7 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
 app.use(passport.session());
 
 app.post(
