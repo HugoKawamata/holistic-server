@@ -38,6 +38,6 @@ const server = new ApolloServer({ typeDefs, resolvers });
 const app = express();
 server.applyMiddleware({ app });
 
-app.listen().then(({ url }) => {
-  console.log(`running apollo server at ${url}`);
-});
+app.listen({ port: 4000 }, () =>
+  console.log(`running apollo server at ${url}`)
+);
