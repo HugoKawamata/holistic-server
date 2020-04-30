@@ -1,6 +1,4 @@
-// @flow
-import { userResolver } from "./user";
-import { nextLessonResolver } from "./lesson";
-import { addLessonResultsResolver } from "./mutations";
+import { addLessonResultsResolver } from "./mutation";
+import { nextLessonResolver, userResolver } from "./query";
 
-export { userResolver, nextLessonResolver, addLessonResultsResolver };
+export { addLessonResultsResolver, nextLessonResolver, userResolver };

@@ -1,0 +1,2 @@
+TypeError: Converting circular structure to JSON
+- Due to query builder building a query with bad arguments given
