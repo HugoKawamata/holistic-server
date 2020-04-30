@@ -1,4 +1,5 @@
-import { ApolloServer, gql } from "apollo-server";
+import express from "express";
+import { ApolloServer, gql } from "apollo-server-express";
 import knex from "knex";
 import {
   userResolver,
@@ -33,6 +34,9 @@ const resolvers = {
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
+
+const app = express();
+server.applyMiddleware({ app });
 
 server.listen().then(({ url }) => {
   console.log(`running apollo server at ${url}`);
