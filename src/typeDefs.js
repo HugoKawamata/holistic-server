@@ -97,7 +97,7 @@ export const typeDefs = gql`
     objectType: TestableObject!
     question: Question!
     answer: Answer!
-    notes: TestableNote
+    introduction: String
   }
 
   type Question {
@@ -109,10 +109,6 @@ export const typeDefs = gql`
 
   type Answer {
     type: AnswerType!
-    text: String!
-  }
-
-  type TestableNote {
     text: String!
   }
 
