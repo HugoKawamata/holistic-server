@@ -52,7 +52,7 @@ passport.use(
             .transacting(trx);
 
           const dbUser = await pg("accounts")
-            .where("email", email)
+            .where("email", parsedToken.payload.email)
             .then((users) => users[0])
             .transacting(trx);
 
