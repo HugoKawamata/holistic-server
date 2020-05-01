@@ -7,7 +7,7 @@ require("dotenv").config();
 passport.use(
   new GoogleTokenStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientID: process.env.GOOGLE_CLIENT_ID_IOS,
     },
     function (parsedToken, googleId, done) {
       // Find or create user in db
