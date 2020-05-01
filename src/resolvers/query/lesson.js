@@ -220,13 +220,13 @@ const hiraganaToRomajiCSV = (hiragana) => {
     let current = hiragana[hiragana.length - 1];
     hiragana = hiragana.slice(0, hiragana.length - 1);
     if (Object.keys(hiraganaRomajiMap).includes(current)) {
-      splitQuestion = [current, ...splitQuestion];
+      splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
     } else {
       current = `${hiragana[hiragana.length - 1]}${current}`;
-      splitQuestion = [current, ...splitQuestion];
+      splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
     }
   }
-  return splitQuestion;
+  return splitQuestion.reduce((csv, kana) => csv + "," + kana);
 };
 
 export const nextLessonResolver = (pg) => {
