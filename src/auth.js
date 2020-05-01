@@ -1,19 +1,18 @@
 // @flow
 import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import GoogleTokenStrategy from "passport-google-id-token";
 
 require("dotenv").config();
 
 passport.use(
-  new GoogleStrategy(
+  new GoogleTokenStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
-      callbackURL: "/return",
     },
-    function (accessToken, refreshToken, profile, done) {
+    function (parsedToken, googleId, done) {
       // Find or create user in db
-      console.log("Passport used googlestrategy", accessToken, profile);
-      return done(null, profile);
+      console.log("Passport used googlestrategy", parsedToken, googleId);
+      return done(null, googleId);
     }
   )
 );
