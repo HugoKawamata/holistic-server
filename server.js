@@ -32,7 +32,7 @@ passport.use(
     function (parsedToken, googleId, done) {
       if (parsedToken) {
         console.log("✅ Parsed token valid");
-        pg.transaction(async (trx) => {
+        pg.transaction((trx) => {
           const insert = pg("accounts")
             .insert({
               email: parsedToken.payload.email,
@@ -45,25 +45,20 @@ passport.use(
             .transacting(trx)
             .toString();
 
-          await pg
-            .raw(
-              `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
-            )
-            .transacting(trx);
-
-          const dbUser = await pg("accounts")
-            .where("email", parsedToken.payload.email)
-            .then((users) => users[0])
-            .transacting(trx);
-
-          console.log("✅ Got db user", dbUser);
-
-          return done(null, dbUser);
+          pg.raw(
+            `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
+          ).transacting(trx);
         });
+        return done(null, {
+          email: parsedToken.payload.email,
+          name: parsedToken.payload.name,
+          picture: parsedToken.payload.picture,
+          google_id: parsedToken.payload.googleId,
+        });
+      } else {
+        console.log("❌ Parsed token invalid");
+        return done(null, false);
       }
-
-      console.log("❌ Parsed token invalid");
-      return done(null, false);
     }
   )
 );
