@@ -38,7 +38,7 @@ passport.use(
               email: parsedToken.email,
               name: parsedToken.name,
               picture: parsedToken.picture,
-              googleId: parsedToken.googleId,
+              google_id: parsedToken.googleId,
               created_at: pg.fn.now(),
               last_login: pg.fn.now(),
             })
