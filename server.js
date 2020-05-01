@@ -98,12 +98,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.post(
-  "/login",
-  passport.authenticate("google-id-token", (req, res) => {
-    console.log("auth complete, req:", req, "res:", res);
-  })
-);
+app.post("/login", passport.authenticate("google-id-token"), (req, res) => {
+  console.log("auth complete, req:", req, "res:", res);
+  res.json(req.user);
+});
 
 server.applyMiddleware({ app });
 
