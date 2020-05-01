@@ -8,8 +8,7 @@ passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
-      callbackURL:
-        "http://ec2-52-63-127-15.ap-southeast-2.compute.amazonaws.com:4000/return",
+      callbackURL: "/return",
     },
     function (accessToken, refreshToken, profile, done) {
       // Find or create user in db

@@ -51,6 +51,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/return", (res) => console.log("return callback", res));
+
 app.post(
   "/login",
   passport.authenticate("google", {
