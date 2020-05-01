@@ -2,6 +2,7 @@ import express from "express";
 import { ApolloServer, gql } from "apollo-server-express";
 import session from "express-session";
 import passport from "passport";
+import GoogleTokenStrategy from "passport-google-id-token";
 import knex from "knex";
 import {
   userResolver,
@@ -10,7 +11,6 @@ import {
 } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
-require("./src/auth");
 require("dotenv").config();
 
 const pg = knex({
@@ -22,6 +22,58 @@ const pg = knex({
     password: process.env.PGPASSWORD,
     port: process.env.PGPORT,
   },
+});
+
+passport.use(
+  new GoogleTokenStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID_IOS,
+    },
+    function (parsedToken, googleId, done) {
+      if (parsedToken) {
+        console.log("✅ Parsed token valid");
+        pg.transaction(async (trx) => {
+          const insert = pg("accounts")
+            .insert({
+              email: parsedToken.email,
+              name: parsedToken.name,
+              picture: parsedToken.picture,
+              googleId: parsedToken.googleId,
+              created_at: pg.fn.now(),
+              last_login: pg.fn.now(),
+            })
+            .transacting(trx)
+            .toString();
+
+          await pg
+            .raw(
+              `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
+            )
+            .transacting(trx);
+
+          const dbUser = await pg("accounts")
+            .where("email", email)
+            .then((users) => users[0])
+            .transacting(trx);
+
+          console.log("✅ Got db user", dbUser);
+
+          return done(null, dbUser);
+        });
+      }
+
+      console.log("❌ Parsed token invalid");
+      return done(null, false);
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
 });
 
 const resolvers = {
