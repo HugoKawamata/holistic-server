@@ -53,11 +53,8 @@ app.use(passport.session());
 
 app.post(
   "/login",
-  passport.authenticate("google", {
-    scope: ["profile"],
-    successRedirect: "/return",
-    failureRedirect: "/login",
-    failureFlash: true,
+  passport.authenticate("google-id-token", (req, res) => {
+    console.log("auth complete, req:", req, "res:", res);
   })
 );
 
