@@ -35,10 +35,10 @@ passport.use(
         pg.transaction(async (trx) => {
           const insert = pg("accounts")
             .insert({
-              email: parsedToken.email,
-              name: parsedToken.name,
-              picture: parsedToken.picture,
-              google_id: parsedToken.googleId,
+              email: parsedToken.payload.email,
+              name: parsedToken.payload.name,
+              picture: parsedToken.payload.picture,
+              google_id: parsedToken.payload.googleId,
               created_at: pg.fn.now(),
               last_login: pg.fn.now(),
             })
