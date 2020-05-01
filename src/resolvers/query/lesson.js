@@ -249,17 +249,16 @@ export const nextLessonResolver = (pg) => {
 const getKanaLesson = (kana_level, pg) => {
   switch (kana_level) {
     case null:
-      return getHiraganaALesson(pg);
+      return getHiraganaLesson("HIRAGANA_A", [1, 2, 3, 4], pg);
     case "HIRAGANA_A":
-      return getHiraganaALesson(pg);
+      return getHiraganaLesson("HIRAGANA_KA", [5, 6, 7, 8], pg);
     default:
       throw new Error("Invalid kana level");
   }
 };
 
-const getHiraganaALesson = async (pg) => {
-  const aWords = await pg("words").whereIn("id", [1, 2, 3, 4]);
-  console.log("AWORDS", aWords);
+const getHiraganaLesson = async (content, wordIds, pg) => {
+  const aWords = await pg("words").whereIn("id", wordIds);
   const testables = aWords.map((word) => ({
     objectId: word.id,
     objectType: "WORD",
@@ -275,106 +274,9 @@ const getHiraganaALesson = async (pg) => {
     },
     introduction: word.introduction,
   }));
-  console.log("TESTABLES", testables);
+
   return {
-    content: "HIRAGANA_A",
+    content,
     testables,
   };
 };
-
-// return {
-//   content: "HIRAGANA_A",
-//   testables: [
-//     {
-//       objectId: 1,
-//       objectType: "WORD",
-//       question: {
-//         type: "J_WORD",
-//         image: null,
-//         emoji: "🔵",
-//         text: "あお",
-//       },
-//       answer: {
-//         type: "ROMAJI",
-//         text: "a,o",
-//       },
-//       notes: {
-//         text:
-//           'This word means "blue". The first letter is "a" and the second letter is "o". Make sure you listen to the pronunciation!',
-//       },
-//     },
-//     {
-//       objectId: 2,
-//       objectType: "WORD",
-//       question: {
-//         type: "J_WORD",
-//         image: null,
-//         emoji: "🏠",
-//         text: "いえ",
-//       },
-//       answer: {
-//         type: "ROMAJI",
-//         text: "i,e",
-//       },
-//       notes: {
-//         text:
-//           'This is "house". The first letter is "i" and the second letter is "e".',
-//       },
-//     },
-//     {
-//       objectId: 3,
-//       objectType: "WORD",
-//       question: {
-//         type: "J_WORD",
-//         image: null,
-//         emoji: "🙅‍♀️",
-//         text: "いいえ",
-//       },
-//       answer: {
-//         type: "ROMAJI",
-//         text: "i,i,e",
-//       },
-//       notes: {
-//         text:
-//           'This word means "no". It\'s very similar to "house" isn\'t it? The only difference is you say "ii" for longer.',
-//       },
-//     },
-//     {
-//       objectId: 4,
-//       objectType: "WORD",
-//       question: {
-//         type: "J_WORD",
-//         image: null,
-//         emoji: "⬆️",
-//         text: "うえ",
-//       },
-//       answer: {
-//         type: "ROMAJI",
-//         text: "u,e",
-//       },
-//       notes: {
-//         text:
-//           'This word means "up". The first letter is "u". You should already know the second letter!',
-//       },
-//     },
-//   ],
-//   preface: [
-//     {
-//       text:
-//         "Hiragana consists of 5 characters that represent vowel sounds (A, I, U, E, O) and 40 characters that represent a consonant-plus-a-vowel-sound (K, S, T, N, H, M, Y, ɾ, and W), as well as a single lone consonant (N).",
-//       image:
-//         "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/preface-1.png",
-//     },
-//     {
-//       text:
-//         'Because the characters represent syllables, they are always pronounced the same. Unlike in English, where "same" is pronouned with a long A sound, the Japanese "さめ" 🦈 (sa・me) is pronounced "sah-meh".',
-//       image:
-//         "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262012/lessons/hiragana-a/preface-2.png",
-//     },
-//   ],
-//   titleScreen: {
-//     title: "Hiragana Lesson 1",
-//     image:
-//       "https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-a/preface-3.png",
-//   },
-// };
