@@ -274,7 +274,7 @@ const getKanaLesson = (user, pg) => {
 // heta as in 下手 (bad at). This was the most succinct so I thought I'd use some Japanese :)
 const getHetaWords = async (pg, userId, howMany = 2) => {
   const hetaWords = await pg("user_words")
-    .where({ userId })
+    .where({ user_id: userIc })
     .join("words", "user_words.word_id", "=", "words.id")
     .orderBy("proficiency")
     .limit(howMany);
