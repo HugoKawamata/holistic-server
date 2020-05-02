@@ -271,6 +271,15 @@ const getKanaLesson = (kana_level, pg) => {
   }
 };
 
+// heta as in 下手 (bad at). This was the most succinct so I thought I'd use some Japanese :)
+const getHetaWords = async (userId, howMany = 2) => {
+  const hetaWords = await pg("user_words")
+    .where({ userId })
+    .join("words", "user_words.word_id", "=", "words.id")
+    .orderBy("proficiency")
+    .limit(howMany);
+};
+
 const getHiraganaLesson = async (content, wordIds, pg) => {
   const words = await pg("words").whereIn("id", wordIds);
   const lesson = await pg("set_lessons")
@@ -298,6 +307,9 @@ const getHiraganaLesson = async (content, wordIds, pg) => {
     image: lec.image,
     position: lec.position,
   }));
+
+  const hetaWords = getHetaWords();
+  console.log("HETA WORDS = ", hetaWords);
 
   return {
     content: lesson.content,
