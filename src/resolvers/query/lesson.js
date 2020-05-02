@@ -252,6 +252,20 @@ const getKanaLesson = (kana_level, pg) => {
       return getHiraganaLesson("HIRAGANA_A", [1, 2, 3, 4], pg);
     case "HIRAGANA_A":
       return getHiraganaLesson("HIRAGANA_KA", [5, 6, 7, 8], pg);
+    case "HIRAGANA_KA":
+      return getHiraganaLesson("HIRAGANA_GA", [9, 10, 11, 12, 13], pg);
+    case "HIRAGANA_GA":
+      return getHiraganaLesson("HIRAGANA_SA", [14, 15, 16, 17, 18], pg);
+    case "HIRAGANA_SA":
+      return getHiraganaLesson("HIRAGANA_ZA", [19, 20, 21, 22, 23], pg);
+    case "HIRAGANA_ZA":
+      return getHiraganaLesson("HIRAGANA_TA", [24, 25, 26, 27, 28], pg);
+    case "HIRAGANA_DA":
+      return getHiraganaLesson("HIRAGANA_TA", [29, 30, 31], pg);
+    case "HIRAGANA_NA":
+      return getHiraganaLesson("HIRAGANA_DA", [32, 33, 34, 35], pg);
+    case "HIRAGANA_N":
+      return getHiraganaLesson("HIRAGANA_NA", [36, 37, 38], pg);
     default:
       throw new Error("Invalid kana level");
   }
