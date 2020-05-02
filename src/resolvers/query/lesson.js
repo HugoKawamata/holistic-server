@@ -274,21 +274,23 @@ const getKanaLesson = (user, pg) => {
 // heta as in 下手 (bad at). This was the most succinct so I thought I'd use some Japanese :)
 const getHetaWords = async (pg, userId, howMany = 2) => {
   const hetaWords = await pg("user_words")
-    .where({ user_id: userIc })
+    .where({ user_id: userId })
     .join("words", "user_words.word_id", "=", "words.id")
     .orderBy("proficiency")
     .limit(howMany);
-  console.log("HETA WORDS = ", hetaWords);
-  return hetaWords;
+  // If the worst words are above a certain threshold, just don't include them
+  return hetaWords.filter((word) => word.proficiency < 0.9);
 };
 
 const getHiraganaLesson = async (content, wordIds, user, pg) => {
   const words = await pg("words").whereIn("id", wordIds);
+  const hetaWords =
+    content == "HIRAGANA_A" ? [] : await getHetaWords(pg, user.id);
   const lesson = await pg("set_lessons")
     .where("content", content)
     .then((lessons) => lessons[0]);
   const rawLectures = await pg("lectures").where("set_lesson_content", content);
-  const testables = words.map((word) => ({
+  const testables = words.concat(hetaWords).map((word) => ({
     objectId: word.id,
     objectType: "WORD",
     question: {
@@ -309,9 +311,6 @@ const getHiraganaLesson = async (content, wordIds, user, pg) => {
     image: lec.image,
     position: lec.position,
   }));
-
-  const hetaWords = getHetaWords(pg, user.id);
-  console.log("2nd HETA WORDS = ", hetaWords);
 
   return {
     content: lesson.content,
