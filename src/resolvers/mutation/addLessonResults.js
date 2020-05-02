@@ -167,12 +167,6 @@ export const insertOrUpdateUserWordOrCharacter = (
             proficiency: calcProficiency(
               allResults.filter((r) => r[objectIdName] === res[objectIdName])
             ),
-            result_ids: [
-              ...allResults
-                .filter((r) => r[objectIdName] === res[objectIdName])
-                .map((r) => r.id),
-              resultIds[i].id,
-            ],
           }))
         )
         .transacting(trx)
