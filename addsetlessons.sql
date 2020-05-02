@@ -141,4 +141,4 @@ VALUES (
   'I know what you''re thinking: "Wait a second, that''s not tsu, that the consonant doubler!". You''re right! When つ is little (っ), it works as the consonant doubler instead.'
   'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ta/lecture-4.png',
   'PRETEST'
-),
+);

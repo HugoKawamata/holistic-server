@@ -43,5 +43,5 @@ VALUES ('赤', 'あか', 'Red', 'This word means "red". The new letter is "ka".'
 
        ('温泉', 'おんせん', 'Onsen, Japanese hot spring', 'This word doesn''t really have an English translation. The closest is "hot spring".', '♨'),
        ('元気', 'げんき', 'Lively, well', 'This word can mean "good/well" as in "How are you" "げんき　です". It can also mean "lively", like you might describe a festival.', '😄'),
-       ('外国人', 'がいこくじん', 'Foreign person', 'If you''re not Japanese by blood, you might get referred to as this when you visit Japan.', '🙋‍♀️🚢'),
+       ('外国人', 'がいこくじん', 'Foreign person, non-Japanese person', 'If you''re not Japanese by blood, you might get referred to as this when you visit Japan.', '🙋‍♀️🚢');
 
