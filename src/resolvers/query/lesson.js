@@ -272,20 +272,28 @@ const getKanaLesson = (user, pg) => {
 };
 
 // heta as in 下手 (bad at). This was the most succinct so I thought I'd use some Japanese :)
-const getHetaWords = async (pg, userId, howMany = 2) => {
+const getHetaWords = async (pg, wordIds, userId, howMany = 2) => {
   const hetaWords = await pg("user_words")
     .where({ user_id: userId })
+    .whereNotIn("word_id", wordIds) // Don't get the words for the current test
     .join("words", "user_words.word_id", "=", "words.id")
     .orderBy("proficiency")
     .limit(howMany);
   // If the worst words are above a certain threshold, just don't include them
-  return hetaWords.filter((word) => word.proficiency < 0.9);
+  return hetaWords
+    .filter((word) => word.proficiency < 0.9)
+    .map((word) => ({
+      image: word.image,
+      emoji: word.emoji,
+      hiragana: word.hiragana,
+      // No introduction for heta words
+    }));
 };
 
 const getHiraganaLesson = async (content, wordIds, user, pg) => {
   const words = await pg("words").whereIn("id", wordIds);
   const hetaWords =
-    content == "HIRAGANA_A" ? [] : await getHetaWords(pg, user.id);
+    content == "HIRAGANA_A" ? [] : await getHetaWords(pg, wordIds, user.id);
   const lesson = await pg("set_lessons")
     .where("content", content)
     .then((lessons) => lessons[0]);

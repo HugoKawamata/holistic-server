@@ -1,5 +1,3 @@
-// @flow
-
 export const kanaLevelArray = [
   null,
   "HIRAGANA-A",
@@ -186,22 +184,18 @@ export const addLessonResultsResolver = (pg) => {
     const characterResults = results.filter(
       (res) => res.objectType === "CHARACTER"
     );
-    console.log("wordresults", wordResults);
-    console.log("characterresults", characterResults);
 
     const marshalledWordResults = marshalInputResultsToWordResults(
       wordResults,
       userId,
       pg.fn.now()
     );
-    console.log("marshalledWordResults", marshalledWordResults);
 
     const marshalledCharacterResults = await marshalInputResultsToCharacterResults(
       characterResults,
       userId,
       pg
     );
-    console.log("marshalledCharacterResults", marshalledCharacterResults);
 
     pg.transaction((trx) => {
       pg("word_results")
