@@ -258,8 +258,10 @@ const getKanaLesson = (kana_level, pg) => {
 };
 
 const getHiraganaLesson = async (content, wordIds, pg) => {
-  const aWords = await pg("words").whereIn("id", wordIds);
-  const testables = aWords.map((word) => ({
+  const words = await pg("words").whereIn("id", wordIds);
+  const lesson = await pg("set_lessons").where("content", content);
+  const rawLectures = await pg("lectures").where("set_lesson_content", content);
+  const testables = words.map((word) => ({
     objectId: word.id,
     objectType: "WORD",
     question: {
@@ -275,8 +277,19 @@ const getHiraganaLesson = async (content, wordIds, pg) => {
     introduction: word.introduction,
   }));
 
+  const lectures = rawLectures.map((lec) => ({
+    text: lec.dialogue,
+    image: lec.image,
+    position: lec.position,
+  }));
+
   return {
-    content,
+    content: lesson.content,
+    titleScreen: {
+      title: lesson.title,
+      image: lesson.titleScreenImage,
+    },
+    lectures,
     testables,
   };
 };

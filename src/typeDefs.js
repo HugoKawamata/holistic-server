@@ -44,6 +44,15 @@ export const typeDefs = gql`
     OTHER
   }
 
+  enum LecturePosition {
+    PRETEST # Appears before lesson title screen
+    BEFORE_SECOND # Appears just before the second question is presented
+    BEFORE_THIRD # Appears just before the third question is presented
+    BEFORE_FOURTH # Appears just before the fourth question is presented
+    BEFORE_FIFTH # Appears just before the fifth question is presented
+    BEFORE_RESULTS # Appears just before the results are presented
+  }
+
   enum TestableObject {
     CHARACTER
     WORD
@@ -82,13 +91,14 @@ export const typeDefs = gql`
 
   type Lesson {
     content: LessonContent! # How to determine what to show at the end of the lesson
-    preface: [LessonPreface!]
     testables: [Testable!]
     titleScreen: TitleScreenInfo
+    lectures: [Lecture!]
   }
 
-  type LessonPreface {
+  type Lecture {
     text: String!
+    position: LecturePosition!
     image: String
   }
 
