@@ -259,7 +259,9 @@ const getKanaLesson = (kana_level, pg) => {
 
 const getHiraganaLesson = async (content, wordIds, pg) => {
   const words = await pg("words").whereIn("id", wordIds);
-  const lesson = await pg("set_lessons").where("content", content);
+  const lesson = await pg("set_lessons")
+    .where("content", content)
+    .then((lessons) => lessons[0]);
   const rawLectures = await pg("lectures").where("set_lesson_content", content);
   const testables = words.map((word) => ({
     objectId: word.id,
