@@ -239,7 +239,7 @@ export const nextLessonResolver = (pg) => {
 
       return {
         content: "OTHER",
-        preface: [],
+        lectures: [],
         testables: [],
       };
     }
