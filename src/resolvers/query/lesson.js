@@ -278,6 +278,8 @@ const getHetaWords = async (pg, userId, howMany = 2) => {
     .join("words", "user_words.word_id", "=", "words.id")
     .orderBy("proficiency")
     .limit(howMany);
+  console.log("HETA WORDS = ", hetaWords);
+  return hetaWords;
 };
 
 const getHiraganaLesson = async (content, wordIds, user, pg) => {
@@ -309,7 +311,7 @@ const getHiraganaLesson = async (content, wordIds, user, pg) => {
   }));
 
   const hetaWords = getHetaWords(pg, user.id);
-  console.log("HETA WORDS = ", hetaWords);
+  console.log("2nd HETA WORDS = ", hetaWords);
 
   return {
     content: lesson.content,
