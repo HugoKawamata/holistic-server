@@ -226,10 +226,10 @@ export const addLessonResultsResolver = (pg) => {
               );
             });
         })
-        .then(() => {
+        .then(async () => {
           // Update kana level if applicable
           if (content !== "OTHER") {
-            pg("accounts")
+            await pg("accounts")
               .where({ id: userId })
               .update({ kana_level: content })
               .transacting(trx);
