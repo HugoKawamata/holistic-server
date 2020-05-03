@@ -1,5 +1,3 @@
-// @flow
-
 export const kanaLevelArray = [
   null,
   "HIRAGANA-A",
@@ -167,12 +165,6 @@ export const insertOrUpdateUserWordOrCharacter = (
             proficiency: calcProficiency(
               allResults.filter((r) => r[objectIdName] === res[objectIdName])
             ),
-            result_ids: [
-              ...allResults
-                .filter((r) => r[objectIdName] === res[objectIdName])
-                .map((r) => r.id),
-              resultIds[i].id,
-            ],
           }))
         )
         .transacting(trx)
@@ -192,22 +184,18 @@ export const addLessonResultsResolver = (pg) => {
     const characterResults = results.filter(
       (res) => res.objectType === "CHARACTER"
     );
-    console.log("wordresults", wordResults);
-    console.log("characterresults", characterResults);
 
     const marshalledWordResults = marshalInputResultsToWordResults(
       wordResults,
       userId,
       pg.fn.now()
     );
-    console.log("marshalledWordResults", marshalledWordResults);
 
     const marshalledCharacterResults = await marshalInputResultsToCharacterResults(
       characterResults,
       userId,
       pg
     );
-    console.log("marshalledCharacterResults", marshalledCharacterResults);
 
     pg.transaction((trx) => {
       pg("word_results")
@@ -238,10 +226,10 @@ export const addLessonResultsResolver = (pg) => {
               );
             });
         })
-        .then(() => {
+        .then(async () => {
           // Update kana level if applicable
           if (content !== "OTHER") {
-            pg("accounts")
+            await pg("accounts")
               .where({ id: userId })
               .update({ kana_level: content })
               .transacting(trx);
