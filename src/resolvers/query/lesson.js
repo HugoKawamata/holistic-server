@@ -283,6 +283,7 @@ const getHetaWords = async (pg, wordIds, userId, howMany = 2) => {
   return hetaWords
     .filter((word) => word.proficiency < 0.9)
     .map((word) => ({
+      id: word.id,
       image: word.image,
       emoji: word.emoji,
       hiragana: word.hiragana,
