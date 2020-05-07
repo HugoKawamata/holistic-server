@@ -97,6 +97,7 @@ export const typeDefs = gql`
   }
 
   type Lecture {
+    title: String
     text: String!
     position: LecturePosition!
     image: String

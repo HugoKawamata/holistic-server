@@ -9,6 +9,36 @@ VALUES ('HIRAGANA_A', 'Hiragana Lesson 1', 'https://res.cloudinary.com/holistic-
  ('HIRAGANA_NA', 'Hiragana Lesson 4', 'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-na/title.png'),
  ('HIRAGANA_N', 'Hiragana Lesson 4 - Bonus Round', 'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-n/title.png');
 
+INSERT INTO lectures (set_lesson_id, title, text, image, position)
+VALUES (
+  1,
+  'What is Hiragana?',
+  'Hiragana is thhe Japanese alphabet, so it''s the first thing you should learn when you''re learning Japanese',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-1.png',
+  'PRETEST'
+),
+(
+  1,
+  'What is Hiragana?',
+  'Hiragana each represent syllables, rather than single letters.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-2.png',
+  'PRETEST'
+),
+(
+  1,
+  'What is Hiragana?',
+  'Because they represent syllables, they are always pronounced exactly the same way, unlike English letters.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-3.png',
+  'PRETEST'
+),
+(
+  1,
+  'What is Hiragana?',
+  'Hiragana come in sets of 5. In this lesson, we''ll learn the first 5 - A, I, U, E, and O',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-4.png',
+  'PRETEST'
+)
+
 INSERT INTO lectures (set_lesson_content, dialogue, image, position)
 VALUES (
   'HIRAGANA_A',
