@@ -44,6 +44,10 @@ export const typeDefs = gql`
     OTHER
   }
 
+  enum KanaLevel {
+    ${KANA_LEVEL}
+  }
+
   enum LecturePosition {
     PRETEST # Appears before lesson title screen
     BEFORE_SECOND # Appears just before the second question is presented
@@ -88,6 +92,7 @@ export const typeDefs = gql`
     name: String
     email: String
     nextLesson: Lesson
+    kanaLevel: KanaLevel
   }
 
   type Lesson {
