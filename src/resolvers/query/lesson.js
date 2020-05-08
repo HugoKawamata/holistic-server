@@ -298,17 +298,7 @@ const getHiraganaLesson = async (content, wordIds, user, pg) => {
   const lesson = await pg("set_lessons")
     .where("content", content)
     .then((lessons) => lessons[0]);
-  const lectures = await pg("lectures")
-    .where("set_lesson_id", lesson.id)
-    .sort((a, b) => {
-      if (a.id < b.id) {
-        return -1;
-      } else if (a.id > b.id) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+  const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
   const testables = words.concat(hetaWords).map((word) => ({
     objectId: word.id,
     objectType: "WORD",
@@ -331,7 +321,15 @@ const getHiraganaLesson = async (content, wordIds, user, pg) => {
       title: lesson.title,
       image: lesson.titleScreenImage,
     },
-    lectures,
+    lectures: lectures.sort((a, b) => {
+      if (a.id < b.id) {
+        return -1;
+      } else if (a.id > b.id) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }),
     testables,
   };
 };
