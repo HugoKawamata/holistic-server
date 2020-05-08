@@ -1,5 +1,3 @@
-// @flow
-
 export const userResolver = (pg) => {
   return async (obj, args, context, info) => {
     console.log(context.session.passport.user);
