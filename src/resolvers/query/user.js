@@ -7,7 +7,10 @@ export const meResolver = (pg) => {
 
     return await pg("accounts")
       .where("email", context.session.passport.user.email)
-      .then((users) => users[0]);
+      .then((users) => ({
+        ...users[0],
+        kanaLevel: users[0].kana_level,
+      }));
   };
 };
 
@@ -24,6 +27,9 @@ export const userResolver = (pg) => {
 
     return await pg("accounts")
       .where("email", args.email)
-      .then((users) => users[0]);
+      .then((users) => ({
+        ...users[0],
+        kanaLevel: users[0].kana_level,
+      }));
   };
 };
