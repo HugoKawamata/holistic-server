@@ -1,3 +1,16 @@
+export const meResolver = (pg) => {
+  return async (obj, args, context, info) => {
+    if (context.session.passport.user == null) {
+      // No user logged in, so do not get any data
+      return null;
+    }
+
+    return await pg("accounts")
+      .where("email", context.session.passport.user.email)
+      .then((users) => users[0]);
+  };
+};
+
 export const userResolver = (pg) => {
   return async (obj, args, context, info) => {
     console.log(context.session.passport.user);

@@ -6,6 +6,7 @@ import GoogleTokenStrategy from "passport-google-id-token";
 import knex from "knex";
 import {
   userResolver,
+  meResolver,
   nextLessonResolver,
   addLessonResultsResolver,
 } from "./src/resolvers";
@@ -74,6 +75,7 @@ passport.deserializeUser((obj, done) => {
 const resolvers = {
   Query: {
     user: userResolver(pg),
+    me: meResolver(pg),
   },
   User: {
     nextLesson: nextLessonResolver(pg),
