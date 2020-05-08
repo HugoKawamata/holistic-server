@@ -11,33 +11,40 @@ VALUES ('HIRAGANA_A', 'Hiragana Lesson 1', 'https://res.cloudinary.com/holistic-
 
 INSERT INTO lectures (set_lesson_id, title, text, image, position)
 VALUES (
-  1,
-  'What is Hiragana?',
-  'Hiragana is thhe Japanese alphabet, so it''s the first thing you should learn when you''re learning Japanese',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-1.png',
+  3,
+  'What is a "voiced" consonant?',
+  'A voiced consonant is a consonant that you need to move your vocal cords to make.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-1.png',
   'PRETEST'
 ),
 (
-  1,
-  'What is Hiragana?',
-  'Hiragana each represent syllables, rather than single letters.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-2.png',
+  3,
+  'What is a "voiced" consonant?',
+  'For example, K is unvoiced, and G is voiced. G is actually the same as K, with vocal cords added.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-2.png',
   'PRETEST'
 ),
 (
-  1,
-  'What is Hiragana?',
-  'Because they represent syllables, they are always pronounced exactly the same way, unlike English letters.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-3.png',
+  3,
+  'What is a "voiced" consonant?',
+  'You can try it yourself! Put your hand on your throat and make K and G sounds.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-3.png',
   'PRETEST'
 ),
 (
-  1,
-  'What is Hiragana?',
-  'Hiragana come in sets of 5. In this lesson, we''ll learn the first 5 - A, I, U, E, and O',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-a/lecture-4.png',
+  3,
+  'The TenTen',
+  'In Japanese, you can make a hiragana''s consonant part voiced by adding a TenTen',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-4.png',
   'PRETEST'
-)
+),
+(
+  3,
+  'The TenTen',
+  'In this lesson, we''ll learn words with the "ga" set. That''s the "ka" set plus TenTens.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-5.png',
+  'PRETEST'
+);
 
 INSERT INTO lectures (set_lesson_content, dialogue, image, position)
 VALUES (
