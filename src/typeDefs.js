@@ -80,6 +80,7 @@ export const typeDefs = gql`
 
   type Query {
     user(email: String!): User
+    me: User
   }
 
   type User {
