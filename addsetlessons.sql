@@ -46,6 +46,57 @@ VALUES (
   'PRETEST'
 );
 
+
+INSERT INTO lectures (set_lesson_id, title, text, image, position)
+VALUES (
+  5,
+  'The Za Set',
+  'Remember, TenTens can be added to hiragana to make the consonant part "voiced".',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-za/lecture-1.png',
+  'PRETEST'
+),
+(
+  5,
+  'The Za Set',
+  'The "sa" set can also have a TenTen attached, which turns an S sound into a Z sound.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-za/lecture-2.png',
+  'PRETEST'
+),
+(
+  5,
+  'The Za Set',
+  'The one exception, of course, is "し" (shi). Shi becomes *ji*. Let''s get started!',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-za/lecture-3.png',
+  'PRETEST'
+),
+(
+  5,
+  'The Consonant Doubler',
+  'Sorry, just one more thing. This little character "っ" doubles consonant sounds.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-za/lecture-4.png',
+  'BEFORE_THIRD'
+),
+(
+  5,
+  'The Consonant Doubler',
+  'It doesn''t make any sound on its own, but it extends the consonant sound of the next hiragana.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-za/lecture-5.png',
+  'BEFORE_THIRD'
+),
+(
+  5,
+  'The Consonant Doubler',
+  'It''s hard to explain it fully here. All you need to know is that to write it, you write a second consonant.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-6.png',
+  'BEFORE_THIRD'
+),
+(
+  5,
+  'The Consonant Doubler',
+  'If you''d like to know more, it might be worth checking out some YouTube videos that explain it.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-7.png',
+  'BEFORE_THIRD'
+);
 INSERT INTO lectures (set_lesson_content, dialogue, image, position)
 VALUES (
   'HIRAGANA_A',

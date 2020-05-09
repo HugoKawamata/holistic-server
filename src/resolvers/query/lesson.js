@@ -215,12 +215,15 @@ export const hiraganaRomajiMap = {
 const hiraganaToRomajiCSV = (hiragana) => {
   let splitQuestion = [];
 
-  // We have to go backwards due to lya/lyu/lyo
+  // We have to go backwards due to lya/lyu/lyo/sokuon
   while (hiragana.length > 0) {
     let current = hiragana[hiragana.length - 1];
     hiragana = hiragana.slice(0, hiragana.length - 1);
     if (Object.keys(hiraganaRomajiMap).includes(current)) {
       splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
+    } else if (current === "っ") {
+      // Strip the first character off the most recent romaji
+      splitQuestion = [splitQuestion[0][0], ...splitQuestion];
     } else {
       current = `${hiragana[hiragana.length - 1]}${current}`;
       splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
