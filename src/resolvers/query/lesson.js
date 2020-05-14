@@ -263,12 +263,28 @@ const getKanaLesson = (user, pg) => {
       return getHiraganaLesson("HIRAGANA_ZA", [19, 20, 21, 22, 23], user, pg);
     case "HIRAGANA_ZA":
       return getHiraganaLesson("HIRAGANA_TA", [24, 25, 26, 27, 28], user, pg);
+    case "HIRAGANA_TA":
+      return getHiraganaLesson("HIRAGANA_DA", [29, 30, 31], user, pg);
     case "HIRAGANA_DA":
-      return getHiraganaLesson("HIRAGANA_TA", [29, 30, 31], user, pg);
+      return getHiraganaLesson("HIRAGANA_NA", [32, 33, 34, 35], user, pg);
     case "HIRAGANA_NA":
-      return getHiraganaLesson("HIRAGANA_DA", [32, 33, 34, 35], user, pg);
+      return getHiraganaLesson("HIRAGANA_N", [36, 37, 38], user, pg);
     case "HIRAGANA_N":
-      return getHiraganaLesson("HIRAGANA_NA", [36, 37, 38], user, pg);
+      return getHiraganaLesson("HIRAGANA_HA", [39, 40, 41, 42, 43], user, pg);
+    case "HIRAGANA_HA":
+      return getHiraganaLesson("HIRAGANA_BA", [44, 45, 46, 47, 48], user, pg);
+    case "HIRAGANA_BA":
+      return getHiraganaLesson("HIRAGANA_MA", [49, 50, 51, 52, 53], user, pg);
+    case "HIRAGANA_MA":
+      return getHiraganaLesson("HIRAGANA_WA", [54, 55, 73], user, pg);
+    case "HIRAGANA_WA":
+      return getHiraganaLesson("HIRAGANA_YA", [56, 57, 58], user, pg);
+    case "HIRAGANA_YA":
+      return getHiraganaLesson("HIRAGANA_LYA", [59, 60, 61, 62], user, pg);
+    case "HIRAGANA_LYA":
+      return getHiraganaLesson("HIRAGANA_RA", [63, 64, 65, 66, 67], user, pg);
+    case "HIRAGANA_RA":
+      return getHiraganaLesson("HIRAGANA_PA", [68, 69, 70, 71, 72], user, pg);
     default:
       throw new Error("Invalid kana level");
   }
@@ -282,16 +298,18 @@ const getHetaWords = async (pg, wordIds, userId, howMany = 2) => {
     .join("words", "user_words.word_id", "=", "words.id")
     .orderBy("proficiency")
     .limit(howMany);
-  // If the worst words are above a certain threshold, just don't include them
-  return hetaWords
-    .filter((word) => word.proficiency < 0.9)
-    .map((word) => ({
-      id: word.id,
-      image: word.image,
-      emoji: word.emoji,
-      hiragana: word.hiragana,
-      // No introduction for heta words
-    }));
+  return (
+    hetaWords
+      // If the worst words are above a certain threshold, just don't include them
+      .filter((word) => word.proficiency < 0.9)
+      .map((word) => ({
+        id: word.id,
+        image: word.image,
+        emoji: word.emoji,
+        hiragana: word.hiragana,
+        // No introduction for heta words
+      }))
+  );
 };
 
 const getHiraganaLesson = async (content, wordIds, user, pg) => {

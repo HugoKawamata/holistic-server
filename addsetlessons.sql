@@ -97,6 +97,39 @@ VALUES (
   'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ga/lecture-7.png',
   'BEFORE_THIRD'
 );
+
+INSERT INTO lectures (set_lesson_id, title, text, image, position)
+VALUES (
+  6,
+  'The Ta Set',
+  'The fourth set of hiragana is the "ta" set, which is the trickiest set of all.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ta/lecture-1.png',
+  'PRETEST'
+),
+(
+  6,
+  'The Ta Set',
+  'Instead of "ti" it''s "chi", and instead of "tu" it''s "tsu"',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ta/lecture-2.png',
+  'PRETEST'
+),
+(
+  6,
+  'Tsu?',
+  'That''s right, this character "つ" is "tsu". When it''s small, it doubles consonants, but full sized it''s a letter on its own',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ta/lecture-3.png',
+  'PRETEST'
+),
+(
+  6,
+  'Tsu?',
+  'Here they are side by side, so you can see the difference: "つっ".',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262011/lessons/hiragana-ta/lecture-4.png',
+  'PRETEST'
+);
+
+
+
 INSERT INTO lectures (set_lesson_content, dialogue, image, position)
 VALUES (
   'HIRAGANA_A',

@@ -45,3 +45,49 @@ VALUES ('赤', 'あか', 'Red', 'This word means "red". The new letter is "ka".'
        ('元気', 'げんき', 'Lively, well', 'This word can mean "good/well" as in "How are you" "げんき　です". It can also mean "lively", like you might describe a festival.', '😄'),
        ('外国人', 'がいこくじん', 'Foreign person, non-Japanese person', 'If you''re not Japanese by blood, you might get referred to as this when you visit Japan.', '🙋‍♀️🚢');
 
+       ('人', 'ひと', 'Person', 'This word means "person", and the new letter is "hi". It''s not pronounced "hie"!', '👩'),
+       ('はい', 'はい', 'Yes', 'This word means "yes". The new letter is "は".', '✅'),
+       ('豆腐', 'とうふ', 'Tofu', 'This is a word that''s become a part of English: "Tofu". Make sure to read it with the correct pronunciation.', '🍢'),
+       ('変', 'へん', 'Strange, weird', 'This means "strange" or "weird". The new letter is "he".', '🤔'),
+       ('日本', 'にほん', 'Japan', 'You might know this word already: "nihon". It''s the Japanese word for "Japan".', '🇯🇵'),
+
+       ('バカ', 'ばか', 'Idiot', 'If you watch any anime you''ll know this one. It means "idiot".', '🤬'),
+       ('僕', 'ぼく', 'I, me (male)', 'This is the pronoun for "I", or "me". It''s usually only used by males. You''ll learn the female one soon!', '🙋‍♂️'),
+       ('人々', 'ひとびと', 'People, everybody', 'This means "people" or "everyone". Notice how similar it is to "ひと" (person).', '👥'),
+       ('危ない', 'あぶない', 'Dangerous', 'This means "dangerous". You''ll see it on Japanese signs a lot, near train stations.', '⚠️'),
+       ('お弁当', 'おべんとう', 'Bento box, Japanese lunch box', 'This is the word for "bento box". In Japanese, it''s "obentō". The "O" at the start shows respect.', '🍱'),
+
+       ('うまい', 'うまい', 'Delicious', 'The new character is "ma". This means "delicious". It''s a *very* common word!', '🤤'),
+       ('すみません', 'すみません', 'Excuse me', 'This means "excuse me". The new character is "mi". It''s also one of the most common words!', '🙇‍♂️'),
+       ('おすすめ', 'おすすめ', 'Recommendation', 'The new letter is "me". It means "recommendation", and you''ll see it on every menu in Japan.', '🌟'),
+       ('寒い', 'さむい', 'Cold (weather)', 'This means "cold", but only for weather. There''s a different word for cold items. The new letter is "mu".', '🥶'),
+       ('もの', 'もの', 'Thing', 'This means "thing". It can be used to refer to almost any physical object. The new letter is "mo".', '📦'),
+
+       ('私', 'わたし', 'I, me (female)', 'This means "me", but the female version. Men can use it when they''re being formal too.', '🙋‍♀️'),
+       ('可愛い', 'かわいい', 'Cute', 'This means "cute". If you''re learning Japanese, you''ll definitely have seen this word already.', '🎀'),
+
+       ('部屋', 'へや', 'Room', 'This is "room". The new letter is "ya". Very useful word for booking accomodation.', '🏨'),
+       ('有名', 'ゆうめい', 'Famous', 'This word means "famous". The new letter is "yu".', '👨‍🎤'),
+       ('強い', 'つよい', 'Strong', 'This means "strong". The new letter is "yo', '💪'),
+
+       ('写真', 'しゃしん', 'Photo', 'This is "photo": "shashin". A very useful word for asking strangers to take tourist photos of you.', '📷'),
+       ('今日', 'きょう', 'Today', 'This means "today" and is written "kyou".', '📅'),
+       ('週', 'しゅう', 'Week', 'This means "week" and is written as "shuu".', '🗓'),
+       ('ちょっと', 'ちょっと', 'A little bit', 'This means "a little bit" and is written as "chotto". (It''s an extremely common word)', '👌'),
+
+       ('なるほど', 'なるほど', 'I see!', 'This is a short phrase that means "I see!". The new letter is "ru"', '😲'),
+       ('柔らかい', 'やわらかい', 'Soft, tender', 'This means "soft" (for anything) or "tender" (for food). The new letter is "ra".', '🧸'),
+       ('綺麗', 'きれい', 'Pretty, clean', 'This means "pretty" or "clean". The new letter is "re".', '✨'),
+       ('鮪', 'まぐろ', 'Tuna', 'This is the word for "tuna", either the live fish or the raw meat. The new letter is "ro".', '🍣'),
+       ('ありがとう', 'ありがとう', 'Thanks', 'This means "thanks", but you already knew that! Make sure to learn the real pronunciation.', '🎁'),
+
+       ('パチンコ', 'ぱちんこ', 'Pachinko', 'This is "pachinko", the Japanese gambling game with little metal balls.', '🎰'),
+       ('鉛筆', 'えんぴつ', 'Pencil', 'This is the Japanese word for "pencil".', '✏️'),
+       ('切符', 'きっぷ', 'Ticket', 'This means "ticket". You might need to know this one if you visit theme parks and similar places.', '🎟'),
+       ('ペン', 'ぺん', 'Pen', 'This is the Japanese word for "pen"... it''s the same as in English', '🖋'),
+       ('散歩', 'さんぽ', 'A walk, stroll', 'This word means "a walk" or "a stroll".', '🚶‍♂️'); 
+
+insert into words (japanese, hiragana, english, introduction, emoji)
+values ('を', 'を', '-', 'This new character is techinically "wo", but it''s usually pronounced as "o". It''s a special letter that''s not really used in real words.', '⁉️');
+       
+
