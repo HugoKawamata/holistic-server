@@ -225,7 +225,10 @@ const hiraganaToRomajiCSV = (hiragana) => {
       // Strip the first character off the most recent romaji
       splitQuestion = [splitQuestion[0][0], ...splitQuestion];
     } else {
+      // It was a lya/lyu/lyo
       current = `${hiragana[hiragana.length - 1]}${current}`;
+      // Remove the next hiragana character
+      hiragana = hiragana.slice(0, hiragana.length - 1);
       splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
     }
   }
