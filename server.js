@@ -11,6 +11,7 @@ import {
   addLessonResultsResolver,
 } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
+import { availableLessonResolver } from "./src/resolvers/query/lesson";
 
 require("dotenv").config();
 
@@ -52,11 +53,16 @@ passport.use(
             )
             .transacting(trx);
 
+          const user = await pg("accounts").where(
+            "email",
+            parsedToken.payload.email
+          );
+
+          console.log("created and found user", user);
+
           const initCourses = pg("user_courses")
             .insert({
-              user_id: await pg("accounts")
-                .select("id")
-                .where("email", parsedToken.payload.email),
+              user_id: user[0].id,
               course_id: "HIRAGANA",
               status: "IN_PROGRESS",
             })
@@ -68,9 +74,7 @@ passport.use(
           ).transacting(trx);
 
           const initLessons = pg("user_set_lessons").insert({
-            user_id: await pg("accounts")
-              .select("id")
-              .where("email", parsedToken.payload.email),
+            user_id: user[0].id,
             course_id: "HIRAGANA_A",
             status: "IN_PROGRESS",
           });
@@ -108,7 +112,7 @@ const resolvers = {
     me: meResolver(pg),
   },
   User: {
-    nextLesson: nextLessonResolver(pg),
+    // availableCourses: availableCoursesResolver(pg),
   },
   Mutation: {
     addLessonResults: addLessonResultsResolver(pg),
