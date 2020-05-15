@@ -91,12 +91,17 @@ export const typeDefs = gql`
     id: ID!
     name: String
     email: String
-    nextLesson: Lesson
-    kanaLevel: KanaLevel
+    availableCourses: [Course]
+  }
+
+  type Course {
+    id: String!
+    title: String!
+    availableLessons: [Lesson]
   }
 
   type Lesson {
-    content: LessonContent! # How to determine what to show at the end of the lesson
+    id: LessonContent! # How to determine what to show at the end of the lesson
     testables: [Testable!]
     titleScreen: TitleScreenInfo
     lectures: [Lecture!]

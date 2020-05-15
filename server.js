@@ -9,6 +9,7 @@ import {
   meResolver,
   nextLessonResolver,
   addLessonResultsResolver,
+  availableCoursesResolver,
 } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
@@ -82,7 +83,9 @@ passport.use(
             .toString();
 
           await pg
-            .raw(`${initLessons} ON CONFLICT (user_id, lesson_id) DO NOTHING`)
+            .raw(
+              `${initLessons} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
+            )
             .transacting(trx);
         });
 
@@ -114,7 +117,7 @@ const resolvers = {
     me: meResolver(pg),
   },
   User: {
-    // availableCourses: availableCoursesResolver(pg),
+    availableCourses: availableCoursesResolver(pg),
   },
   Mutation: {
     addLessonResults: addLessonResultsResolver(pg),

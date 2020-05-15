@@ -1,216 +1,4 @@
-export const romajiHiraganaMap = {
-  a: "あ",
-  i: "い",
-  u: "う",
-  e: "え",
-  o: "お",
-  ka: "か",
-  ki: "き",
-  ku: "く",
-  ke: "け",
-  ko: "こ",
-  ga: "が",
-  gi: "ぎ",
-  gu: "ぐ",
-  ge: "げ",
-  go: "ご",
-  sa: "さ",
-  shi: "し",
-  su: "す",
-  se: "せ",
-  so: "そ",
-  za: "ざ",
-  ji: "じ",
-  zu: "ず",
-  ze: "ぜ",
-  zo: "ぞ",
-  ta: "た",
-  chi: "ち",
-  tsu: "つ",
-  te: "て",
-  to: "と",
-  da: "だ",
-  dji: "ぢ",
-  dzu: "づ",
-  de: "で",
-  do: "ど",
-  na: "な",
-  ni: "に",
-  nu: "ぬ",
-  ne: "ね",
-  no: "の",
-  ha: "は",
-  hi: "ひ",
-  fu: "ふ",
-  he: "へ",
-  ho: "ほ",
-  ba: "ば",
-  bi: "び",
-  bu: "ぶ",
-  be: "べ",
-  bo: "ぼ",
-  pa: "ぱ",
-  pi: "ぴ",
-  pu: "ぷ",
-  pe: "ぺ",
-  po: "ぽ",
-  ma: "ま",
-  mi: "み",
-  mu: "む",
-  me: "め",
-  mo: "も",
-  ya: "や",
-  yu: "ゆ",
-  yo: "よ",
-  ra: "ら",
-  ri: "り",
-  ru: "る",
-  re: "れ",
-  ro: "ろ",
-  wa: "わ",
-  wo: "を",
-  n: "ん",
-  kya: "きゃ",
-  kyu: "きゅ",
-  kyo: "きょ",
-  gya: "ぎゃ",
-  gyu: "ぎゅ",
-  gyo: "ぎょ",
-  sha: "しゃ",
-  shu: "しゅ",
-  sho: "しょ",
-  ja: "じゃ",
-  ju: "じゅ",
-  jo: "じょ",
-  cha: "ちゃ",
-  chu: "ちゅ",
-  cho: "ちょ",
-  nya: "にゃ",
-  nyu: "にゅ",
-  nyo: "にょ",
-  hya: "ひゃ",
-  hyu: "ひゅ",
-  hyo: "ひょ",
-  bya: "びゃ",
-  byu: "びゅ",
-  byo: "びょ",
-  pya: "ぴゃ",
-  pyu: "ぴゅ",
-  pyo: "ぴょ",
-  mya: "みゃ",
-  myu: "みゅ",
-  myo: "みょ",
-  rya: "りゃ",
-  ryu: "りゅ",
-  ryo: "りょ",
-};
-
-export const hiraganaRomajiMap = {
-  あ: "a",
-  い: "i",
-  う: "u",
-  え: "e",
-  お: "o",
-  か: "ka",
-  き: "ki",
-  く: "ku",
-  け: "ke",
-  こ: "ko",
-  が: "ga",
-  ぎ: "gi",
-  ぐ: "gu",
-  げ: "ge",
-  ご: "go",
-  さ: "sa",
-  し: "shi",
-  す: "su",
-  せ: "se",
-  そ: "so",
-  ざ: "za",
-  じ: "ji",
-  ず: "zu",
-  ぜ: "ze",
-  ぞ: "zo",
-  た: "ta",
-  ち: "chi",
-  つ: "tsu",
-  て: "te",
-  と: "to",
-  だ: "da",
-  ぢ: "dji",
-  づ: "dzu",
-  で: "de",
-  ど: "do",
-  な: "na",
-  に: "ni",
-  ぬ: "nu",
-  ね: "ne",
-  の: "no",
-  は: "ha",
-  ひ: "hi",
-  ふ: "fu",
-  へ: "he",
-  ほ: "ho",
-  ば: "ba",
-  び: "bi",
-  ぶ: "bu",
-  べ: "be",
-  ぼ: "bo",
-  ぱ: "pa",
-  ぴ: "pi",
-  ぷ: "pu",
-  ぺ: "pe",
-  ぽ: "po",
-  ま: "ma",
-  み: "mi",
-  む: "mu",
-  め: "me",
-  も: "mo",
-  や: "ya",
-  ゆ: "yu",
-  よ: "yo",
-  ら: "ra",
-  り: "ri",
-  る: "ru",
-  れ: "re",
-  ろ: "ro",
-  わ: "wa",
-  を: "wo",
-  ん: "n",
-  きゃ: "kya",
-  きゅ: "kyu",
-  きょ: "kyo",
-  ぎゃ: "gya",
-  ぎゅ: "gyu",
-  ぎょ: "gyo",
-  しゃ: "sha",
-  しゅ: "shu",
-  しょ: "sho",
-  じゃ: "ja",
-  じゅ: "ju",
-  じょ: "jo",
-  ちゃ: "cha",
-  ちゅ: "chu",
-  ちょ: "cho",
-  にゃ: "nya",
-  にゅ: "nyu",
-  にょ: "nyo",
-  ひゃ: "hya",
-  ひゅ: "hyu",
-  ひょ: "hyo",
-  びゃ: "bya",
-  びゅ: "byu",
-  びょ: "byo",
-  ぴゃ: "pya",
-  ぴゅ: "pyu",
-  ぴょ: "pyo",
-  みゃ: "mya",
-  みゅ: "myu",
-  みょ: "myo",
-  りゃ: "rya",
-  りゅ: "ryu",
-  りょ: "ryo",
-};
+import { hiraganaRomajiMap, romajiHiraganaMap, kanaLevelArray } from "../util";
 
 const hiraganaToRomajiCSV = (hiragana) => {
   let splitQuestion = [];
@@ -233,23 +21,6 @@ const hiraganaToRomajiCSV = (hiragana) => {
     }
   }
   return splitQuestion.reduce((csv, kana) => csv + "," + kana);
-};
-
-export const nextLessonResolver = (pg) => {
-  return (user, args) => {
-    // No args given, just generate the next lesson with the defaults
-    if (Object.keys(args).length < 1) {
-      if (user.kana_level != "COMPLETE") {
-        return getKanaLesson(user, pg);
-      }
-
-      return {
-        content: "OTHER",
-        lectures: [],
-        testables: [],
-      };
-    }
-  };
 };
 
 const getKanaLesson = (user, pg) => {
@@ -356,4 +127,86 @@ const getHiraganaLesson = async (content, wordIds, user, pg) => {
     }),
     testables,
   };
+};
+
+export const nextLessonResolver = (pg) => {
+  return (user, args) => {
+    // No args given, just generate the next lesson with the defaults
+    if (Object.keys(args).length < 1) {
+      if (user.kana_level != "COMPLETE") {
+        return getKanaLesson(user, pg);
+      }
+
+      return {
+        content: "OTHER",
+        lectures: [],
+        testables: [],
+      };
+    }
+  };
+};
+
+export const kanaLessonResolver = async (lesson, pg) => {
+  const words = await pg("words").where("lesson_id", lesson.id);
+  const hetaWords =
+    lesson.id == "HIRAGANA_A"
+      ? []
+      : await getHetaWords(
+          pg,
+          words.map((w) => w.id),
+          user.id
+        );
+  const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
+  const testables = words.concat(hetaWords).map((word) => ({
+    objectId: word.id,
+    objectType: "WORD",
+    question: {
+      type: "J_WORD",
+      image: word.image,
+      emoji: word.emoji,
+      text: word.hiragana,
+    },
+    answer: {
+      type: "ROMAJI",
+      text: hiraganaToRomajiCSV(word.hiragana),
+    },
+    introduction: word.introduction,
+  }));
+
+  return {
+    content: lesson.content,
+    titleScreen: {
+      title: lesson.title,
+      image: lesson.titleScreenImage,
+    },
+    lectures: lectures.sort((a, b) => {
+      if (a.id < b.id) {
+        return -1;
+      } else if (a.id > b.id) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }),
+    testables,
+  };
+};
+
+export const lessonResolver = async (course, lesson, pg) => {
+  switch (course.id) {
+    case "HIRAGANA":
+      kanaLessonResolver(lesson, pg);
+    case "KATAKANA":
+      kanaLessonResolver(lesson, pg);
+    default:
+      return null;
+  }
+};
+
+export const availableLessonsResolver = async (course, pg) => {
+  const availableLessons = await pg("set_lessons").where({
+    course_id: course.id,
+    status: "AVAILABLE",
+  });
+  return availableLessons.map((lesson) => lessonResolver(course, lesson, pg));
 };
