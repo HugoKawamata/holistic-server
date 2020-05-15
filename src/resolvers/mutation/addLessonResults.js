@@ -167,7 +167,7 @@ export const addLessonResultsResolver = (pg) => {
             status: "AVAILABLE",
           }));
 
-          await pg("user_set_lessons").insert(unlocks);
+          await pg("user_set_lessons").insert(unlocks).transacting(trx);
         })
         .then(trx.commit)
         .catch(trx.rollback);
