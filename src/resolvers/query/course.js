@@ -9,15 +9,10 @@ export const availableCoursesResolver = (pg) => {
       })
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
-    console.log("all courses got", courses);
-
-    return courses.map(
-      (course) =>
-        console.log("got course: ", course) || {
-          id: course.id,
-          title: course.title,
-          availableLessons: availableLessonsResolver(course, pg),
-        }
-    );
+    return courses.map((course) => ({
+      id: course.course_id,
+      title: course.title,
+      availableLessons: availableLessonsResolver(course, pg),
+    }));
   };
 };

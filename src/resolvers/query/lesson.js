@@ -192,12 +192,12 @@ export const kanaLessonResolver = async (lesson, pg) => {
   };
 };
 
-export const lessonResolver = async (course, lesson, pg) => {
-  switch (course.id) {
+export const lessonResolver = async (lesson, pg) => {
+  switch (lesson.course_id) {
     case "HIRAGANA":
-      kanaLessonResolver(lesson, pg);
+      return kanaLessonResolver(lesson, pg);
     case "KATAKANA":
-      kanaLessonResolver(lesson, pg);
+      return kanaLessonResolver(lesson, pg);
     default:
       return null;
   }
@@ -215,5 +215,5 @@ export const availableLessonsResolver = async (course, pg) => {
       "set_lessons.course_id": course.id,
       "user_set_lessons.status": "AVAILABLE",
     });
-  return availableLessons.map((lesson) => lessonResolver(course, lesson, pg));
+  return availableLessons.map((lesson) => lessonResolver(lesson, pg));
 };
