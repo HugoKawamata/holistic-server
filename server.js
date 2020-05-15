@@ -33,7 +33,7 @@ passport.use(
     function (parsedToken, googleId, done) {
       if (parsedToken) {
         console.log("✅ Parsed token valid");
-        pg.transaction((trx) => {
+        pg.transaction(async (trx) => {
           const insert = pg("accounts")
             .insert({
               email: parsedToken.payload.email,
@@ -46,10 +46,40 @@ passport.use(
             .transacting(trx)
             .toString();
 
+          await pg
+            .raw(
+              `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
+            )
+            .transacting(trx);
+
+          const initCourses = pg("user_courses")
+            .insert({
+              user_id: await pg("accounts")
+                .select("id")
+                .where("email", parsedToken.payload.email),
+              course_id: "HIRAGANA",
+              status: "IN_PROGRESS",
+            })
+            .transacting(trx)
+            .toString();
+
           pg.raw(
-            `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
+            `${initCourses} ON CONFLICT (user_id, course_id) DO NOTHING`
+          ).transacting(trx);
+
+          const initLessons = pg("user_set_lessons").insert({
+            user_id: await pg("accounts")
+              .select("id")
+              .where("email", parsedToken.payload.email),
+            course_id: "HIRAGANA_A",
+            status: "IN_PROGRESS",
+          });
+
+          pg.raw(
+            `${initLessons} ON CONFLICT (user_id, lesson_id) DO NOTHING`
           ).transacting(trx);
         });
+
         return done(null, {
           email: parsedToken.payload.email,
           name: parsedToken.payload.name,
