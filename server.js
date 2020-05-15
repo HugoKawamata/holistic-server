@@ -7,7 +7,6 @@ import knex from "knex";
 import {
   userResolver,
   meResolver,
-  nextLessonResolver,
   addLessonResultsResolver,
   availableCoursesResolver,
 } from "./src/resolvers";
