@@ -68,19 +68,22 @@ passport.use(
             .transacting(trx)
             .toString();
 
-          pg.raw(
-            `${initCourses} ON CONFLICT (user_id, course_id) DO NOTHING`
-          ).transacting(trx);
+          await pg
+            .raw(`${initCourses} ON CONFLICT (user_id, course_id) DO NOTHING`)
+            .transacting(trx);
 
-          const initLessons = pg("user_set_lessons").insert({
-            user_id: user.id,
-            course_id: "HIRAGANA_A",
-            status: "IN_PROGRESS",
-          });
+          const initLessons = pg("user_set_lessons")
+            .insert({
+              user_id: user.id,
+              set_lesson_id: "HIRAGANA_A",
+              status: "IN_PROGRESS",
+            })
+            .transacting(trx)
+            .toString();
 
-          pg.raw(
-            `${initLessons} ON CONFLICT (user_id, lesson_id) DO NOTHING`
-          ).transacting(trx);
+          await pg
+            .raw(`${initLessons} ON CONFLICT (user_id, lesson_id) DO NOTHING`)
+            .transacting(trx);
         });
 
         return done(null, {
