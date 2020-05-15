@@ -94,7 +94,7 @@ export const kanaLessonResolver = async (lesson, pg) => {
       : await getHetaWords(
           pg,
           words.map((w) => w.id),
-          user.id
+          lesson.user_id
         );
   const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
   const testables = words.concat(hetaWords).map((word) => ({
