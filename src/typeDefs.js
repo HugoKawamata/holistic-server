@@ -109,7 +109,8 @@ export const typeDefs = gql`
   type Lesson {
     id: LessonContent! # How to determine what to show at the end of the lesson
     testables: [Testable!]
-    titleScreen: TitleScreenInfo
+    title: String!
+    image: String
     lectures: [Lecture!]
   }
 
@@ -138,11 +139,6 @@ export const typeDefs = gql`
   type Answer {
     type: AnswerType!
     text: String!
-  }
-
-  type TitleScreenInfo {
-    image: String
-    title: String!
   }
 
   input Result {

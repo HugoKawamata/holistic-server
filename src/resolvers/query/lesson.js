@@ -86,66 +86,6 @@ const getHetaWords = async (pg, wordIds, userId, howMany = 2) => {
   );
 };
 
-const getHiraganaLesson = async (content, wordIds, user, pg) => {
-  const words = await pg("words").whereIn("id", wordIds);
-  const hetaWords =
-    content == "HIRAGANA_A" ? [] : await getHetaWords(pg, wordIds, user.id);
-  const lesson = await pg("set_lessons")
-    .where("content", content)
-    .then((lessons) => lessons[0]);
-  const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
-  const testables = words.concat(hetaWords).map((word) => ({
-    objectId: word.id,
-    objectType: "WORD",
-    question: {
-      type: "J_WORD",
-      image: word.image,
-      emoji: word.emoji,
-      text: word.hiragana,
-    },
-    answer: {
-      type: "ROMAJI",
-      text: hiraganaToRomajiCSV(word.hiragana),
-    },
-    introduction: word.introduction,
-  }));
-
-  return {
-    content: lesson.content,
-    titleScreen: {
-      title: lesson.title,
-      image: lesson.titleScreenImage,
-    },
-    lectures: lectures.sort((a, b) => {
-      if (a.id < b.id) {
-        return -1;
-      } else if (a.id > b.id) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }),
-    testables,
-  };
-};
-
-export const nextLessonResolver = (pg) => {
-  return (user, args) => {
-    // No args given, just generate the next lesson with the defaults
-    if (Object.keys(args).length < 1) {
-      if (user.kana_level != "COMPLETE") {
-        return getKanaLesson(user, pg);
-      }
-
-      return {
-        content: "OTHER",
-        lectures: [],
-        testables: [],
-      };
-    }
-  };
-};
-
 export const kanaLessonResolver = async (lesson, pg) => {
   const words = await pg("words").where("set_lesson_id", lesson.id);
   const hetaWords =
@@ -175,10 +115,8 @@ export const kanaLessonResolver = async (lesson, pg) => {
 
   return {
     id: lesson.id,
-    titleScreen: {
-      title: lesson.title,
-      image: lesson.titleScreenImage,
-    },
+    title: lesson.title,
+    image: lesson.image,
     lectures: lectures.sort((a, b) => {
       if (a.id < b.id) {
         return -1;
