@@ -99,7 +99,7 @@ export const insertOrUpdateUserWordOrCharacter = (
 };
 
 export const addLessonResultsResolver = (pg) => {
-  return async (_, { results, userId, content }) => {
+  return async (_, { results, userId, set_lesson_id }) => {
     const wordResults = results.filter((res) => res.objectType === "WORD");
     const characterResults = results.filter(
       (res) => res.objectType === "CHARACTER"
@@ -147,13 +147,27 @@ export const addLessonResultsResolver = (pg) => {
             });
         })
         .then(async () => {
-          // Update kana level if applicable
-          if (content !== "OTHER") {
-            await pg("accounts")
-              .where({ id: userId })
-              .update({ kana_level: content })
-              .transacting(trx);
-          }
+          // Complete current lesson
+          await pg("user_set_lessons")
+            .where({ user_id: userId, set_lesson_id })
+            .update({ status: "COMPLETE" })
+            .transacting(trx);
+
+          // Line up next lesson
+          const lesson = await pg("set_lessons")
+            .where({
+              id: set_lesson_id,
+            })
+            .transacting(trx)
+            .then((lessons) => lessons[0]);
+
+          const unlocks = lesson.unlocks_ids.split(",").map((unlockId) => ({
+            user_id: userId,
+            set_lesson_id: unlockId,
+            status: "AVAILABLE",
+          }));
+
+          await pg("user_set_lessons").insert(unlocks);
         })
         .then(trx.commit)
         .catch(trx.rollback);
