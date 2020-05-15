@@ -147,7 +147,7 @@ export const nextLessonResolver = (pg) => {
 };
 
 export const kanaLessonResolver = async (lesson, pg) => {
-  const words = await pg("words").where("lesson_id", lesson.id);
+  const words = await pg("words").where("set_lesson_id", lesson.id);
   const hetaWords =
     lesson.id == "HIRAGANA_A"
       ? []
