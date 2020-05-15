@@ -174,7 +174,7 @@ export const kanaLessonResolver = async (lesson, pg) => {
   }));
 
   return {
-    content: lesson.content,
+    id: lesson.id,
     titleScreen: {
       title: lesson.title,
       image: lesson.titleScreenImage,
