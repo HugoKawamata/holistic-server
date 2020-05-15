@@ -50,38 +50,37 @@ passport.use(
             .raw(
               `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
             )
+            .transacting(trx);
+
+          const user = await pg("accounts")
+            .where("email", parsedToken.payload.email)
             .transacting(trx)
-            .then(async () => {
-              const user = await pg("accounts").where(
-                "email",
-                parsedToken.payload.email
-              );
+            .then((users) => users[0]);
 
-              console.log("created and found user", user);
+          console.log("created and found user", user);
 
-              const initCourses = pg("user_courses")
-                .insert({
-                  user_id: user[0].id,
-                  course_id: "HIRAGANA",
-                  status: "IN_PROGRESS",
-                })
-                .transacting(trx)
-                .toString();
+          const initCourses = pg("user_courses")
+            .insert({
+              user_id: user.id,
+              course_id: "HIRAGANA",
+              status: "IN_PROGRESS",
+            })
+            .transacting(trx)
+            .toString();
 
-              pg.raw(
-                `${initCourses} ON CONFLICT (user_id, course_id) DO NOTHING`
-              ).transacting(trx);
+          pg.raw(
+            `${initCourses} ON CONFLICT (user_id, course_id) DO NOTHING`
+          ).transacting(trx);
 
-              const initLessons = pg("user_set_lessons").insert({
-                user_id: user[0].id,
-                course_id: "HIRAGANA_A",
-                status: "IN_PROGRESS",
-              });
+          const initLessons = pg("user_set_lessons").insert({
+            user_id: user.id,
+            course_id: "HIRAGANA_A",
+            status: "IN_PROGRESS",
+          });
 
-              pg.raw(
-                `${initLessons} ON CONFLICT (user_id, lesson_id) DO NOTHING`
-              ).transacting(trx);
-            });
+          pg.raw(
+            `${initLessons} ON CONFLICT (user_id, lesson_id) DO NOTHING`
+          ).transacting(trx);
         });
 
         return done(null, {
