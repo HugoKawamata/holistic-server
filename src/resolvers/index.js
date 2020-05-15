@@ -1,15 +1,4 @@
 import { addLessonResultsResolver } from "./mutation";
-import {
-  nextLessonResolver,
-  userResolver,
-  meResolver,
-  availableCourses,
-} from "./query";
+import { userResolver, meResolver, availableCourses } from "./query";
 
-export {
-  addLessonResultsResolver,
-  availableCourses,
-  nextLessonResolver,
-  userResolver,
-  meResolver,
-};
+export { addLessonResultsResolver, availableCourses, userResolver, meResolver };
