@@ -48,6 +48,11 @@ export const typeDefs = gql`
     ${KANA_LEVEL}
   }
 
+  enum CourseStatus {
+    AVAILABLE
+    COMPLETE
+  }
+
   enum LecturePosition {
     PRETEST # Appears before lesson title screen
     BEFORE_SECOND # Appears just before the second question is presented
@@ -98,6 +103,7 @@ export const typeDefs = gql`
     id: String!
     title: String!
     availableLessons: [Lesson]
+    status: CourseStatus
   }
 
   type Lesson {
