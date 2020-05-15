@@ -205,6 +205,9 @@ export const lessonResolver = async (course, lesson, pg) => {
 
 export const availableLessonsResolver = async (course, pg) => {
   const availableLessons = await pg("set_lessons")
+    .where({
+      course_id: course.id,
+    })
     .join(
       "user_set_lessons",
       "user_set_lessons.set_lesson_id",
@@ -212,8 +215,7 @@ export const availableLessonsResolver = async (course, pg) => {
       "set_lesson.id"
     )
     .where({
-      course_id: course.id,
-      status: "AVAILABLE",
+      "user_set_lesson.status": "AVAILABLE",
     });
   return availableLessons.map((lesson) => lessonResolver(course, lesson, pg));
 };

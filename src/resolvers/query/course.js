@@ -7,10 +7,15 @@ export const availableCoursesResolver = (pg) => {
       status: "AVAILABLE",
     });
 
-    return courses.map((course) => ({
-      id: course.id,
-      title: course.title,
-      availableLessons: availableLessonsResolver(course, pg),
-    }));
+    console.log("all courses got", courses);
+
+    return courses.map(
+      (course) =>
+        console.log("got course: ", course) || {
+          id: course.id,
+          title: course.title,
+          availableLessons: availableLessonsResolver(course, pg),
+        }
+    );
   };
 };
