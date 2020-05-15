@@ -63,7 +63,7 @@ passport.use(
             .insert({
               user_id: user.id,
               course_id: "HIRAGANA",
-              status: "IN_PROGRESS",
+              status: "AVAILABLE",
             })
             .transacting(trx)
             .toString();
@@ -76,7 +76,7 @@ passport.use(
             .insert({
               user_id: user.id,
               set_lesson_id: "HIRAGANA_A",
-              status: "IN_PROGRESS",
+              status: "AVAILABLE",
             })
             .transacting(trx)
             .toString();
