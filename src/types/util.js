@@ -15,3 +15,5 @@ export type TestableObject = "CHARACTER" | "WORD" | "SENTENCE";
 export type QuestionType = "J_WORD" | "J_SENTENCE" | "E_WORD" | "E_SENTENCE";
 
 export type AnswerType = "ROMAJI" | "HIRAGANA" | "JAPANESE" | "MC";
+
+export type Mark = "CORRECT" | "INCORRECT";

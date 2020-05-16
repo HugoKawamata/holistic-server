@@ -1,3 +1,4 @@
+/* @flow */
 import { addLessonResultsResolver } from "./mutation";
 import {
   userResolver,

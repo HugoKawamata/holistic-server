@@ -1,5 +1,30 @@
 /* @flow */
-import type { CourseLessonStatus } from "./util";
+import type { Mark, CourseLessonStatus } from "./util";
+
+export type CharacterDB = {|
+  id: number,
+  character: string,
+  type: "HIRAGANA" | "KATAKANA" | "KANJI",
+  readings: Array<string>,
+|};
+
+export type CharacterResultDB = {|
+  id: number,
+  created_at: mixed,
+  answers: string, // Comma separated
+  marks: Array<Mark>,
+  user_id: number,
+  character_id: number,
+|};
+
+export type WordResultDB = {|
+  id: number,
+  created_at: mixed,
+  answers: string, // Comma separated
+  marks: Array<Mark>,
+  user_id: number,
+  word_id: number,
+|};
 
 export type SetLessonDB = {|
   id: string, // eg. HIRAGANA_A, HIRAGANA_KA, GMR_SUBJECT_WA
