@@ -9,6 +9,7 @@ import {
   meResolver,
   addLessonResultsResolver,
   availableCoursesResolver,
+  userCourseResolver,
 } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
@@ -117,6 +118,7 @@ const resolvers = {
   },
   User: {
     availableCourses: availableCoursesResolver(pg),
+    course: userCourseResolver(pg),
   },
   Mutation: {
     addLessonResults: addLessonResultsResolver(pg),

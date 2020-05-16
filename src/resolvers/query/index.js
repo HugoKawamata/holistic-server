@@ -1,5 +1,10 @@
 // @flow
 import { userResolver, meResolver } from "./user";
-import { availableCoursesResolver } from "./course";
+import { availableCoursesResolver, userCourseResolver } from "./course";
 
-export { userResolver, meResolver, availableCoursesResolver };
+export {
+  userResolver,
+  meResolver,
+  availableCoursesResolver,
+  userCourseResolver,
+};

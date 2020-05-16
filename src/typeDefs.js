@@ -97,12 +97,14 @@ export const typeDefs = gql`
     name: String
     email: String
     availableCourses: [Course]
+    course(id: String!): Course
   }
 
   type Course {
     id: String!
     title: String!
     availableLessons: [Lesson]
+    completedLessons: [Lesson]
     status: CourseStatus
   }
 

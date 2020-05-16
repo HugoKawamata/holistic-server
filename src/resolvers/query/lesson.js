@@ -155,3 +155,18 @@ export const availableLessonsResolver = async (course, pg) => {
     });
   return availableLessons.map((lesson) => lessonResolver(lesson, pg));
 };
+
+export const completedLessonsResolver = async (course, pg) => {
+  const availableLessons = await pg("set_lessons")
+    .join(
+      "user_set_lessons",
+      "user_set_lessons.set_lesson_id",
+      "=",
+      "set_lessons.id"
+    )
+    .where({
+      "set_lessons.course_id": course.id,
+      "user_set_lessons.status": "COMPLETED",
+    });
+  return availableLessons.map((lesson) => lessonResolver(lesson, pg));
+};
