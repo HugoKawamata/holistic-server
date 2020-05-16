@@ -20,7 +20,8 @@ export const userCourseResolver = (pg) => {
         user_id: user.id,
         course_id: args.id,
       })
-      .join("courses", "courses.id", "=", "user_courses.course_id");
+      .join("courses", "courses.id", "=", "user_courses.course_id")
+      .then((course) => course[0]);
 
     return marshalUserCourse(course, pg);
   };
