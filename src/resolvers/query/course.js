@@ -29,8 +29,8 @@ export const userCourseResolver = (pg) => {
 const marshalUserCourse = (dbCourse, pg) => {
   return {
     id: dbCourse.course_id,
-    title: course.title,
-    availableLessons: availableLessonsResolver(course, pg),
-    completedLessons: completedLessonsResolver(course, pg),
+    title: dbCourse.title,
+    availableLessons: availableLessonsResolver(dbCourse, pg),
+    completedLessons: completedLessonsResolver(dbCourse, pg),
   };
 };
