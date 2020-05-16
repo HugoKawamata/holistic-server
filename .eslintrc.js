@@ -16,9 +16,6 @@ module.exports = {
     SharedArrayBuffer: "readonly",
   },
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
     ecmaVersion: 2018,
     sourceType: "module",
   },
@@ -26,12 +23,9 @@ module.exports = {
     "eslint-comments",
     "flowtype",
     "jest",
-    "react-native-globals",
     "import",
     "react",
     "react-hooks",
-    "tanda",
-    "react-native",
   ],
   rules: {
     /* Always dangle commas, there's no reason not to and it makes adding new stuff easier */
@@ -40,8 +34,6 @@ module.exports = {
     "react/state-in-constructor": 0,
     /* Two classes is fine */
     "max-classes-per-file": 0,
-    /* I like prop spreading */
-    "react/jsx-props-no-spreading": 0,
     /* flow doesn't understand numbers as keys on object, so quote them */
     "quote-props": [2, "as-needed", { numbers: true }],
     /* I should not be allowing console logs into production code */
@@ -90,8 +82,6 @@ module.exports = {
       "always",
       { annotationStyle: "block" },
     ],
-    /* there are no 'valid hrefs' on mobile */
-    "jsx-a11y/anchor-is-valid": 0,
     /* this is no longer a valid rule https://github.com/yannickcr/eslint-plugin-react/issues/1707 */
     "react/no-did-update-set-state": 0,
     /* if you disable an eslint rule, you must re-enable it */

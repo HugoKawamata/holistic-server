@@ -1,9 +1,15 @@
 import { addLessonResultsResolver } from "./mutation";
-import { nextLessonResolver, userResolver, meResolver } from "./query";
+import {
+  userResolver,
+  meResolver,
+  availableCoursesResolver,
+  userCourseResolver,
+} from "./query";
 
 export {
   addLessonResultsResolver,
-  nextLessonResolver,
+  availableCoursesResolver,
   userResolver,
   meResolver,
+  userCourseResolver,
 };

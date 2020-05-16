@@ -48,6 +48,11 @@ export const typeDefs = gql`
     ${KANA_LEVEL}
   }
 
+  enum CourseStatus {
+    AVAILABLE
+    COMPLETE
+  }
+
   enum LecturePosition {
     PRETEST # Appears before lesson title screen
     BEFORE_SECOND # Appears just before the second question is presented
@@ -91,14 +96,23 @@ export const typeDefs = gql`
     id: ID!
     name: String
     email: String
-    nextLesson: Lesson
-    kanaLevel: KanaLevel
+    availableCourses: [Course]
+    course(id: String!): Course
+  }
+
+  type Course {
+    id: String!
+    title: String!
+    availableLessons: [Lesson]
+    completedLessons: [Lesson]
+    status: CourseStatus
   }
 
   type Lesson {
-    content: LessonContent! # How to determine what to show at the end of the lesson
+    id: LessonContent! # How to determine what to show at the end of the lesson
     testables: [Testable!]
-    titleScreen: TitleScreenInfo
+    title: String!
+    image: String
     lectures: [Lecture!]
   }
 
@@ -129,11 +143,6 @@ export const typeDefs = gql`
     text: String!
   }
 
-  type TitleScreenInfo {
-    image: String
-    title: String!
-  }
-
   input Result {
     objectId: ID
     objectType: TestableObject!
@@ -143,7 +152,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addLessonResults(results: [Result]!, userId: ID!, content: LessonContent!): Boolean
+    addLessonResults(results: [Result]!, userId: ID!, setLessonId: LessonContent!): Boolean
   }
 `;
 

@@ -7,8 +7,9 @@ import knex from "knex";
 import {
   userResolver,
   meResolver,
-  nextLessonResolver,
   addLessonResultsResolver,
+  availableCoursesResolver,
+  userCourseResolver,
 } from "./src/resolvers";
 import typeDefs from "./src/typeDefs";
 
@@ -33,7 +34,7 @@ passport.use(
     function (parsedToken, googleId, done) {
       if (parsedToken) {
         console.log("✅ Parsed token valid");
-        pg.transaction((trx) => {
+        pg.transaction(async (trx) => {
           const insert = pg("accounts")
             .insert({
               email: parsedToken.payload.email,
@@ -46,10 +47,48 @@ passport.use(
             .transacting(trx)
             .toString();
 
-          pg.raw(
-            `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
-          ).transacting(trx);
+          await pg
+            .raw(
+              `${insert} ON CONFLICT (email) DO UPDATE SET last_login = EXCLUDED.last_login`
+            )
+            .transacting(trx);
+
+          const user = await pg("accounts")
+            .where("email", parsedToken.payload.email)
+            .transacting(trx)
+            .then((users) => users[0]);
+
+          console.log("created and found user", user);
+
+          const initCourses = pg("user_courses")
+            .insert({
+              user_id: user.id,
+              course_id: "HIRAGANA",
+              status: "AVAILABLE",
+            })
+            .transacting(trx)
+            .toString();
+
+          await pg
+            .raw(`${initCourses} ON CONFLICT (user_id, course_id) DO NOTHING`)
+            .transacting(trx);
+
+          const initLessons = pg("user_set_lessons")
+            .insert({
+              user_id: user.id,
+              set_lesson_id: "HIRAGANA_A",
+              status: "AVAILABLE",
+            })
+            .transacting(trx)
+            .toString();
+
+          await pg
+            .raw(
+              `${initLessons} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
+            )
+            .transacting(trx);
         });
+
         return done(null, {
           email: parsedToken.payload.email,
           name: parsedToken.payload.name,
@@ -78,7 +117,8 @@ const resolvers = {
     me: meResolver(pg),
   },
   User: {
-    nextLesson: nextLessonResolver(pg),
+    availableCourses: availableCoursesResolver(pg),
+    course: userCourseResolver(pg),
   },
   Mutation: {
     addLessonResults: addLessonResultsResolver(pg),
