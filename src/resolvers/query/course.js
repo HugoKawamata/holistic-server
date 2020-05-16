@@ -22,7 +22,7 @@ export const userCourseResolver = (pg) => {
       })
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
-    return courses.map((course) => marshalUserCourse(course, pg));
+    return marshalUserCourse(course, pg);
   };
 };
 
