@@ -157,7 +157,7 @@ export const availableLessonsResolver = async (course, pg) => {
 };
 
 export const completedLessonsResolver = async (course, pg) => {
-  const availableLessons = await pg("set_lessons")
+  const completeLessons = await pg("set_lessons")
     .join(
       "user_set_lessons",
       "user_set_lessons.set_lesson_id",
@@ -166,7 +166,7 @@ export const completedLessonsResolver = async (course, pg) => {
     )
     .where({
       "set_lessons.course_id": course.id,
-      "user_set_lessons.status": "COMPLETED",
+      "user_set_lessons.status": "COMPLETE",
     });
-  return availableLessons.map((lesson) => lessonResolver(lesson, pg));
+  return completeLessons.map((lesson) => lessonResolver(lesson, pg));
 };
