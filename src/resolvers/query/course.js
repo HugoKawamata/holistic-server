@@ -18,7 +18,7 @@ export const userCourseResolver = (pg) => {
     const course = await pg("user_courses")
       .where({
         user_id: user.id,
-        course_id: args.courseId,
+        course_id: args.id,
       })
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
