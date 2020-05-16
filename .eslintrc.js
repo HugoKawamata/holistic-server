@@ -28,8 +28,22 @@ module.exports = {
     "react-hooks",
   ],
   rules: {
+    "global-require": 0,
+    /* I like naming components/styles and then exporting them as default */
+    "import/no-named-as-default": 0,
+    /* We use flow, not typescript */
+    "react/jsx-filename-extension": 0,
     /* Always dangle commas, there's no reason not to and it makes adding new stuff easier */
-    "comma-dangle": ["error", "always"],
+    "comma-dangle": [
+      "error",
+      {
+        arrays: "always-multiline",
+        objects: "always-multiline",
+        imports: "always-multiline",
+        exports: "always-multiline",
+        functions: "never",
+      },
+    ],
     /* State isn't needed in constructor */
     "react/state-in-constructor": 0,
     /* Two classes is fine */

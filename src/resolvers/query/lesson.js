@@ -1,12 +1,19 @@
-import { hiraganaRomajiMap, romajiHiraganaMap, kanaLevelArray } from "../util";
+/* @flow */
+
+import type {
+  UserSetLessonJoinSetLessonDB,
+  UserCourseJoinCourseDB,
+} from "../../types/db";
+import { hiraganaRomajiMap } from "../util";
 
 const hiraganaToRomajiCSV = (hiragana) => {
   let splitQuestion = [];
+  let mutateHiragana = hiragana;
 
   // We have to go backwards due to lya/lyu/lyo/sokuon
-  while (hiragana.length > 0) {
-    let current = hiragana[hiragana.length - 1];
-    hiragana = hiragana.slice(0, hiragana.length - 1);
+  while (mutateHiragana.length > 0) {
+    let current = mutateHiragana[mutateHiragana.length - 1];
+    mutateHiragana = mutateHiragana.slice(0, mutateHiragana.length - 1);
     if (Object.keys(hiraganaRomajiMap).includes(current)) {
       splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
     } else if (current === "っ") {
@@ -14,54 +21,13 @@ const hiraganaToRomajiCSV = (hiragana) => {
       splitQuestion = [splitQuestion[0][0], ...splitQuestion];
     } else {
       // It was a lya/lyu/lyo
-      current = `${hiragana[hiragana.length - 1]}${current}`;
+      current = `${mutateHiragana[mutateHiragana.length - 1]}${current}`;
       // Remove the next hiragana character
-      hiragana = hiragana.slice(0, hiragana.length - 1);
+      mutateHiragana = mutateHiragana.slice(0, mutateHiragana.length - 1);
       splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
     }
   }
-  return splitQuestion.reduce((csv, kana) => csv + "," + kana);
-};
-
-const getKanaLesson = (user, pg) => {
-  switch (user.kana_level) {
-    case null:
-      return getHiraganaLesson("HIRAGANA_A", [1, 2, 3, 4], user, pg);
-    case "HIRAGANA_A":
-      return getHiraganaLesson("HIRAGANA_KA", [5, 6, 7, 8], user, pg);
-    case "HIRAGANA_KA":
-      return getHiraganaLesson("HIRAGANA_GA", [9, 10, 11, 12, 13], user, pg);
-    case "HIRAGANA_GA":
-      return getHiraganaLesson("HIRAGANA_SA", [14, 15, 16, 17, 18], user, pg);
-    case "HIRAGANA_SA":
-      return getHiraganaLesson("HIRAGANA_ZA", [19, 20, 21, 22, 23], user, pg);
-    case "HIRAGANA_ZA":
-      return getHiraganaLesson("HIRAGANA_TA", [24, 25, 26, 27, 28], user, pg);
-    case "HIRAGANA_TA":
-      return getHiraganaLesson("HIRAGANA_DA", [29, 30, 31], user, pg);
-    case "HIRAGANA_DA":
-      return getHiraganaLesson("HIRAGANA_NA", [32, 33, 34, 35], user, pg);
-    case "HIRAGANA_NA":
-      return getHiraganaLesson("HIRAGANA_N", [36, 37, 38], user, pg);
-    case "HIRAGANA_N":
-      return getHiraganaLesson("HIRAGANA_HA", [39, 40, 41, 42, 43], user, pg);
-    case "HIRAGANA_HA":
-      return getHiraganaLesson("HIRAGANA_BA", [44, 45, 46, 47, 48], user, pg);
-    case "HIRAGANA_BA":
-      return getHiraganaLesson("HIRAGANA_MA", [49, 50, 51, 52, 53], user, pg);
-    case "HIRAGANA_MA":
-      return getHiraganaLesson("HIRAGANA_WA", [54, 55, 73], user, pg);
-    case "HIRAGANA_WA":
-      return getHiraganaLesson("HIRAGANA_YA", [56, 57, 58], user, pg);
-    case "HIRAGANA_YA":
-      return getHiraganaLesson("HIRAGANA_LYA", [59, 60, 61, 62], user, pg);
-    case "HIRAGANA_LYA":
-      return getHiraganaLesson("HIRAGANA_RA", [63, 64, 65, 66, 67], user, pg);
-    case "HIRAGANA_RA":
-      return getHiraganaLesson("HIRAGANA_PA", [68, 69, 70, 71, 72], user, pg);
-    default:
-      throw new Error("Invalid kana level");
-  }
+  return splitQuestion.reduce((csv, kana) => `${csv},${kana}`);
 };
 
 // heta as in 下手 (bad at). This was the most succinct so I thought I'd use some Japanese :)
@@ -86,10 +52,13 @@ const getHetaWords = async (pg, wordIds, userId, howMany = 2) => {
   );
 };
 
-export const kanaLessonResolver = async (lesson, pg) => {
+export const kanaLessonResolver = async (
+  lesson: UserSetLessonJoinSetLessonDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
   const words = await pg("words").where("set_lesson_id", lesson.id);
   const hetaWords =
-    lesson.id == "HIRAGANA_A"
+    lesson.id === "HIRAGANA_A"
       ? []
       : await getHetaWords(
           pg,
@@ -120,17 +89,20 @@ export const kanaLessonResolver = async (lesson, pg) => {
     lectures: lectures.sort((a, b) => {
       if (a.id < b.id) {
         return -1;
-      } else if (a.id > b.id) {
-        return 1;
-      } else {
-        return 0;
       }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
     }),
     testables,
   };
 };
 
-export const lessonResolver = async (lesson, pg) => {
+export const lessonResolver = async (
+  lesson: UserSetLessonJoinSetLessonDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
   switch (lesson.course_id) {
     case "HIRAGANA":
       return kanaLessonResolver(lesson, pg);
@@ -141,7 +113,10 @@ export const lessonResolver = async (lesson, pg) => {
   }
 };
 
-export const availableLessonsResolver = async (course, pg) => {
+export const availableLessonsResolver = async (
+  course: UserCourseJoinCourseDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
   const availableLessons = await pg("set_lessons")
     .join(
       "user_set_lessons",
@@ -156,7 +131,10 @@ export const availableLessonsResolver = async (course, pg) => {
   return availableLessons.map((lesson) => lessonResolver(lesson, pg));
 };
 
-export const completedLessonsResolver = async (course, pg) => {
+export const completedLessonsResolver = async (
+  course: UserCourseJoinCourseDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
   const completeLessons = await pg("set_lessons")
     .join(
       "user_set_lessons",
