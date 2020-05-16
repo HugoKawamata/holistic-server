@@ -1,5 +1,6 @@
+// eslint-disable-next-line flowtype/require-valid-file-annotation
 import express from "express";
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
 import passport from "passport";
 import GoogleTokenStrategy from "passport-google-id-token";
@@ -10,8 +11,8 @@ import {
   addLessonResultsResolver,
   availableCoursesResolver,
   userCourseResolver,
-} from "./src/resolvers";
-import typeDefs from "./src/typeDefs";
+} from "./resolvers";
+import typeDefs from "./typeDefs";
 
 require("dotenv").config();
 
