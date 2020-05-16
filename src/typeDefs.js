@@ -48,7 +48,7 @@ export const typeDefs = gql`
     ${KANA_LEVEL}
   }
 
-  enum CourseStatus {
+  enum CourseLessonStatus {
     AVAILABLE
     COMPLETE
   }
@@ -105,7 +105,7 @@ export const typeDefs = gql`
     title: String!
     availableLessons: [Lesson]
     completedLessons: [Lesson]
-    status: CourseStatus
+    status: CourseLessonStatus
   }
 
   type Lesson {

@@ -1,5 +1,5 @@
 /* @flow */
-export type CourseLessonStatusDB = "COMPLETE" | "AVAILABLE";
+import type { CourseLessonStatus } from "./util";
 
 export type SetLessonDB = {|
   id: string, // eg. HIRAGANA_A, HIRAGANA_KA, GMR_SUBJECT_WA
@@ -12,7 +12,7 @@ export type SetLessonDB = {|
 export type UserSetLessonDB = {|
   user_id: number,
   set_lesson_id: string,
-  status: CourseLessonStatusDB,
+  status: CourseLessonStatus,
 |};
 
 export type UserSetLessonJoinSetLessonDB = {|
@@ -29,7 +29,7 @@ export type CourseDB = {|
 export type UserCourseDB = {|
   user_id: number,
   course_id: string,
-  status: CourseLessonStatusDB,
+  status: CourseLessonStatus,
 |};
 
 export type UserCourseJoinCourseDB = {|
