@@ -1,5 +1,6 @@
+// eslint-disable-next-line flowtype/require-valid-file-annotation
 import express from "express";
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
 import passport from "passport";
 import GoogleTokenStrategy from "passport-google-id-token";
@@ -10,8 +11,8 @@ import {
   addLessonResultsResolver,
   availableCoursesResolver,
   userCourseResolver,
-} from "./src/resolvers";
-import typeDefs from "./src/typeDefs";
+} from "./resolvers";
+import typeDefs from "./typeDefs";
 
 require("dotenv").config();
 
@@ -31,9 +32,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID_IOS,
     },
-    function (parsedToken, googleId, done) {
+    (parsedToken, googleId, done) => {
       if (parsedToken) {
-        console.log("✅ Parsed token valid");
         pg.transaction(async (trx) => {
           const insert = pg("accounts")
             .insert({
@@ -95,10 +95,9 @@ passport.use(
           picture: parsedToken.payload.picture,
           google_id: parsedToken.payload.googleId,
         });
-      } else {
-        console.log("❌ Parsed token invalid");
-        return done(null, false);
       }
+      console.log("❌ Parsed token invalid");
+      return done(null, false);
     }
   )
 );
@@ -145,7 +144,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.post("/login", passport.authenticate("google-id-token"), (req, res) => {
-  console.log("auth complete, req:", req, "res:", res);
   res.json(req.user);
 });
 

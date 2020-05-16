@@ -1,4 +1,4 @@
-// @flow
+/* @flow */
 import { userResolver, meResolver } from "./user";
 import { availableCoursesResolver, userCourseResolver } from "./course";
 

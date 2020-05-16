@@ -1,7 +1,21 @@
+/* @flow */
+import type { UserCourseJoinCourseDB } from "../../types/db";
+import type { UserGQL } from "../../types/gql";
 import { availableLessonsResolver, completedLessonsResolver } from "./lesson";
 
-export const availableCoursesResolver = (pg) => {
-  return async (user, args) => {
+const marshalUserCourse = (dbCourse, pg) => {
+  return {
+    id: dbCourse.course_id,
+    title: dbCourse.title,
+    availableLessons: availableLessonsResolver(dbCourse, pg),
+    completedLessons: completedLessonsResolver(dbCourse, pg),
+  };
+};
+
+export const availableCoursesResolver = (
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  return async (user: UserGQL) => {
     const courses = await pg("user_courses")
       .where({
         user_id: user.id,
@@ -13,25 +27,18 @@ export const availableCoursesResolver = (pg) => {
   };
 };
 
-export const userCourseResolver = (pg) => {
-  return async (user, args) => {
+export const userCourseResolver = (
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  return async (user: UserGQL, args: { id: string }) => {
     const course = await pg("user_courses")
       .where({
         user_id: user.id,
         course_id: args.id,
       })
       .join("courses", "courses.id", "=", "user_courses.course_id")
-      .then((course) => course[0]);
+      .then((c: UserCourseJoinCourseDB) => c[0]);
 
     return marshalUserCourse(course, pg);
-  };
-};
-
-const marshalUserCourse = (dbCourse, pg) => {
-  return {
-    id: dbCourse.course_id,
-    title: dbCourse.title,
-    availableLessons: availableLessonsResolver(dbCourse, pg),
-    completedLessons: completedLessonsResolver(dbCourse, pg),
   };
 };
