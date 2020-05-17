@@ -56,7 +56,7 @@ export const nextUnlockCoursesResolver = (
     const nextUnlockCourseIds = availableCourses.reduce(
       (acc, course) =>
         typeof course.unlocks_ids === "string"
-          ? acc + course.unlocks_ids.split(",")
+          ? acc.concat(course.unlocks_ids.split(","))
           : acc,
       []
     );

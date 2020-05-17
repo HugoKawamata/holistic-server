@@ -180,7 +180,7 @@ export const nextUnlockLessonsResolver = async (
   const nextUnlockLessonIds = availableLessons.reduce(
     (acc, lesson) =>
       typeof lesson.unlocks_ids === "string"
-        ? acc + lesson.unlocks_ids.split(",")
+        ? acc.concat(lesson.unlocks_ids.split(","))
         : acc,
     []
   );
