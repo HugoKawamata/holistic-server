@@ -113,7 +113,11 @@ export const lessonResolver = async (
     case "KATAKANA":
       return kanaLessonResolver(lesson, pg);
     default:
-      return null;
+      return {
+        id: lesson.id,
+        title: lesson.title,
+        image: lesson.image,
+      };
   }
 };
 
