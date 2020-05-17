@@ -178,7 +178,10 @@ export const nextUnlockLessonsResolver = async (
     });
 
   const nextUnlockLessonIds = availableLessons.reduce(
-    (acc, lesson) => acc + lesson.unlock_ids.split(","),
+    (acc, lesson) =>
+      typeof lesson.unlock_ids === "string"
+        ? acc + lesson.unlock_ids.split(",")
+        : acc,
     []
   );
   const lessons = await pg("courses").whereIn("id", nextUnlockLessonIds);

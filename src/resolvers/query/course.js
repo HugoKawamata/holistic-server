@@ -54,7 +54,10 @@ export const nextUnlockCoursesResolver = (
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
     const nextUnlockCourseIds = availableCourses.reduce(
-      (acc, course) => acc + course.unlock_ids.split(","),
+      (acc, course) =>
+        typeof course.unlock_ids === "string"
+          ? acc + course.unlock_ids.split(",")
+          : acc,
       []
     );
 
