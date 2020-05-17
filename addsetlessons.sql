@@ -18,6 +18,12 @@ VALUES ('HIRAGANA_HA', 'Hiragana Lesson 6', 'https://res.cloudinary.com/holistic
  ('HIRAGANA_RA', 'Hiragana Lesson 9', 'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-ra/title.png'),
  ('HIRAGANA_PA', 'Hiragana Lesson 9 - Bonus Round', 'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/hiragana-pa/title.png');
 
+INSERT INTO set_lessons (id, title, image, unlocks_ids, course_id)
+VALUES ('GMR_PARTICLE_WA', 'Talking about yourself', 'https://res.cloudinary.com/holistic-japanese/image/upload/v1587262008/lessons/katakana-1/title.png', '', 'GRAMMAR_1');
+
+INSERT INTO courses (id, title)
+VALUES ('GRAMMAR_1', 'Very Basic Conversation')
+
 INSERT INTO lectures (set_lesson_id, title, text, image, position)
 VALUES (
   3,

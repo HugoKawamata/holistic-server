@@ -39,11 +39,6 @@ const KANA_LEVEL = `
 `;
 
 export const typeDefs = gql`
-  enum LessonContent {
-    ${KANA_LEVEL}
-    OTHER
-  }
-
   enum KanaLevel {
     ${KANA_LEVEL}
   }
@@ -112,7 +107,7 @@ export const typeDefs = gql`
   }
 
   type Lesson {
-    id: LessonContent! # How to determine what to show at the end of the lesson
+    id: String! # How to determine what to show at the end of the lesson
     testables: [Testable!]
     title: String!
     image: String
@@ -155,7 +150,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addLessonResults(results: [Result]!, userId: ID!, setLessonId: LessonContent!): Boolean
+    addLessonResults(results: [Result]!, userId: ID!, setLessonId: String!): Boolean
   }
 `;
 
