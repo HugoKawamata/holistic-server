@@ -1,14 +1,29 @@
 /* @flow */
 import type { UserCourseJoinCourseDB } from "../../types/db";
 import type { UserGQL } from "../../types/gql";
-import { availableLessonsResolver, completedLessonsResolver } from "./lesson";
+import {
+  availableLessonsResolver,
+  completedLessonsResolver,
+  lessonsResolver,
+  nextUnlockLessonsResolver,
+} from "./lesson";
 
 const marshalUserCourse = (dbCourse, pg) => {
   return {
     id: dbCourse.course_id,
     title: dbCourse.title,
     availableLessons: availableLessonsResolver(dbCourse, pg),
+    nextUnlockLessons: nextUnlockLessonsResolver(dbCourse, pg),
     completedLessons: completedLessonsResolver(dbCourse, pg),
+    lessons: lessonsResolver(dbCourse, pg),
+  };
+};
+
+const marshalCourse = (dbCourse, pg) => {
+  return {
+    id: dbCourse.id,
+    title: dbCourse.title,
+    lessons: lessonsResolver(dbCourse, pg),
   };
 };
 
@@ -24,6 +39,28 @@ export const availableCoursesResolver = (
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
     return courses.map((course) => marshalUserCourse(course, pg));
+  };
+};
+
+export const nextUnlockCoursesResolver = (
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  return async (user: UserGQL) => {
+    const availableCourses = await pg("user_courses")
+      .where({
+        user_id: user.id,
+        status: "AVAILABLE",
+      })
+      .join("courses", "courses.id", "=", "user_courses.course_id");
+
+    const nextUnlockCourseIds = availableCourses.reduce(
+      (acc, course) => acc + course.unlock_ids.split(","),
+      []
+    );
+
+    const courses = await pg("courses").whereIn("id", nextUnlockCourseIds);
+
+    return courses.map((course) => marshalCourse(course, pg));
   };
 };
 

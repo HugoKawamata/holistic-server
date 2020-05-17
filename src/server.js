@@ -11,6 +11,7 @@ import {
   addLessonResultsResolver,
   availableCoursesResolver,
   userCourseResolver,
+  nextUnlockCoursesResolver,
 } from "./resolvers";
 import typeDefs from "./typeDefs";
 
@@ -117,6 +118,7 @@ const resolvers = {
   },
   User: {
     availableCourses: availableCoursesResolver(pg),
+    nextUnlockCourses: nextUnlockCoursesResolver(pg),
     course: userCourseResolver(pg),
   },
   Mutation: {

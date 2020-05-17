@@ -3,6 +3,8 @@
 import type {
   UserSetLessonJoinSetLessonDB,
   UserCourseJoinCourseDB,
+  SetLessonDB,
+  CourseDB,
 } from "../../types/db";
 import { hiraganaRomajiMap } from "../util";
 
@@ -53,18 +55,20 @@ const getHetaWords = async (pg, wordIds, userId, howMany = 2) => {
 };
 
 export const kanaLessonResolver = async (
-  lesson: UserSetLessonJoinSetLessonDB,
+  lesson: UserSetLessonJoinSetLessonDB | SetLessonDB,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
   const words = await pg("words").where("set_lesson_id", lesson.id);
-  const hetaWords =
-    lesson.id === "HIRAGANA_A"
-      ? []
-      : await getHetaWords(
-          pg,
-          words.map((w) => w.id),
-          lesson.user_id
-        );
+  let hetaWords = [];
+  // Only add bad words to the testable list if this is a user-set-lesson-join
+  if (lesson.id === "HIRAGANA_A" && lesson.user_id != null) {
+    hetaWords = await getHetaWords(
+      pg,
+      words.map((w) => w.id),
+      // $FlowFixMe I check this above
+      lesson.user_id
+    );
+  }
   const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
   const testables = words.concat(hetaWords).map((word) => ({
     objectId: word.id,
@@ -100,7 +104,7 @@ export const kanaLessonResolver = async (
 };
 
 export const lessonResolver = async (
-  lesson: UserSetLessonJoinSetLessonDB,
+  lesson: UserSetLessonJoinSetLessonDB | SetLessonDB,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
   switch (lesson.course_id) {
@@ -111,6 +115,14 @@ export const lessonResolver = async (
     default:
       return null;
   }
+};
+
+export const lessonsResolver = async (
+  course: CourseDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  const lessons = await pg("set_lessons").where({ course_id: course.id });
+  return lessons.map((lesson) => lessonResolver(lesson, pg));
 };
 
 export const availableLessonsResolver = async (
@@ -147,4 +159,29 @@ export const completedLessonsResolver = async (
       "user_set_lessons.status": "COMPLETE",
     });
   return completeLessons.map((lesson) => lessonResolver(lesson, pg));
+};
+
+export const nextUnlockLessonsResolver = async (
+  course: UserCourseJoinCourseDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  const availableLessons = await pg("set_lessons")
+    .join(
+      "user_set_lessons",
+      "user_set_lessons.set_lesson_id",
+      "=",
+      "set_lessons.id"
+    )
+    .where({
+      "set_lessons.course_id": course.id,
+      "user_set_lessons.status": "AVAILABLE",
+    });
+
+  const nextUnlockLessonIds = availableLessons.reduce(
+    (acc, lesson) => acc + lesson.unlock_ids.split(","),
+    []
+  );
+  const lessons = await pg("courses").whereIn("id", nextUnlockLessonIds);
+
+  return lessons.map((lesson) => lessonResolver(lesson, pg));
 };

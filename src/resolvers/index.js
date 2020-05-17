@@ -5,6 +5,7 @@ import {
   meResolver,
   availableCoursesResolver,
   userCourseResolver,
+  nextUnlockCoursesResolver,
 } from "./query";
 
 export {
@@ -13,4 +14,5 @@ export {
   userResolver,
   meResolver,
   userCourseResolver,
+  nextUnlockCoursesResolver,
 };
