@@ -184,7 +184,7 @@ export const nextUnlockLessonsResolver = async (
         : acc,
     []
   );
-  const lessons = await pg("courses").whereIn("id", nextUnlockLessonIds);
+  const lessons = await pg("lessons").whereIn("id", nextUnlockLessonIds);
 
   return lessons.map((lesson) => lessonResolver(lesson, pg));
 };
