@@ -149,8 +149,9 @@ app.post("/login", passport.authenticate("google-id-token"), (req, res) => {
   res.json(req.user);
 });
 
-app.post("/logout", (req) => {
+app.post("/logout", (req, res) => {
   req.logout();
+  res.json({ success: true });
 });
 
 server.applyMiddleware({ app });
