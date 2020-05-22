@@ -149,6 +149,10 @@ app.post("/login", passport.authenticate("google-id-token"), (req, res) => {
   res.json(req.user);
 });
 
+app.post("/logout", (req) => {
+  req.logout();
+});
+
 server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () =>
