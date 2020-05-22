@@ -52,6 +52,7 @@ export type CourseGQL = {|
 
 export type UserGQL = {|
   id: number,
+  picture: string,
   name: string,
   email: string,
   availableCourses: Array<CourseGQL>,

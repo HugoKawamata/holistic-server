@@ -89,6 +89,7 @@ export const typeDefs = gql`
 
   type User {
     id: ID!
+    picture: String
     name: String
     email: String
     availableCourses: [Course]
