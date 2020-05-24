@@ -4,7 +4,7 @@ import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
 import passport from "passport";
 import GoogleTokenStrategy from "passport-google-id-token";
-import { v5 } from "uuid";
+import { v5 as uuidv5 } from "uuid";
 import knex from "knex";
 import {
   userResolver,
@@ -39,7 +39,7 @@ passport.use(
         pg.transaction(async (trx) => {
           const insert = pg("accounts")
             .insert({
-              id: v5(parsedToken.payload.email, process.env.NAMESPACE_UUID),
+              id: uuidv5(parsedToken.payload.email, process.env.NAMESPACE_UUID),
               email: parsedToken.payload.email,
               name: parsedToken.payload.name,
               picture: parsedToken.payload.picture,
