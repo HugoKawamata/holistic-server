@@ -201,7 +201,7 @@ export const addLessonResultsResolver = (
           // Complete current lesson
           await pg("user_set_lessons")
             .where({ user_id: userId, set_lesson_id: setLessonId })
-            .update({ status: "COMPLETE" })
+            .update({ status: "COMPLETE", completed_at: pg.fn.now() })
             .transacting(trx);
 
           // Line up next lesson
@@ -212,13 +212,20 @@ export const addLessonResultsResolver = (
             .transacting(trx)
             .then((lessons) => lessons[0]);
 
-          const unlocks = lesson.unlocks_ids.split(",").map((unlockId) => ({
-            user_id: userId,
-            set_lesson_id: unlockId,
-            status: "AVAILABLE",
-          }));
+          if (lesson.unlocks_ids === "NEXT_COURSE") {
+            await pg("user_courses")
+              .where({ id: lesson.course_id })
+              .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+              .transacting(trx);
+          } else {
+            const unlocks = lesson.unlocks_ids.split(",").map((unlockId) => ({
+              user_id: userId,
+              set_lesson_id: unlockId,
+              status: "AVAILABLE",
+            }));
 
-          await pg("user_set_lessons").insert(unlocks).transacting(trx);
+            await pg("user_set_lessons").insert(unlocks).transacting(trx);
+          }
         })
         .then(trx.commit)
         .catch(trx.rollback);
