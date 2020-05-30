@@ -158,8 +158,8 @@ app.post("/logout", (req, res) => {
 
 server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () =>
+app.listen({ port: 80 }, () =>
   console.log(
-    `running apollo server at http://localhost:4000${server.graphqlPath}`
+    `running apollo server at https://www.issei.com.au${server.graphqlPath}`
   )
 );
