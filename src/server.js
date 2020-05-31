@@ -2,6 +2,7 @@
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
+import pgStore from "connect-pg-simple";
 import passport from "passport";
 import GoogleTokenStrategy from "passport-google-id-token";
 import { v5 as uuidv5 } from "uuid";
@@ -131,19 +132,30 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ session: req.session }),
+  context: ({ req }) =>
+    console.log("req!", req.sessionStore, req.session, req.headers) || {
+      session: req.session,
+    },
 });
 
 const app = express();
 
 app.use(
   session({
+    store: new (pgStore(session))(),
     secret: process.env.SESSION_SECRET,
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    proxy: true,
   })
 );
-
+app.use((req, res, next) => {
+  if (req.headers["cloudfront-forwarded-proto"]) {
+    req.headers["x-forwarded-proto"] =
+      req.headers["cloudfront-forwarded-proto"];
+  }
+  next();
+});
 app.use(passport.initialize());
 app.use(passport.session());
 
