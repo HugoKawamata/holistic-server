@@ -1,4 +1,5 @@
 // eslint-disable-next-line flowtype/require-valid-file-annotation
+import path from "path";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
@@ -169,6 +170,13 @@ app.post("/login", passport.authenticate("google-id-token"), (req, res) => {
 app.post("/logout", (req, res) => {
   req.logout();
   res.json({ success: true });
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "/../src/static/index.html"));
+});
+app.get("/styles.css", (req, res) => {
+  res.sendFile(path.join(__dirname, "/../src/static/styles.css"));
 });
 
 const corsOptions = {
