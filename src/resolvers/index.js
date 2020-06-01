@@ -6,11 +6,13 @@ import {
   availableCoursesResolver,
   userCourseResolver,
   nextUnlockCoursesResolver,
+  completedCoursesResolver,
 } from "./query";
 
 export {
   addLessonResultsResolver,
   availableCoursesResolver,
+  completedCoursesResolver,
   userResolver,
   meResolver,
   userCourseResolver,

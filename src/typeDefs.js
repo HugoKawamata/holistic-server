@@ -93,6 +93,7 @@ export const typeDefs = gql`
     name: String
     email: String
     availableCourses: [Course]
+    completedCourses: [Course]
     nextUnlockCourses: [Course]
     course(id: String!): Course
   }

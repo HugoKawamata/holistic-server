@@ -27,6 +27,21 @@ const marshalCourse = (dbCourse, pg) => {
   };
 };
 
+export const completedCoursesResolver = (
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  return async (user: UserGQL) => {
+    const courses = await pg("user_courses")
+      .where({
+        user_id: user.id,
+        status: "COMPLETED",
+      })
+      .join("courses", "courses.id", "=", "user_courses.course_id");
+
+    return courses.map((course) => marshalUserCourse(course, pg));
+  };
+};
+
 export const availableCoursesResolver = (
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {

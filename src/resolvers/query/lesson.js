@@ -66,7 +66,8 @@ export const kanaLessonResolver = async (
       pg,
       words.map((w) => w.id),
       // $FlowFixMe I check this above
-      lesson.user_id
+      lesson.user_id,
+      lesson.status === "COMPLETE" ? 0 : 2
     );
   }
   const lectures = await pg("lectures").where("set_lesson_id", lesson.id);

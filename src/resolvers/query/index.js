@@ -2,6 +2,7 @@
 import { userResolver, meResolver } from "./user";
 import {
   availableCoursesResolver,
+  completedCoursesResolver,
   userCourseResolver,
   nextUnlockCoursesResolver,
 } from "./course";
@@ -9,6 +10,7 @@ import {
 export {
   userResolver,
   meResolver,
+  completedCoursesResolver,
   availableCoursesResolver,
   userCourseResolver,
   nextUnlockCoursesResolver,
