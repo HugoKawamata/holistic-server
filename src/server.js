@@ -4,6 +4,7 @@ import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
 import pgStore from "connect-pg-simple";
 import passport from "passport";
+import cors from "cors";
 import GoogleTokenStrategy from "passport-google-id-token";
 import { v5 as uuidv5 } from "uuid";
 import knex from "knex";
@@ -168,7 +169,15 @@ app.post("/logout", (req, res) => {
   res.json({ success: true });
 });
 
-server.applyMiddleware({ app });
+const corsOptions = {
+  origin: ["https://www.issei.com.au"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+// Disable cors here otherwise the options defined above will be overwritten
+server.applyMiddleware({ app, cors: false });
 
 app.listen({ port: 80 }, () =>
   console.log(
