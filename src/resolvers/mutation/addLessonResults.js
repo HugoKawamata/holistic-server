@@ -24,13 +24,12 @@ export const marshalInputResultsToWordResults = (
 ): Array<BeforeCreateWordResultDB> => {
   return results
     .map((result: ResultCT): BeforeCreateWordResultDB | null => {
-      const parsedUserId = parseInt(userId, 10);
       const parsedWordId = parseInt(result.objectId, 10);
       if (parsedWordId == null) {
         return null;
       }
       return {
-        user_id: parsedUserId,
+        user_id: userId,
         word_id: parsedWordId,
         answers: result.answers,
         marks: result.marks,
@@ -65,7 +64,7 @@ export const marshalInputResultsToCharacterResults = async (
               return null;
             }
             return {
-              user_id: parseInt(userId, 10),
+              user_id: userId,
               character_id: parseInt(char.id, 10),
               answers: result.answers,
               marks: result.marks,

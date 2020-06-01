@@ -13,7 +13,7 @@ export type CharacterResultDB = {|
   created_at: mixed,
   answers: string, // Comma separated
   marks: Array<Mark>,
-  user_id: number,
+  user_id: string,
   character_id: number,
 |};
 
@@ -22,7 +22,7 @@ export type WordResultDB = {|
   created_at: mixed,
   answers: string, // Comma separated
   marks: Array<Mark>,
-  user_id: number,
+  user_id: string,
   word_id: number,
 |};
 
@@ -35,7 +35,7 @@ export type SetLessonDB = {|
 |};
 
 export type UserSetLessonDB = {|
-  user_id: number,
+  user_id: string,
   set_lesson_id: string,
   status: CourseLessonStatus,
 |};
@@ -52,7 +52,7 @@ export type CourseDB = {|
 |};
 
 export type UserCourseDB = {|
-  user_id: number,
+  user_id: string,
   course_id: string,
   status: CourseLessonStatus,
 |};
