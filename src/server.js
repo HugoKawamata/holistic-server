@@ -1,4 +1,5 @@
 // eslint-disable-next-line flowtype/require-valid-file-annotation
+import path from "path";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import session from "express-session";
@@ -170,6 +171,11 @@ app.post("/logout", (req, res) => {
   req.logout();
   res.json({ success: true });
 });
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "/../src/static/index.html"));
+});
+app.use(express.static("public"));
 
 const corsOptions = {
   origin: ["https://www.issei.com.au"],
