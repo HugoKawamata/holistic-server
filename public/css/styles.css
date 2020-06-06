@@ -212,5 +212,19 @@ a {
 }
 
 footer {
-  margin-bottom: 6rem;
+  margin-bottom: 3rem;
+  margin-top: 6rem;
+}
+
+footer p {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #708093;
+}
+
+footer i {
+  margin-left: 1rem;
+  color: #708093;
 }
