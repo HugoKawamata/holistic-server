@@ -175,9 +175,7 @@ app.post("/logout", (req, res) => {
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/../src/static/index.html"));
 });
-app.get("/styles.css", (req, res) => {
-  res.sendFile(path.join(__dirname, "/../src/static/styles.css"));
-});
+app.use(express.static("public"));
 
 const corsOptions = {
   origin: ["https://www.issei.com.au"],

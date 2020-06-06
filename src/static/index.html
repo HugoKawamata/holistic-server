@@ -2,50 +2,61 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="./styles.css" type="text/css" />
+    <link rel="stylesheet" href="css/reset.css" type="text/css" />
+    <link rel="stylesheet" href="css/styles.css" type="text/css" />
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <title>Issei</title>
   </head>
   <body>
     <div class="container">
       <header class="header">
         <div class="header-left">
-          <img src="images/logo.png" />
-          Issei
+          <img class="header-logo" src="images/logo.png" />
+          <h3 class="name">Issei<h3>
         </div>
         <div class="header-right">
           <ul class="navbar">
-            <li class="navbar-item">
-              Features
-            </li>
-            <li class="navbar-item">
-              Support
-            </li>
-            <li class="navbar-item">
-              Download
-            </li>
+            <a href="#features">
+              <li class="navbar-item">
+                Features
+              </li>
+            </a>
+            <a href="#support">
+              <li class="navbar-item">
+                Support
+              </li>
+            </a>
+            <!-- <a href="#download">
+              <li class="navbar-item">
+                Download
+              </li>
+            </a> -->
           </ul>
         </div>
       </header>
-      <div class="main">
-        <div class="hero-wrapper">
-          <div class="hero">
-            <h2>Twice the content. Half the time.</h2>
-            <p>
-              Issei teaches multiple language concepts at once. You're learning
-              double the content per lesson, and because your brain is immersed
-              in context, it takes less time to learn.
-            </p>
-          </div>
-          <div class="hero-image">
-            <img src="images/hero-image.png" />
+      <div class="main-background">
+        <div class="main">
+          <div class="hero-wrapper">
+            <div class="hero">
+              <h2>Twice the content. Half the time.</h2>
+              <p>
+                Issei teaches multiple language concepts at once. You're learning
+                double the content per lesson, and because your brain is immersed
+                in context, it takes less time to learn.
+              </p>
+            </div>
+            <div class="hero-image-wrapper">
+              <img class="hero-image" src="images/hero-image.png" />
+            </div>
           </div>
         </div>
       </div>
       <div id="features">
+        <h2 class="section-title">Features</h2>
         <div class="feature-grid">
           <div class="feature-grid-row">
             <div class="feature-grid-cell">
@@ -76,20 +87,21 @@
         </div>
       </div>
       <div id="support">
-        <h3>Need help?</h3>
-        <p>
+        <h2 class="section-title">Need help?</h2>
+        <p class="support-section">
           Feel free to reach out to our development team directly at
           holisticjapanese@gmail.com
         </p>
       </div>
-      <div id="download">
+      <!-- <div id="download">
         <div class="appstore-link">
           <img src="images/google-play-store-link.png" />
         </div>
         <div class="appstore-link">
           <img src="images/apple-store-link.png" />
         </div>
-      </div>
+      </div> -->
+      <footer>
     </div>
   </body>
 </html>
