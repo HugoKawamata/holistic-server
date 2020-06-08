@@ -32,6 +32,8 @@ export type SetLessonDB = {|
   image: string, // Shows up on the link cards
   unlocks_ids: string, // CSV separated set_lesson ids. eg. "HIRAGANA_A,GMR_SUBJECT_WA"
   course_id: string, // Parent course. eg. "HIRAGANA"
+  skill_level: string, // eg. "Beginner", "Intermediate"
+  time_estimate: number, // In seconds
 |};
 
 export type UserSetLessonDB = {|

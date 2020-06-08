@@ -96,7 +96,7 @@ export const typeDefs = gql`
     completedCourses: [Course]
     nextUnlockCourses: [Course]
     course(id: String!): Course
-    created_at: Float
+    createdAt: Float
   }
 
   type Course {
@@ -115,6 +115,8 @@ export const typeDefs = gql`
     title: String!
     image: String
     lectures: [Lecture!]
+    skillLevel: String # eg. "Beginner", "Intermediate", "Advanced"
+    timeEstimate: Integer # In seconds
   }
 
   type Lecture {

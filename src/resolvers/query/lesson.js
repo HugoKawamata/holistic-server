@@ -91,6 +91,8 @@ export const kanaLessonResolver = async (
     id: lesson.id,
     title: lesson.title,
     image: lesson.image,
+    skillLevel: lesson.skill_level,
+    timeEstimate: lesson.time_estimate,
     lectures: lectures.sort((a, b) => {
       if (a.id < b.id) {
         return -1;
@@ -118,6 +120,8 @@ export const lessonResolver = async (
         id: lesson.id,
         title: lesson.title,
         image: lesson.image,
+        skillLevel: lesson.skill_level,
+        timeEstimate: lesson.time_estimate,
       };
   }
 };
