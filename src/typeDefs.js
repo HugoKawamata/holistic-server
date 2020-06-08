@@ -96,6 +96,7 @@ export const typeDefs = gql`
     completedCourses: [Course]
     nextUnlockCourses: [Course]
     course(id: String!): Course
+    created_at: Float
   }
 
   type Course {
