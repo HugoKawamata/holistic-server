@@ -116,7 +116,7 @@ export const typeDefs = gql`
     image: String
     lectures: [Lecture!]
     skillLevel: String # eg. "Beginner", "Intermediate", "Advanced"
-    timeEstimate: Integer # In seconds
+    timeEstimate: Int # In seconds
   }
 
   type Lecture {
