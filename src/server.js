@@ -170,6 +170,8 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(express.json()); // for parsing application/json
+
 app.post("/login", passport.authenticate(["ios", "android"]), (req, res) => {
   res.json(req.user);
 });
@@ -190,8 +192,8 @@ app.post("/nuke_account", (req, res) => {
   // The confirmation string isn't a secret, it's just there to make it difficult to
   // accidentally nuke an account.
   if (
-    req.session.passport.user.email !== req.email &&
-    req.confirmation === "WHO's thhe MAn now dog?"
+    req.session.passport.user.email !== req.body.email &&
+    req.body.confirmation === "WHO's thhe MAn now dog?"
   ) {
     nukeAccount(req.id, pg);
     res.json({ success: true });
