@@ -17,7 +17,7 @@ import {
   nextUnlockCoursesResolver,
   completedCoursesResolver,
 } from "./resolvers";
-import nukeAccount from "./util/nukeAccount";
+import { nukeAccount } from "./util/nukeAccount";
 import typeDefs from "./typeDefs";
 
 require("dotenv").config();
