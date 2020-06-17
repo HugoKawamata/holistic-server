@@ -195,7 +195,7 @@ app.post("/nuke_account", (req, res) => {
     req.session.passport.user.email === req.body.email &&
     req.body.confirmation === "WHO's thhe MAn now dog?"
   ) {
-    nukeAccount(req.id, pg);
+    nukeAccount(req.body.email, pg);
     res.json({ success: true });
   } else {
     res.json({ success: false });
