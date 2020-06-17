@@ -192,7 +192,7 @@ app.post("/nuke_account", (req, res) => {
   // The confirmation string isn't a secret, it's just there to make it difficult to
   // accidentally nuke an account.
   if (
-    req.session.passport.user.email !== req.body.email &&
+    req.session.passport.user.email === req.body.email &&
     req.body.confirmation === "WHO's thhe MAn now dog?"
   ) {
     nukeAccount(req.id, pg);
