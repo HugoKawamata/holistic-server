@@ -6,6 +6,11 @@ export function nukeAccount(
 ) {
   pg.transaction((trx) => {
     // All child records should cascade on delete
-    pg("accounts").where("email", email).del().transacting(trx);
+    pg("accounts")
+      .where("email", email)
+      .del()
+      .transacting(trx)
+      .then(trx.commit)
+      .catch(trx.rollback);
   });
 }
