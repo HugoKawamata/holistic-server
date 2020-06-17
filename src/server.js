@@ -17,6 +17,7 @@ import {
   nextUnlockCoursesResolver,
   completedCoursesResolver,
 } from "./resolvers";
+import nukeAccount from "./util/nukeAccount";
 import typeDefs from "./typeDefs";
 
 require("dotenv").config();
@@ -59,8 +60,6 @@ const loginHandler = (parsedToken, googleId, done) => {
         .transacting(trx)
         .then((users) => users[0]);
 
-      console.log("created and found user", user);
-
       const initCourses = pg("user_courses")
         .insert({
           user_id: user.id,
@@ -95,7 +94,6 @@ const loginHandler = (parsedToken, googleId, done) => {
       google_id: parsedToken.payload.googleId,
     });
   }
-  console.log("❌ Parsed token invalid");
   return done(null, false);
 };
 
@@ -146,10 +144,9 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) =>
-    console.log("req!", req.sessionStore, req.session, req.headers) || {
-      session: req.session,
-    },
+  context: ({ req }) => ({
+    session: req.session,
+  }),
 });
 
 const app = express();
@@ -180,6 +177,27 @@ app.post("/login", passport.authenticate(["ios", "android"]), (req, res) => {
 app.post("/logout", (req, res) => {
   req.logout();
   res.json({ success: true });
+});
+
+app.post("/nuke_account", (req, res) => {
+  if (req.session.passport.user == null) {
+    res.json({ success: false });
+    return;
+  }
+  // If the logged in user is the same as the user that is being deleted, AND the
+  // special confirmation string is correct (no accidental postman requests permanently
+  // deleting accounts) then we nuke the account and all it stands for.
+  // The confirmation string isn't a secret, it's just there to make it difficult to
+  // accidentally nuke an account.
+  if (
+    req.session.passport.user.email !== req.email &&
+    req.confirmation === "WHO's thhe MAn now dog?"
+  ) {
+    nukeAccount(req.id, pg);
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
+  }
 });
 
 app.get("/", (req, res) => {
