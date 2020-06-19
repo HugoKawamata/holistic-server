@@ -198,9 +198,16 @@ export const addLessonResultsResolver = (
         })
         .then(async () => {
           // Complete current lesson
-          await pg("user_set_lessons")
+          const completeLesson = pg("user_set_lessons")
             .where({ user_id: userId, set_lesson_id: setLessonId })
             .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+            .transacting(trx)
+            .toString();
+
+          await pg
+            .raw(
+              `${completeLesson} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
+            )
             .transacting(trx);
 
           // Line up next lesson
@@ -212,10 +219,19 @@ export const addLessonResultsResolver = (
             .then((lessons) => lessons[0]);
 
           if (lesson.unlocks_ids === "NEXT_COURSE") {
-            await pg("user_courses")
-              .where({ id: lesson.course_id })
+            const completeCourse = pg("user_courses")
+              .where({ user_id: userId, course_id: lesson.course_id })
               .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+              .transacting(trx)
+              .toString();
+
+            await pg
+              .raw(
+                `${completeCourse} ON CONFLICT (user_id, course_id) DO NOTHING`
+              )
               .transacting(trx);
+
+            // TODO: add new course
           } else {
             const unlocks = lesson.unlocks_ids.split(",").map((unlockId) => ({
               user_id: userId,
@@ -223,7 +239,14 @@ export const addLessonResultsResolver = (
               status: "AVAILABLE",
             }));
 
-            await pg("user_set_lessons").insert(unlocks).transacting(trx);
+            const addNewLesson = pg("user_set_lessons")
+              .insert(unlocks)
+              .transacting(trx);
+            await pg
+              .raw(
+                `${addNewLesson} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
+              )
+              .transacting(trx);
           }
         })
         .then(trx.commit)
