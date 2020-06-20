@@ -231,7 +231,25 @@ export const addLessonResultsResolver = (
               )
               .transacting(trx);
 
-            // TODO: add new course
+            const course = await pg("courses")
+              .where({ id: lesson.course_id })
+              .transacting(trx);
+
+            const unlocks = course.unlocks_ids.split(",").map((unlockId) => ({
+              user_id: userId,
+              course_id: unlockId,
+              status: "AVAILABLE",
+            }));
+
+            const addNewCourse = pg("user_courses")
+              .insert(unlocks)
+              .transacting(trx);
+
+            await pg
+              .raw(
+                `${addNewCourse} ON CONFLICT (user_id, course_id) DO NOTHING`
+              )
+              .transacting(trx);
           } else {
             const unlocks = lesson.unlocks_ids.split(",").map((unlockId) => ({
               user_id: userId,
