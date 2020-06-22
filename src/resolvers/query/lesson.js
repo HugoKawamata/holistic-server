@@ -161,9 +161,11 @@ export const normalLessonResolver = async (
   lesson: UserSetLessonJoinSetLessonDB | SetLessonDB,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
-  const testables = await pg("testables")
+  const dbTestables = await pg("testables")
     .where("set_lesson_id", lesson.id)
-    .join("words", "words.id", "=", "testables.word_id")
+    .join("words", "words.id", "=", "testables.word_id");
+
+  const testables = dbTestables
     .map((testable) => ({
       objectId: testable.id,
       objectType: getObjectType(testable.question_type),
