@@ -8,6 +8,44 @@ import type {
 } from "../../types/db";
 import { hiraganaRomajiMap } from "../util";
 
+const getObjectType = (questionType) => {
+  switch (questionType) {
+    case "J_SENTENCE":
+    case "E_SENTENCE":
+      return "SENTENCE";
+    case "J_WORD":
+    case "E_WORD":
+      return "WORD";
+    default:
+      return "SENTENCE";
+  }
+};
+
+const getQuestion = (testableWordJoin) => {
+  if (["J_WORD", "KANA_WORD"].includes(testableWordJoin.question_type)) {
+    return {
+      type: testableWordJoin.question_type,
+      image: testableWordJoin.image,
+      emoji: testableWordJoin.emoji,
+      text:
+        testableWordJoin.question_type === "J_WORD"
+          ? testableWordJoin.japanese
+          : testableWordJoin.hiragana,
+      furigana:
+        testableWordJoin.question_type === "J_WORD"
+          ? testableWordJoin.hiragana
+          : null,
+    };
+  }
+  return {
+    type: testableWordJoin.question_type,
+    image: null,
+    emoji: null,
+    text: testableWordJoin.question_text,
+    furigana: testableWordJoin.question_text_fg,
+  };
+};
+
 const hiraganaToRomajiCSV = (hiragana) => {
   let splitQuestion = [];
   let mutateHiragana = hiragana;
@@ -30,6 +68,19 @@ const hiraganaToRomajiCSV = (hiragana) => {
     }
   }
   return splitQuestion.reduce((csv, kana) => `${csv},${kana}`);
+};
+
+const getAnswer = (testableWordJoin) => {
+  if (testableWordJoin.answer_type === "ROMAJI") {
+    return {
+      text: hiraganaToRomajiCSV(testableWordJoin.hiragana),
+      type: testableWordJoin.answer_type,
+    };
+  }
+  return {
+    text: testableWordJoin.possible_answers,
+    type: testableWordJoin.answer_type,
+  };
 };
 
 // heta as in 下手 (bad at). This was the most succinct so I thought I'd use some Japanese :)
@@ -75,7 +126,7 @@ export const kanaLessonResolver = async (
     objectId: word.id,
     objectType: "WORD",
     question: {
-      type: "J_WORD",
+      type: "KANA_WORD",
       image: word.image,
       emoji: word.emoji,
       text: word.hiragana,
@@ -106,6 +157,58 @@ export const kanaLessonResolver = async (
   };
 };
 
+export const normalLessonResolver = async (
+  lesson: UserSetLessonJoinSetLessonDB | SetLessonDB,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  const testables = await pg("testables")
+    .where("set_lesson_id", lesson.id)
+    .join("words", "words.id", "=", "testables.word_id")
+    .sort((a, b) => {
+      if (a.order_in_lesson < b.order_in_lesson) {
+        return -1;
+      }
+      if (a.order_in_lesson > b.order_in_lesson) {
+        return 1;
+      }
+      return 0;
+    })
+    .map((testable) => ({
+      objectId: testable.id,
+      objectType: getObjectType(testable.question_type),
+      question: getQuestion(testable),
+      answer: getAnswer(testable),
+      person: testable.person,
+      location: testable.location,
+      introduction: testable.introduction, // will be non-null iff it's a word
+      context: {
+        japanese: testable.context_jp,
+        furigana: testable.context_fg,
+        english: testable.context_en,
+        speaker: testable.context_speaker,
+      },
+    }));
+
+  const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
+  return {
+    id: lesson.id,
+    title: lesson.title,
+    image: lesson.image,
+    skillLevel: lesson.skill_level,
+    timeEstimate: lesson.time_estimate,
+    lectures: lectures.sort((a, b) => {
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    }),
+    testables,
+  };
+};
+
 export const lessonResolver = async (
   lesson: UserSetLessonJoinSetLessonDB | SetLessonDB,
   pg: any // eslint-disable-line flowtype/no-weak-types
@@ -116,13 +219,7 @@ export const lessonResolver = async (
     case "KATAKANA":
       return kanaLessonResolver(lesson, pg);
     default:
-      return {
-        id: lesson.id,
-        title: lesson.title,
-        image: lesson.image,
-        skillLevel: lesson.skill_level,
-        timeEstimate: lesson.time_estimate,
-      };
+      return normalLessonResolver(lesson, pg);
   }
 };
 

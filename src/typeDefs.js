@@ -74,6 +74,7 @@ export const typeDefs = gql`
     ROMAJI
     HIRAGANA
     JAPANESE
+    ENGLISH
     MC
   }
 
@@ -129,9 +130,14 @@ export const typeDefs = gql`
   type Testable {
     objectId: ID!
     objectType: TestableObject!
+    person: String
+    location: String
     question: Question!
     answer: Answer!
     introduction: String
+    wordId: Integer
+    orderInLesson: Integer
+    contextSpeaker: String
   }
 
   type Question {
@@ -139,6 +145,7 @@ export const typeDefs = gql`
     image: String
     emoji: String
     text: String!
+    furigana: String
   }
 
   type Answer {
