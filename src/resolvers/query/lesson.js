@@ -162,7 +162,7 @@ export const normalLessonResolver = async (
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
   const dbTestables = await pg("testables")
-    .where("set_lesson_id", lesson.id)
+    .where("testables.set_lesson_id", lesson.id)
     .join("words", "words.id", "=", "testables.word_id");
 
   const testables = dbTestables
