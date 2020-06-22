@@ -164,30 +164,31 @@ export const normalLessonResolver = async (
   const testables = await pg("testables")
     .where("set_lesson_id", lesson.id)
     .join("words", "words.id", "=", "testables.word_id")
-    .sort((a, b) => {
-      if (a.order_in_lesson < b.order_in_lesson) {
-        return -1;
-      }
-      if (a.order_in_lesson > b.order_in_lesson) {
-        return 1;
-      }
-      return 0;
-    })
     .map((testable) => ({
       objectId: testable.id,
       objectType: getObjectType(testable.question_type),
       question: getQuestion(testable),
       answer: getAnswer(testable),
-      person: testable.person,
-      location: testable.location,
       introduction: testable.introduction, // will be non-null iff it's a word
       context: {
+        person: testable.person,
+        location: testable.location,
         japanese: testable.context_jp,
         furigana: testable.context_fg,
         english: testable.context_en,
         speaker: testable.context_speaker,
       },
-    }));
+      orderInLesson: testable.order_in_lesson,
+    }))
+    .sort((a, b) => {
+      if (a.orderInLesson < b.orderInLesson) {
+        return -1;
+      }
+      if (a.orderInLesson > b.orderInLesson) {
+        return 1;
+      }
+      return 0;
+    });
 
   const lectures = await pg("lectures").where("set_lesson_id", lesson.id);
   return {

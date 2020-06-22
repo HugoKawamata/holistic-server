@@ -131,14 +131,21 @@ export const typeDefs = gql`
   type Testable {
     objectId: ID!
     objectType: TestableObject!
-    person: String
-    location: String
+    context: Context
     question: Question!
     answer: Answer!
     introduction: String
     wordId: Int
     orderInLesson: Int
-    contextSpeaker: String
+  }
+
+  type Context {
+    person: String # conversation partner
+    location: String
+    speaker: String # name of speaker (plus details)
+    japanese: String
+    furigana: String
+    english: String
   }
 
   type Question {
