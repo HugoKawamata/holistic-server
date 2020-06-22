@@ -135,8 +135,8 @@ export const typeDefs = gql`
     question: Question!
     answer: Answer!
     introduction: String
-    wordId: Integer
-    orderInLesson: Integer
+    wordId: Int
+    orderInLesson: Int
     contextSpeaker: String
   }
 
