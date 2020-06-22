@@ -64,6 +64,7 @@ export const typeDefs = gql`
   }
 
   enum QuestionType {
+    KANA_WORD
     J_WORD
     J_SENTENCE
     E_WORD
