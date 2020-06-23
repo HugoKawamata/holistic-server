@@ -36,7 +36,7 @@ const getQuestion = (testableWordJoin) => {
           ? testableWordJoin.hiragana
           : null,
       // maybe change this prompt to be "Spell this word with English letters"
-      prompt: testableWordJoin.question_type === "",
+      prompt: null,
     };
   }
   return {
@@ -133,6 +133,7 @@ export const kanaLessonResolver = async (
       image: word.image,
       emoji: word.emoji,
       text: word.hiragana,
+      prompt: null,
     },
     answer: {
       type: "ROMAJI",
