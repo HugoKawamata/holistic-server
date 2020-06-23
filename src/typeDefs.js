@@ -154,6 +154,7 @@ export const typeDefs = gql`
     emoji: String
     text: String!
     furigana: String
+    prompt: String
   }
 
   type Answer {

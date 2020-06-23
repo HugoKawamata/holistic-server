@@ -35,6 +35,8 @@ const getQuestion = (testableWordJoin) => {
         testableWordJoin.question_type === "J_WORD"
           ? testableWordJoin.hiragana
           : null,
+      // maybe change this prompt to be "Spell this word with English letters"
+      prompt: testableWordJoin.question_type === "",
     };
   }
   return {
@@ -43,6 +45,7 @@ const getQuestion = (testableWordJoin) => {
     emoji: null,
     text: testableWordJoin.question_text,
     furigana: testableWordJoin.question_text_fg,
+    prompt: testableWordJoin.question_prompt,
   };
 };
 
