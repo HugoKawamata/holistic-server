@@ -26,8 +26,14 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
   if (sentence == null) {
     return sentence;
   }
-  // Each segment can be a word + particles or just a word
-  const segments = sentence.split("　"); // This is a Japanese space character
+  // Each segment can be:
+  // - a series of punctuation, including spaces
+  // - a series of japanese characters (and english full stops which delimit particles)
+  // - anything enclosed within curly braces
+  const segments = sentence.match(
+    // eslint-disable-next-line no-irregular-whitespace
+    /[　、。「」？！]+|[一-龠ぁ-ゔァ-ヴー.]+|\{.*\}/g
+  );
   // Particles are separated from the connecting word by an English full stop character
   const splitSegments = segments.map((segment) => segment.split(".")); // English dot
   // Split segments is an array of arrays.
@@ -40,11 +46,19 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
     .select("japanese");
   console.log("knownWords", knownWords);
   const highlights = splitSegments.map((segment) => {
+    // segment[0] can be:
+    // - a series of punctuation, including spaces
+    // - a japanese word
+    // - anything enclosed within curly braces
     const word = knownWords.includes(segment[0])
       ? `[${segment[0]}]`
       : segment[0];
 
-    const particles = segment.slice(1).map((particle) => `(${particle})`);
+    const particles = segment
+      .slice(1)
+      .map((particle) => `(${particle})`)
+      .reduce((acc, cur) => `${acc}${cur}`, "");
+
     return `${word}${particles}`;
   });
   console.log("highlights", highlights);
