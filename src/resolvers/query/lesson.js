@@ -43,7 +43,9 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
     .join("user_words", "user_words.word_id", "=", "words.id")
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
-    .select("japanese");
+    .select("japanese")
+    .map((known) => known.japanese);
+
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
     // - a series of punctuation, including spaces
