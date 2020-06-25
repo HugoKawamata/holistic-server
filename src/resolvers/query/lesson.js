@@ -44,7 +44,6 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
     .select("japanese");
-  console.log("knownWords", knownWords);
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
     // - a series of punctuation, including spaces
@@ -61,9 +60,7 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
 
     return `${word}${particles}`;
   });
-  console.log("highlights", highlights);
-  // eslint-disable-next-line no-irregular-whitespace
-  return highlights.reduce((acc, segment) => `${acc}　${segment}`);
+  return highlights.reduce((acc, segment) => `${acc}${segment}`);
 };
 
 const getQuestion = (testableWordJoin, pg) => {

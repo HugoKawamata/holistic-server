@@ -198,17 +198,21 @@ export const addLessonResultsResolver = (
         })
         .then(async () => {
           // Complete current lesson
-          const completeLesson = pg("user_set_lessons")
-            .where({ user_id: userId, set_lesson_id: setLessonId })
-            .update({ status: "COMPLETE", completed_at: pg.fn.now() })
-            .transacting(trx)
-            .toString();
-
-          await pg
-            .raw(
-              `${completeLesson} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
-            )
+          const completeLesson = await pg("user_set_lessons")
+            .where({
+              user_id: userId,
+              set_lesson_id: setLessonId,
+            })
             .transacting(trx);
+
+          // If it's already complete, dont update
+          // We want completed_at to be the time it was originally completed at, for sorting
+          if (completeLesson.status !== "COMPLETE") {
+            await pg("user_set_lessons")
+              .where({ user_id: userId, set_lesson_id: setLessonId })
+              .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+              .transacting(trx);
+          }
 
           // Line up next lesson
           const lesson = await pg("set_lessons")
@@ -219,17 +223,20 @@ export const addLessonResultsResolver = (
             .then((lessons) => lessons[0]);
 
           if (lesson.unlocks_ids === "NEXT_COURSE") {
-            const completeCourse = pg("user_courses")
-              .where({ user_id: userId, course_id: lesson.course_id })
-              .update({ status: "COMPLETE", completed_at: pg.fn.now() })
-              .transacting(trx)
-              .toString();
-
-            await pg
-              .raw(
-                `${completeCourse} ON CONFLICT (user_id, course_id) DO NOTHING`
-              )
+            const completeCourse = await pg("user_courses")
+              .where({
+                user_id: userId,
+                course_id: lesson.course_id,
+              })
               .transacting(trx);
+
+            // If it's already complete, dont update
+            if (completeCourse.status !== "COMPLETE") {
+              await pg("user_courses")
+                .where({ user_id: userId, course_id: lesson.course_id })
+                .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+                .transacting(trx);
+            }
 
             const course = await pg("courses")
               .where({ id: lesson.course_id })
