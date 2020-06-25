@@ -163,6 +163,9 @@ export const kanaLessonResolver = async (
 
 // TODO: Add focus word highlight
 export const parseWithHighlights = async (sentence, isFurigana, pg) => {
+  if (sentence == null) {
+    return sentence;
+  }
   // Each segment can be a word + particles or just a word
   const segments = sentence.split("　"); // This is a Japanese space character
   // Particles are separated from the connecting word by an English full stop character
@@ -171,7 +174,7 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
   // EG. [["word", "particle"], ["word"], ["word", "particle", "particle"]]
   const wordsToCheck = splitSegments.map((segment) => segment[0]);
   const knownWords = await pg("words")
-    .join("user_words", "user_words.id", "=", "words.id")
+    .join("user_words", "user_words.word_id", "=", "words.id")
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
     .select("japanese");
@@ -182,10 +185,11 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
       : segment[0];
 
     const particles = segment.slice(1).map((particle) => `(${particle})`);
-    return [word, ...particles];
+    return `${word}${particles}`;
   });
   console.log("highlights", highlights);
-  return highlights;
+  // eslint-disable-next-line no-irregular-whitespace
+  return highlights.reduce((acc, segment) => `${acc}　${segment}`);
 };
 
 export const normalLessonResolver = async (
