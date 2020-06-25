@@ -44,7 +44,7 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
     .select("japanese")
-    .map((known) => known.japanese);
+    .then((res) => res.map((known) => known.japanese));
 
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
