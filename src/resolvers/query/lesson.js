@@ -22,7 +22,11 @@ const getObjectType = (questionType) => {
 };
 
 // TODO: Add focus word highlight
-export const parseWithHighlights = async (sentence, isFurigana, pg) => {
+export const parseWithHighlights = async (
+  sentence: ?string,
+  isFurigana: boolean,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
   if (sentence == null) {
     return sentence;
   }
@@ -34,6 +38,9 @@ export const parseWithHighlights = async (sentence, isFurigana, pg) => {
     // eslint-disable-next-line no-irregular-whitespace
     /[　、。「」？！]+|[一-龠ぁ-ゔァ-ヴー.]+|\{.*\}/g
   );
+  if (segments == null) {
+    return sentence;
+  }
   // Particles are separated from the connecting word by an English full stop character
   const splitSegments = segments.map((segment) => segment.split(".")); // English dot
   // Split segments is an array of arrays.
