@@ -52,8 +52,8 @@ export const parseWithHighlights = async (
   // EG. [["word", "particle"], ["word"], ["word", "particle", "particle"]]
   const wordsToCheck = splitSegments.map((segment) => segment[0]);
 
-  const knownWords = await pg("words")
-    .join("user_words", "user_words.word_id", "=", "words.id")
+  const dbWords = await pg("words")
+    .leftJoin("user_words", "user_words.word_id", "=", "words.id")
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
     .select("japanese", "hiragana");
@@ -64,8 +64,9 @@ export const parseWithHighlights = async (
     // - a series of punctuation, including spaces
     // - a japanese word
     // - anything enclosed within curly braces
-    const knownWord = knownWords.find((known) => known.japanese === segment[0]);
-    const word = knownWord != null ? `[${segment[0]}]` : segment[0];
+    const dbWord = dbWords.find((word) => word.japanese === segment[0]);
+    const word =
+      dbWord != null && dbWord.user_id != null ? `[${segment[0]}]` : segment[0];
 
     const particles = segment
       .slice(1)
@@ -74,8 +75,7 @@ export const parseWithHighlights = async (
 
     return {
       japanese: `${word}${particles}`,
-      furigana:
-        knownWord != null ? `[${knownWord.hiragana}]${particles}` : null,
+      furigana: dbWord != null ? `[${dbWord.hiragana}]${particles}` : null,
     };
   });
   return highlights.reduce(
