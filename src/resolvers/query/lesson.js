@@ -278,7 +278,7 @@ export const normalLessonResolver = async (
       );
       return {
         objectId:
-          testable.questionType === "J_WORD"
+          testable.question_type === "J_WORD"
             ? testable.word_id
             : testable.testable_id,
         objectType: getObjectType(testable.question_type),
