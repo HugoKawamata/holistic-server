@@ -24,7 +24,8 @@ const getObjectType = (questionType) => {
 // TODO: Add focus word highlight
 export const parseWithHighlights = async (
   sentence: ?string,
-  pg: any // eslint-disable-line flowtype/no-weak-types
+  pg: any, // eslint-disable-line flowtype/no-weak-types
+  focusWordId?: number
 ): Promise<?{
   furigana: string,
   japanese: string,
@@ -56,7 +57,7 @@ export const parseWithHighlights = async (
     .leftJoin("user_words", "user_words.word_id", "=", "words.id")
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
-    .select("japanese", "hiragana", "user_id");
+    .select("japanese", "hiragana", "user_id", "word_id");
 
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
@@ -65,13 +66,22 @@ export const parseWithHighlights = async (
     // - anything enclosed within curly braces
     const dbWord = dbWords.find((word) => word.japanese === segment[0]);
     const word =
-      dbWord != null && dbWord.user_id != null ? `[${segment[0]}]` : segment[0];
+      // eslint-disable-next-line no-nested-ternary
+      dbWord != null
+        ? segment[0]
+        : dbWord.user_id != null // eslint-disable-line no-nested-ternary
+        ? `[${segment[0]}]`
+        : dbWord.word_id === focusWordId
+        ? `<${segment[0]}`
+        : segment[0];
     const furigana =
       // eslint-disable-next-line no-nested-ternary
       dbWord == null
         ? null
-        : dbWord.user_id != null
+        : dbWord.user_id != null // eslint-disable-line no-nested-ternary
         ? `[${dbWord.hiragana}]`
+        : dbWord.word_id === focusWordId
+        ? `<${dbWord.hiragana}>`
         : dbWord.hiragana;
 
     const particles = segment
@@ -256,7 +266,11 @@ export const normalLessonResolver = async (
 
   const testables = dbTestables
     .map(async (testable) => {
-      const contextText = await parseWithHighlights(testable.context_jp, pg);
+      const contextText = await parseWithHighlights(
+        testable.context_jp,
+        pg,
+        testable.wordId
+      );
       return {
         objectId: testable.id,
         objectType: getObjectType(testable.question_type),
