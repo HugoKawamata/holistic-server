@@ -120,8 +120,9 @@ const getQuestion = async (testableWordJoin, pg) => {
     type: testableWordJoin.question_type,
     image: null,
     emoji: null,
-    text: questionText?.japanese || testableWordJoin.question_text,
-    furigana: questionText?.furigana || testableWordJoin.question_text_fg,
+    text: (questionText || {}).japanese || testableWordJoin.question_text,
+    furigana:
+      (questionText || {}).furigana || testableWordJoin.question_text_fg,
     prompt: testableWordJoin.question_prompt,
   };
 };
@@ -258,8 +259,8 @@ export const normalLessonResolver = async (
         context: {
           person: testable.person,
           location: testable.location,
-          japanese: contextText?.japanese || testable.context_jp,
-          furigana: contextText?.furigana || testable.context_fg,
+          japanese: (contextText || {}).japanese || testable.context_jp,
+          furigana: (contextText || {}).furigana || testable.context_fg,
           english: testable.context_en,
           speaker: testable.context_speaker,
         },
