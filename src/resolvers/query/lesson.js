@@ -56,8 +56,7 @@ export const parseWithHighlights = async (
     .leftJoin("user_words", "user_words.word_id", "=", "words.id")
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
-    .select("japanese", "hiragana");
-  // .then((res) => res.map((known) => known.japanese));
+    .select("japanese", "hiragana", "user_id");
 
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
