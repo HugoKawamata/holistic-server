@@ -24,11 +24,13 @@ const getObjectType = (questionType) => {
 // TODO: Add focus word highlight
 export const parseWithHighlights = async (
   sentence: ?string,
-  isFurigana: boolean,
   pg: any // eslint-disable-line flowtype/no-weak-types
-) => {
+): Promise<?{
+  furigana: string,
+  japanese: string,
+}> => {
   if (sentence == null) {
-    return sentence;
+    return null;
   }
   // Each segment can be:
   // - a series of punctuation, including spaces
@@ -39,7 +41,10 @@ export const parseWithHighlights = async (
     /[　、。「」？！]+|[一-龠ぁ-ゔァ-ヴー.]+|\{.*\}/g
   );
   if (segments == null) {
-    return sentence;
+    return {
+      japanese: sentence,
+      furigana: sentence,
+    };
   }
   // Particles are separated from the connecting word by an English full stop character
   const splitSegments = segments.map((segment) => segment.split(".")); // English dot
@@ -47,35 +52,44 @@ export const parseWithHighlights = async (
   // EG. [["word", "particle"], ["word"], ["word", "particle", "particle"]]
   const wordsToCheck = splitSegments.map((segment) => segment[0]);
 
-  const knownWords = isFurigana
-    ? [] // Don't highlight if it's furigana
-    : await pg("words")
-        .join("user_words", "user_words.word_id", "=", "words.id")
-        .whereIn("japanese", wordsToCheck)
-        .orWhereIn("hiragana", wordsToCheck)
-        .select("japanese")
-        .then((res) => res.map((known) => known.japanese));
+  const knownWords = await pg("words")
+    .join("user_words", "user_words.word_id", "=", "words.id")
+    .whereIn("japanese", wordsToCheck)
+    .orWhereIn("hiragana", wordsToCheck)
+    .select("japanese", "hiragana");
+  // .then((res) => res.map((known) => known.japanese));
 
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
     // - a series of punctuation, including spaces
     // - a japanese word
     // - anything enclosed within curly braces
-    const word = knownWords.includes(segment[0])
-      ? `[${segment[0]}]`
-      : segment[0];
+    const knownWord = knownWords.find((known) => known.japanese === segment[0]);
+    const word = knownWord != null ? `[${segment[0]}]` : segment[0];
 
     const particles = segment
       .slice(1)
       .map((particle) => `(${particle})`)
       .reduce((acc, cur) => `${acc}${cur}`, "");
 
-    return `${word}${particles}`;
+    return {
+      japanese: `${word}${particles}`,
+      furigana: knownWord != null ? `${knownWord.hiragana}` : null,
+    };
   });
-  return highlights.reduce((acc, segment) => `${acc}${segment}`);
+  return highlights.reduce(
+    (acc, segment) => ({
+      japanese: `${acc.japanese}${segment.japanese}`,
+      furigana:
+        segment.furigana == null
+          ? `${acc.furigana}${segment.japanese}`
+          : `${acc.furigana}${segment.furigana}`,
+    }),
+    { japanese: "", furigana: "" }
+  );
 };
 
-const getQuestion = (testableWordJoin, pg) => {
+const getQuestion = async (testableWordJoin, pg) => {
   if (["J_WORD", "KANA_WORD"].includes(testableWordJoin.question_type)) {
     return {
       type: testableWordJoin.question_type,
@@ -93,18 +107,21 @@ const getQuestion = (testableWordJoin, pg) => {
       prompt: null,
     };
   }
+
+  const questionText =
+    testableWordJoin.question_type === "J_SENTENCE"
+      ? await parseWithHighlights(testableWordJoin.question_text, pg)
+      : {
+          japanese: testableWordJoin.question_text,
+          furigana: testableWordJoin.question_text_fg,
+        };
+
   return {
     type: testableWordJoin.question_type,
     image: null,
     emoji: null,
-    text:
-      testableWordJoin.question_type === "J_SENTENCE"
-        ? parseWithHighlights(testableWordJoin.question_text, false, pg)
-        : testableWordJoin.question_text,
-    furigana:
-      testableWordJoin.question_type === "J_SENTENCE"
-        ? parseWithHighlights(testableWordJoin.question_text_fg, true, pg)
-        : testableWordJoin.question_text_fg,
+    text: questionText?.japanese || testableWordJoin.question_text,
+    furigana: questionText?.furigana || testableWordJoin.question_text_fg,
     prompt: testableWordJoin.question_prompt,
   };
 };
@@ -230,22 +247,25 @@ export const normalLessonResolver = async (
     .join("words", "words.id", "=", "testables.word_id");
 
   const testables = dbTestables
-    .map((testable) => ({
-      objectId: testable.id,
-      objectType: getObjectType(testable.question_type),
-      question: getQuestion(testable, pg),
-      answer: getAnswer(testable),
-      introduction: testable.introduction, // will be non-null iff it's a word
-      context: {
-        person: testable.person,
-        location: testable.location,
-        japanese: parseWithHighlights(testable.context_jp, false, pg),
-        furigana: parseWithHighlights(testable.context_fg, true, pg),
-        english: testable.context_en,
-        speaker: testable.context_speaker,
-      },
-      orderInLesson: testable.order_in_lesson,
-    }))
+    .map(async (testable) => {
+      const contextText = await parseWithHighlights(testable.context_jp, pg);
+      return {
+        objectId: testable.id,
+        objectType: getObjectType(testable.question_type),
+        question: await getQuestion(testable, pg),
+        answer: getAnswer(testable),
+        introduction: testable.introduction, // will be non-null iff it's a word
+        context: {
+          person: testable.person,
+          location: testable.location,
+          japanese: contextText?.japanese || testable.context_jp,
+          furigana: contextText?.furigana || testable.context_fg,
+          english: testable.context_en,
+          speaker: testable.context_speaker,
+        },
+        orderInLesson: testable.order_in_lesson,
+      };
+    })
     .sort((a, b) => {
       if (a.orderInLesson < b.orderInLesson) {
         return -1;
