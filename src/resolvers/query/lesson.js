@@ -67,7 +67,7 @@ export const parseWithHighlights = async (
     const dbWord = dbWords.find((word) => word.japanese === segment[0]);
     const word =
       // eslint-disable-next-line no-nested-ternary
-      dbWord != null
+      dbWord == null
         ? segment[0]
         : dbWord.user_id != null // eslint-disable-line no-nested-ternary
         ? `[${segment[0]}]`
