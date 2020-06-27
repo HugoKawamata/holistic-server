@@ -46,12 +46,15 @@ export const parseWithHighlights = async (
   // Split segments is an array of arrays.
   // EG. [["word", "particle"], ["word"], ["word", "particle", "particle"]]
   const wordsToCheck = splitSegments.map((segment) => segment[0]);
-  const knownWords = await pg("words")
-    .join("user_words", "user_words.word_id", "=", "words.id")
-    .whereIn("japanese", wordsToCheck)
-    .orWhereIn("hiragana", wordsToCheck)
-    .select("japanese")
-    .then((res) => res.map((known) => known.japanese));
+
+  const knownWords = isFurigana
+    ? [] // Don't highlight if it's furigana
+    : await pg("words")
+        .join("user_words", "user_words.word_id", "=", "words.id")
+        .whereIn("japanese", wordsToCheck)
+        .orWhereIn("hiragana", wordsToCheck)
+        .select("japanese")
+        .then((res) => res.map((known) => known.japanese));
 
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
@@ -98,7 +101,10 @@ const getQuestion = (testableWordJoin, pg) => {
       testableWordJoin.question_type === "J_SENTENCE"
         ? parseWithHighlights(testableWordJoin.question_text, false, pg)
         : testableWordJoin.question_text,
-    furigana: testableWordJoin.question_text_fg,
+    furigana:
+      testableWordJoin.question_type === "J_SENTENCE"
+        ? parseWithHighlights(testableWordJoin.question_text_pg, true, pg)
+        : testableWordJoin.question_text_fg,
     prompt: testableWordJoin.question_prompt,
   };
 };
@@ -234,7 +240,7 @@ export const normalLessonResolver = async (
         person: testable.person,
         location: testable.location,
         japanese: parseWithHighlights(testable.context_jp, false, pg),
-        furigana: testable.context_fg,
+        furigana: parseWithHighlights(testable.context_fg, true, pg),
         english: testable.context_en,
         speaker: testable.context_speaker,
       },
