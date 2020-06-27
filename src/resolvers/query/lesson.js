@@ -57,7 +57,7 @@ export const parseWithHighlights = async (
     .leftJoin("user_words", "user_words.word_id", "=", "words.id")
     .whereIn("japanese", wordsToCheck)
     .orWhereIn("hiragana", wordsToCheck)
-    .select("japanese", "hiragana", "user_id", "word_id");
+    .select("japanese", "hiragana", "user_id", "id");
 
   const highlights = splitSegments.map((segment) => {
     // segment[0] can be:
@@ -71,7 +71,7 @@ export const parseWithHighlights = async (
         ? segment[0]
         : dbWord.user_id != null // eslint-disable-line no-nested-ternary
         ? `[${segment[0]}]`
-        : dbWord.word_id === focusWordId
+        : dbWord.id === focusWordId
         ? `<${segment[0]}>`
         : segment[0];
     const furigana =
@@ -80,7 +80,7 @@ export const parseWithHighlights = async (
         ? null
         : dbWord.user_id != null // eslint-disable-line no-nested-ternary
         ? `[${dbWord.hiragana}]`
-        : dbWord.word_id === focusWordId
+        : dbWord.id === focusWordId
         ? `<${dbWord.hiragana}>`
         : dbWord.hiragana;
 
