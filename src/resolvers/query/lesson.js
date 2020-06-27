@@ -103,7 +103,7 @@ const getQuestion = (testableWordJoin, pg) => {
         : testableWordJoin.question_text,
     furigana:
       testableWordJoin.question_type === "J_SENTENCE"
-        ? parseWithHighlights(testableWordJoin.question_text_pg, true, pg)
+        ? parseWithHighlights(testableWordJoin.question_text_fg, true, pg)
         : testableWordJoin.question_text_fg,
     prompt: testableWordJoin.question_prompt,
   };
