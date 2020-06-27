@@ -266,7 +266,7 @@ export const normalLessonResolver = async (
 ) => {
   const dbTestables = await pg("testables")
     .where("testables.set_lesson_id", lesson.id)
-    .select(["testables.*", "words.*", "words.id as actual_word_id"])
+    .select(["testables.*", "words.*", "testables.id as testable_id"])
     .join("words", "words.id", "=", "testables.word_id");
 
   const testables = dbTestables
@@ -278,7 +278,9 @@ export const normalLessonResolver = async (
       );
       return {
         objectId:
-          testable.questionType === "J_WORD" ? testable.word_id : testable.id,
+          testable.questionType === "J_WORD"
+            ? testable.word_id
+            : testable.testable_id,
         objectType: getObjectType(testable.question_type),
         question: await getQuestion(testable, pg),
         answer: getAnswer(testable),
