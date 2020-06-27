@@ -60,7 +60,7 @@ export const typeDefs = gql`
   enum TestableObject {
     CHARACTER
     WORD
-    SENTENCE
+    TESTABLE
   }
 
   enum QuestionType {

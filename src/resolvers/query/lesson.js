@@ -12,12 +12,12 @@ const getObjectType = (questionType) => {
   switch (questionType) {
     case "J_SENTENCE":
     case "E_SENTENCE":
-      return "SENTENCE";
+      return "TESTABLE";
     case "J_WORD":
     case "E_WORD":
       return "WORD";
     default:
-      return "SENTENCE";
+      return "TESTABLE";
   }
 };
 
@@ -266,6 +266,7 @@ export const normalLessonResolver = async (
 ) => {
   const dbTestables = await pg("testables")
     .where("testables.set_lesson_id", lesson.id)
+    .select(["testables.*", "words.*", "words.id as actual_word_id"])
     .join("words", "words.id", "=", "testables.word_id");
 
   const testables = dbTestables
@@ -276,7 +277,8 @@ export const normalLessonResolver = async (
         testable.wordId
       );
       return {
-        objectId: testable.id,
+        objectId:
+          testable.questionType === "J_WORD" ? testable.word_id : testable.id,
         objectType: getObjectType(testable.question_type),
         question: await getQuestion(testable, pg),
         answer: getAnswer(testable),
