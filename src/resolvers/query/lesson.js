@@ -25,7 +25,7 @@ const getObjectType = (questionType) => {
 export const parseWithHighlights = async (
   sentence: ?string,
   pg: any, // eslint-disable-line flowtype/no-weak-types
-  focusWordId?: number
+  focusWordId?: ?number
 ): Promise<?{
   furigana: string,
   japanese: string,
@@ -72,7 +72,7 @@ export const parseWithHighlights = async (
         : dbWord.user_id != null // eslint-disable-line no-nested-ternary
         ? `[${segment[0]}]`
         : dbWord.word_id === focusWordId
-        ? `<${segment[0]}`
+        ? `<${segment[0]}>`
         : segment[0];
     const furigana =
       // eslint-disable-next-line no-nested-ternary
@@ -127,7 +127,11 @@ const getQuestion = async (testableWordJoin, pg) => {
 
   const questionText =
     testableWordJoin.question_type === "J_SENTENCE"
-      ? await parseWithHighlights(testableWordJoin.question_text, pg)
+      ? await parseWithHighlights(
+          testableWordJoin.question_text,
+          pg,
+          testableWordJoin.word_id
+        )
       : {
           japanese: testableWordJoin.question_text,
           furigana: testableWordJoin.question_text_fg,
