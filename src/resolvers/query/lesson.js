@@ -74,7 +74,8 @@ export const parseWithHighlights = async (
 
     return {
       japanese: `${word}${particles}`,
-      furigana: knownWord != null ? `${knownWord.hiragana}` : null,
+      furigana:
+        knownWord != null ? `[${knownWord.hiragana}]${particles}` : null,
     };
   });
   return highlights.reduce(
