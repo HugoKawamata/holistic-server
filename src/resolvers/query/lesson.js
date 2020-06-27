@@ -67,6 +67,13 @@ export const parseWithHighlights = async (
     const dbWord = dbWords.find((word) => word.japanese === segment[0]);
     const word =
       dbWord != null && dbWord.user_id != null ? `[${segment[0]}]` : segment[0];
+    const furigana =
+      // eslint-disable-next-line no-nested-ternary
+      dbWord == null
+        ? null
+        : dbWord.user_id != null
+        ? `[${dbWord.hiragana}]`
+        : dbWord.hiragana;
 
     const particles = segment
       .slice(1)
@@ -75,7 +82,7 @@ export const parseWithHighlights = async (
 
     return {
       japanese: `${word}${particles}`,
-      furigana: dbWord != null ? `[${dbWord.hiragana}]${particles}` : null,
+      furigana: furigana != null ? `${furigana}${particles}` : null,
     };
   });
   return highlights.reduce(
