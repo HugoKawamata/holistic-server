@@ -267,7 +267,7 @@ export const normalLessonResolver = async (
   const dbTestables = await pg("testables")
     .where("testables.set_lesson_id", lesson.id)
     .select(["testables.*", "words.*", "testables.id as testable_id"])
-    .join("words", "words.id", "=", "testables.word_id");
+    .leftJoin("words", "words.id", "=", "testables.word_id");
 
   const testables = dbTestables
     .map(async (testable) => {
