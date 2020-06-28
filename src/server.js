@@ -12,6 +12,7 @@ import {
   userResolver,
   meResolver,
   addLessonResultsResolver,
+  sendGenderResolver,
   availableCoursesResolver,
   userCourseResolver,
   nextUnlockCoursesResolver,
@@ -138,6 +139,7 @@ const resolvers = {
   },
   Mutation: {
     addLessonResults: addLessonResultsResolver(pg),
+    sendGender: sendGenderResolver(pg),
   },
 };
 

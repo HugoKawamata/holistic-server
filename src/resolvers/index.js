@@ -1,5 +1,5 @@
 /* @flow */
-import { addLessonResultsResolver } from "./mutation";
+import { addLessonResultsResolver, sendGenderResolver } from "./mutation";
 import {
   userResolver,
   meResolver,
@@ -11,6 +11,7 @@ import {
 
 export {
   addLessonResultsResolver,
+  sendGenderResolver,
   availableCoursesResolver,
   completedCoursesResolver,
   userResolver,
