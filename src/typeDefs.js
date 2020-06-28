@@ -1,7 +1,7 @@
 /* @flow */
 import { gql } from "apollo-server-express";
 
-const KANA_LEVEL = `
+export const KANA_LESSON_IDS = `
   HIRAGANA_A
   HIRAGANA_KA
   HIRAGANA_GA
@@ -39,10 +39,6 @@ const KANA_LEVEL = `
 `;
 
 export const typeDefs = gql`
-  enum KanaLevel {
-    ${KANA_LEVEL}
-  }
-
   enum CourseLessonStatus {
     AVAILABLE
     COMPLETE
@@ -91,14 +87,16 @@ export const typeDefs = gql`
 
   type User {
     id: ID!
-    picture: String
-    name: String
-    email: String
+    picture: String!
+    name: String!
+    email: String!
+    gender: String
     availableCourses: [Course]
     completedCourses: [Course]
     nextUnlockCourses: [Course]
     course(id: String!): Course
     createdAt: Float
+    splots: Splots
   }
 
   type Course {
@@ -162,6 +160,11 @@ export const typeDefs = gql`
     text: String!
   }
 
+  type Splots {
+    me: String
+    meFuri: String
+  }
+
   input Result {
     objectId: ID
     objectType: TestableObject!
@@ -171,7 +174,11 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addLessonResults(results: [Result]!, userId: ID!, setLessonId: String!): Boolean
+    addLessonResults(
+      results: [Result]!
+      userId: ID!
+      setLessonId: String!
+    ): Boolean
   }
 `;
 

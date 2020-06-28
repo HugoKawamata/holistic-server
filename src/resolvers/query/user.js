@@ -1,4 +1,17 @@
 /* @flow */
+import type { UserDB } from "../../types/db";
+
+export const userMarshaller = (dbUser: UserDB) => {
+  return {
+    ...dbUser,
+    createdAt: dbUser.created_at,
+    splots: {
+      me: dbUser.gender === "M" ? "僕" : "私",
+      meFuri: dbUser.gender === "M" ? "ぼく" : "わたし",
+    },
+  };
+};
+
 export const meResolver = (
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
@@ -22,9 +35,7 @@ export const meResolver = (
 
     return pg("accounts")
       .where("email", context.session.passport.user.email)
-      .then((users) => ({
-        ...users[0],
-      }));
+      .then((users) => userMarshaller(users[0]));
   };
 };
 
@@ -54,8 +65,6 @@ export const userResolver = (
 
     return pg("accounts")
       .where("email", args.email)
-      .then((users) => ({
-        ...users[0],
-      }));
+      .then((users) => userMarshaller(users[0]));
   };
 };

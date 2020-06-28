@@ -59,6 +59,17 @@ export type UserCourseDB = {|
   status: CourseLessonStatus,
 |};
 
+export type UserDB = {|
+  id: string,
+  name: string,
+  email: string,
+  created_at: number,
+  last_login: ?number,
+  google_id: ?string,
+  picture: ?string,
+  gender: ?string, // "M", "F", "X", null
+|};
+
 export type UserCourseJoinCourseDB = {|
   ...CourseDB,
   ...UserCourseDB,
