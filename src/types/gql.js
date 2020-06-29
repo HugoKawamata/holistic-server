@@ -51,7 +51,7 @@ export type CourseGQL = {|
 |};
 
 export type UserGQL = {|
-  id: number,
+  id: string,
   picture: string,
   name: string,
   email: string,

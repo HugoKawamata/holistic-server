@@ -21,7 +21,6 @@ const getObjectType = (questionType) => {
   }
 };
 
-// TODO: Add focus word highlight
 export const parseWithHighlights = async (
   sentence: ?string,
   pg: any, // eslint-disable-line flowtype/no-weak-types
@@ -350,6 +349,7 @@ export const lessonsResolver = async (
 
 export const availableLessonsResolver = async (
   course: UserCourseJoinCourseDB,
+  userId: string,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
   const availableLessons = await pg("set_lessons")
@@ -361,6 +361,7 @@ export const availableLessonsResolver = async (
     )
     .where({
       "set_lessons.course_id": course.id,
+      "user_set_lessons.user_id": userId,
       "user_set_lessons.status": "AVAILABLE",
     });
   return availableLessons.map((lesson) => lessonResolver(lesson, pg));
@@ -368,6 +369,7 @@ export const availableLessonsResolver = async (
 
 export const completedLessonsResolver = async (
   course: UserCourseJoinCourseDB,
+  userId: string,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
   const completeLessons = await pg("set_lessons")
@@ -379,6 +381,7 @@ export const completedLessonsResolver = async (
     )
     .where({
       "set_lessons.course_id": course.id,
+      "user_set_lessons.user_id": userId,
       "user_set_lessons.status": "COMPLETE",
     });
   return completeLessons.map((lesson) => lessonResolver(lesson, pg));
@@ -386,6 +389,7 @@ export const completedLessonsResolver = async (
 
 export const nextUnlockLessonsResolver = async (
   course: UserCourseJoinCourseDB,
+  userId: string,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
   const availableLessons = await pg("set_lessons")
@@ -397,6 +401,7 @@ export const nextUnlockLessonsResolver = async (
     )
     .where({
       "set_lessons.course_id": course.id,
+      "user_set_lessons.user_id": userId,
       "user_set_lessons.status": "AVAILABLE",
     });
 
