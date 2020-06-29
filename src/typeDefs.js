@@ -163,6 +163,7 @@ export const typeDefs = gql`
   type Splots {
     me: String
     meFuri: String
+    fname: String
   }
 
   input Result {
