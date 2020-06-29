@@ -1,6 +1,14 @@
 /* @flow */
 import type { UserDB } from "../../types/db";
 
+const getFname = (name: string) => {
+  const splitName = name.split(" ");
+  if (splitName.length > 0) {
+    return splitName[0];
+  }
+  return name;
+};
+
 export const userMarshaller = (dbUser: UserDB) => {
   return {
     ...dbUser,
@@ -8,6 +16,7 @@ export const userMarshaller = (dbUser: UserDB) => {
     splots: {
       me: dbUser.gender === "M" ? "僕" : "私",
       meFuri: dbUser.gender === "M" ? "ぼく" : "わたし",
+      fname: getFname(dbUser.name),
     },
   };
 };
