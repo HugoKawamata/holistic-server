@@ -213,7 +213,7 @@ export const kanaLessonResolver = async (
   const words = await pg("words").where("set_lesson_id", lesson.id);
   let hetaWords = [];
   // Only add bad words to the testable list if this is a user-set-lesson-join
-  if (lesson.id === "HIRAGANA_A" && lesson.user_id != null) {
+  if (lesson.id !== "HIRAGANA_A" && lesson.user_id != null) {
     hetaWords = await getHetaWords(
       pg,
       words.map((w) => w.id),
