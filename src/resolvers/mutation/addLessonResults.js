@@ -3,19 +3,18 @@ import type { ResultCT } from "../../types/client";
 import type {
   CharacterDB,
   CharacterResultDB,
+  TestableResultDB,
   WordResultDB,
 } from "../../types/db";
 
 type BeforeCreateWordResultDB = $Diff<WordResultDB, { id: number }>;
 
+type BeforeCreateTestableResultDB = $Diff<TestableResultDB, { id: number }>;
+
 type BeforeCreateCharacterResultDB = $Diff<CharacterResultDB, { id: number }>;
 
 // Can be either word result or character result
-type AmbiguousResultDB = WordResultDB | CharacterResultDB;
-
-type BeforeCreateAmbiguousResultDB =
-  | BeforeCreateWordResultDB
-  | BeforeCreateCharacterResultDB;
+type AmbiguousResultDB = WordResultDB | CharacterResultDB | TestableResultDB;
 
 export const marshalInputResultsToWordResults = (
   results: Array<ResultCT>,
@@ -31,6 +30,28 @@ export const marshalInputResultsToWordResults = (
       return {
         user_id: userId,
         word_id: parsedWordId,
+        answers: result.answers,
+        marks: result.marks,
+        created_at: now,
+      };
+    })
+    .filter(Boolean);
+};
+
+export const marshalInputResultsToTestableResults = (
+  results: Array<ResultCT>,
+  userId: string,
+  now: mixed
+): Array<BeforeCreateTestableResultDB> => {
+  return results
+    .map((result: ResultCT): BeforeCreateTestableResultDB | null => {
+      const parsedTestableId = parseInt(result.objectId, 10);
+      if (parsedTestableId == null) {
+        return null;
+      }
+      return {
+        user_id: userId,
+        testable_id: parsedTestableId,
         answers: result.answers,
         marks: result.marks,
         created_at: now,
@@ -94,13 +115,18 @@ export const calcProficiency = (results: Array<AmbiguousResultDB>) => {
   return summedDailyProficiencies / summedDailyWeights;
 };
 
-// This is an N+1 query - should try to optimise in the future
+type ArrayOfAmbiguousResults =
+  | Array<BeforeCreateWordResultDB>
+  | Array<BeforeCreateTestableResultDB>
+  | Array<BeforeCreateCharacterResultDB>;
+
 export const insertOrUpdateUserWordOrCharacter = (
   pg: any, // eslint-disable-line flowtype/no-weak-types
   trx: mixed,
   resultIds: Array<number>,
-  marshalledResults: Array<BeforeCreateAmbiguousResultDB>,
-  objectName: "word" | "character",
+  // $FlowFixMe Weird flow error that doesn't like mixed array types
+  marshalledResults: ArrayOfAmbiguousResults,
+  objectName: "word" | "character" | "testable",
   userId: string
 ) => {
   const tableName = `user_${objectName}s`;
@@ -150,12 +176,21 @@ export const addLessonResultsResolver = (
     }: { results: Array<ResultCT>, userId: string, setLessonId: string }
   ) => {
     const wordResults = results.filter((res) => res.objectType === "WORD");
+    const testableResults = results.filter(
+      (res) => res.objectType === "TESTABLE"
+    );
     const characterResults = results.filter(
       (res) => res.objectType === "CHARACTER"
     );
 
     const marshalledWordResults = marshalInputResultsToWordResults(
       wordResults,
+      userId,
+      pg.fn.now()
+    );
+
+    const marshalledTestableResults = marshalInputResultsToTestableResults(
+      testableResults,
       userId,
       pg.fn.now()
     );
@@ -192,6 +227,21 @@ export const addLessonResultsResolver = (
                 characterResultIds,
                 marshalledCharacterResults,
                 "character",
+                userId
+              );
+            });
+        })
+        .then(() => {
+          return pg("testable_results")
+            .insert(marshalledTestableResults, ["id"])
+            .transacting(trx)
+            .then((testableResultIds) => {
+              return insertOrUpdateUserWordOrCharacter(
+                pg,
+                trx,
+                testableResultIds,
+                marshalledTestableResults,
+                "testable",
                 userId
               );
             });

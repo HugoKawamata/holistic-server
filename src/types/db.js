@@ -17,6 +17,15 @@ export type CharacterResultDB = {|
   character_id: number,
 |};
 
+export type TestableResultDB = {|
+  id: number,
+  created_at: mixed,
+  answers: string, // Comma separated
+  marks: Array<Mark>,
+  user_id: string,
+  testable_id: number,
+|};
+
 export type WordResultDB = {|
   id: number,
   created_at: mixed,
