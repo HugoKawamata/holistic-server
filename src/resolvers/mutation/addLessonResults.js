@@ -123,7 +123,6 @@ type ArrayOfAmbiguousResults =
 export const insertOrUpdateUserWordOrCharacter = (
   pg: any, // eslint-disable-line flowtype/no-weak-types
   trx: mixed,
-  resultIds: Array<number>,
   // $FlowFixMe Weird flow error that doesn't like mixed array types
   marshalledResults: ArrayOfAmbiguousResults,
   objectName: "word" | "character" | "testable",
@@ -158,7 +157,7 @@ export const insertOrUpdateUserWordOrCharacter = (
 
       return pg
         .raw(
-          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET proficiency = EXCLUDED.proficiency, result_ids = EXCLUDED.result_ids`
+          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET proficiency = EXCLUDED.proficiency`
         )
         .transacting(trx);
     });
@@ -205,11 +204,10 @@ export const addLessonResultsResolver = (
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
-        .then((newWordResultIds): BeforeCreateWordResultDB => {
+        .then(() => {
           return insertOrUpdateUserWordOrCharacter(
             pg,
             trx,
-            newWordResultIds,
             // $FlowFixMe this this annoying
             marshalledWordResults,
             "word",
@@ -220,11 +218,10 @@ export const addLessonResultsResolver = (
           return pg("character_results")
             .insert(marshalledCharacterResults, ["id"])
             .transacting(trx)
-            .then((characterResultIds) => {
+            .then(() => {
               return insertOrUpdateUserWordOrCharacter(
                 pg,
                 trx,
-                characterResultIds,
                 marshalledCharacterResults,
                 "character",
                 userId
@@ -235,11 +232,10 @@ export const addLessonResultsResolver = (
           return pg("testable_results")
             .insert(marshalledTestableResults, ["id"])
             .transacting(trx)
-            .then((testableResultIds) => {
+            .then(() => {
               return insertOrUpdateUserWordOrCharacter(
                 pg,
                 trx,
-                testableResultIds,
                 marshalledTestableResults,
                 "testable",
                 userId
