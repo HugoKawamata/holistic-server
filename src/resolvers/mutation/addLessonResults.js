@@ -215,32 +215,38 @@ export const addLessonResultsResolver = (
           );
         })
         .then(() => {
-          return pg("character_results")
-            .insert(marshalledCharacterResults, ["id"])
-            .transacting(trx)
-            .then(() => {
-              return insertOrUpdateUserWordOrCharacter(
-                pg,
-                trx,
-                marshalledCharacterResults,
-                "character",
-                userId
-              );
-            });
+          if (marshalledCharacterResults.length > 0) {
+            return pg("character_results")
+              .insert(marshalledCharacterResults, ["id"])
+              .transacting(trx)
+              .then(() => {
+                return insertOrUpdateUserWordOrCharacter(
+                  pg,
+                  trx,
+                  marshalledCharacterResults,
+                  "character",
+                  userId
+                );
+              });
+          }
+          return null;
         })
         .then(() => {
-          return pg("testable_results")
-            .insert(marshalledTestableResults, ["id"])
-            .transacting(trx)
-            .then(() => {
-              return insertOrUpdateUserWordOrCharacter(
-                pg,
-                trx,
-                marshalledTestableResults,
-                "testable",
-                userId
-              );
-            });
+          if (marshalledTestableResults.length > 0) {
+            return pg("testable_results")
+              .insert(marshalledTestableResults, ["id"])
+              .transacting(trx)
+              .then(() => {
+                return insertOrUpdateUserWordOrCharacter(
+                  pg,
+                  trx,
+                  marshalledTestableResults,
+                  "testable",
+                  userId
+                );
+              });
+          }
+          return null;
         })
         .then(async () => {
           // Complete current lesson
