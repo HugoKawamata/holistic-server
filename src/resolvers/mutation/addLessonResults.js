@@ -274,6 +274,11 @@ export const addLessonResultsResolver = (
             .transacting(trx)
             .then((lessons) => lessons[0]);
 
+          // Maybe delete this later? It may be dangerous to let lessons come to a
+          // dead end like this
+          if (lesson.unlocks_ids === "" || lesson.unlocks_ids == null) {
+            return;
+          }
           if (lesson.unlocks_ids === "NEXT_COURSE") {
             const completeCourse = await pg("user_courses")
               .where({
