@@ -175,7 +175,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    sendGender(userEmail: String!, gender: String!): User
+    sendGender(userEmail: String!, gender: String!): Boolean
     addLessonResults(
       results: [Result]!
       userId: ID!
