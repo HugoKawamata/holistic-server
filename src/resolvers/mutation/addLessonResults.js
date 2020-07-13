@@ -3,19 +3,18 @@ import type { ResultCT } from "../../types/client";
 import type {
   CharacterDB,
   CharacterResultDB,
+  TestableResultDB,
   WordResultDB,
 } from "../../types/db";
 
 type BeforeCreateWordResultDB = $Diff<WordResultDB, { id: number }>;
 
+type BeforeCreateTestableResultDB = $Diff<TestableResultDB, { id: number }>;
+
 type BeforeCreateCharacterResultDB = $Diff<CharacterResultDB, { id: number }>;
 
 // Can be either word result or character result
-type AmbiguousResultDB = WordResultDB | CharacterResultDB;
-
-type BeforeCreateAmbiguousResultDB =
-  | BeforeCreateWordResultDB
-  | BeforeCreateCharacterResultDB;
+type AmbiguousResultDB = WordResultDB | CharacterResultDB | TestableResultDB;
 
 export const marshalInputResultsToWordResults = (
   results: Array<ResultCT>,
@@ -31,6 +30,28 @@ export const marshalInputResultsToWordResults = (
       return {
         user_id: userId,
         word_id: parsedWordId,
+        answers: result.answers,
+        marks: result.marks,
+        created_at: now,
+      };
+    })
+    .filter(Boolean);
+};
+
+export const marshalInputResultsToTestableResults = (
+  results: Array<ResultCT>,
+  userId: string,
+  now: mixed
+): Array<BeforeCreateTestableResultDB> => {
+  return results
+    .map((result: ResultCT): BeforeCreateTestableResultDB | null => {
+      const parsedTestableId = parseInt(result.objectId, 10);
+      if (parsedTestableId == null) {
+        return null;
+      }
+      return {
+        user_id: userId,
+        testable_id: parsedTestableId,
         answers: result.answers,
         marks: result.marks,
         created_at: now,
@@ -94,13 +115,17 @@ export const calcProficiency = (results: Array<AmbiguousResultDB>) => {
   return summedDailyProficiencies / summedDailyWeights;
 };
 
-// This is an N+1 query - should try to optimise in the future
+type ArrayOfAmbiguousResults =
+  | Array<BeforeCreateWordResultDB>
+  | Array<BeforeCreateTestableResultDB>
+  | Array<BeforeCreateCharacterResultDB>;
+
 export const insertOrUpdateUserWordOrCharacter = (
   pg: any, // eslint-disable-line flowtype/no-weak-types
   trx: mixed,
-  resultIds: Array<number>,
-  marshalledResults: Array<BeforeCreateAmbiguousResultDB>,
-  objectName: "word" | "character",
+  // $FlowFixMe Weird flow error that doesn't like mixed array types
+  marshalledResults: ArrayOfAmbiguousResults,
+  objectName: "word" | "character" | "testable",
   userId: string
 ) => {
   const tableName = `user_${objectName}s`;
@@ -132,7 +157,7 @@ export const insertOrUpdateUserWordOrCharacter = (
 
       return pg
         .raw(
-          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET proficiency = EXCLUDED.proficiency, result_ids = EXCLUDED.result_ids`
+          `${insert} ON CONFLICT (user_id, ${objectName}_id) DO UPDATE SET proficiency = EXCLUDED.proficiency`
         )
         .transacting(trx);
     });
@@ -150,12 +175,21 @@ export const addLessonResultsResolver = (
     }: { results: Array<ResultCT>, userId: string, setLessonId: string }
   ) => {
     const wordResults = results.filter((res) => res.objectType === "WORD");
+    const testableResults = results.filter(
+      (res) => res.objectType === "TESTABLE"
+    );
     const characterResults = results.filter(
       (res) => res.objectType === "CHARACTER"
     );
 
     const marshalledWordResults = marshalInputResultsToWordResults(
       wordResults,
+      userId,
+      pg.fn.now()
+    );
+
+    const marshalledTestableResults = marshalInputResultsToTestableResults(
+      testableResults,
       userId,
       pg.fn.now()
     );
@@ -170,11 +204,10 @@ export const addLessonResultsResolver = (
       pg("word_results")
         .insert(marshalledWordResults, ["id"])
         .transacting(trx)
-        .then((newWordResultIds): BeforeCreateWordResultDB => {
+        .then(() => {
           return insertOrUpdateUserWordOrCharacter(
             pg,
             trx,
-            newWordResultIds,
             // $FlowFixMe this this annoying
             marshalledWordResults,
             "word",
@@ -182,33 +215,56 @@ export const addLessonResultsResolver = (
           );
         })
         .then(() => {
-          return pg("character_results")
-            .insert(marshalledCharacterResults, ["id"])
-            .transacting(trx)
-            .then((characterResultIds) => {
-              return insertOrUpdateUserWordOrCharacter(
-                pg,
-                trx,
-                characterResultIds,
-                marshalledCharacterResults,
-                "character",
-                userId
-              );
-            });
+          if (marshalledCharacterResults.length > 0) {
+            return pg("character_results")
+              .insert(marshalledCharacterResults, ["id"])
+              .transacting(trx)
+              .then(() => {
+                return insertOrUpdateUserWordOrCharacter(
+                  pg,
+                  trx,
+                  marshalledCharacterResults,
+                  "character",
+                  userId
+                );
+              });
+          }
+          return null;
+        })
+        .then(() => {
+          if (marshalledTestableResults.length > 0) {
+            return pg("testable_results")
+              .insert(marshalledTestableResults, ["id"])
+              .transacting(trx)
+              .then(() => {
+                return insertOrUpdateUserWordOrCharacter(
+                  pg,
+                  trx,
+                  marshalledTestableResults,
+                  "testable",
+                  userId
+                );
+              });
+          }
+          return null;
         })
         .then(async () => {
           // Complete current lesson
-          const completeLesson = pg("user_set_lessons")
-            .where({ user_id: userId, set_lesson_id: setLessonId })
-            .update({ status: "COMPLETE", completed_at: pg.fn.now() })
-            .transacting(trx)
-            .toString();
-
-          await pg
-            .raw(
-              `${completeLesson} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
-            )
+          const completeLesson = await pg("user_set_lessons")
+            .where({
+              user_id: userId,
+              set_lesson_id: setLessonId,
+            })
             .transacting(trx);
+
+          // If it's already complete, dont update
+          // We want completed_at to be the time it was originally completed at, for sorting
+          if (completeLesson.status !== "COMPLETE") {
+            await pg("user_set_lessons")
+              .where({ user_id: userId, set_lesson_id: setLessonId })
+              .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+              .transacting(trx);
+          }
 
           // Line up next lesson
           const lesson = await pg("set_lessons")
@@ -218,18 +274,26 @@ export const addLessonResultsResolver = (
             .transacting(trx)
             .then((lessons) => lessons[0]);
 
+          // Maybe delete this later? It may be dangerous to let lessons come to a
+          // dead end like this
+          if (lesson.unlocks_ids === "" || lesson.unlocks_ids == null) {
+            return;
+          }
           if (lesson.unlocks_ids === "NEXT_COURSE") {
-            const completeCourse = pg("user_courses")
-              .where({ user_id: userId, course_id: lesson.course_id })
-              .update({ status: "COMPLETE", completed_at: pg.fn.now() })
-              .transacting(trx)
-              .toString();
-
-            await pg
-              .raw(
-                `${completeCourse} ON CONFLICT (user_id, course_id) DO NOTHING`
-              )
+            const completeCourse = await pg("user_courses")
+              .where({
+                user_id: userId,
+                course_id: lesson.course_id,
+              })
               .transacting(trx);
+
+            // If it's already complete, dont update
+            if (completeCourse.status !== "COMPLETE") {
+              await pg("user_courses")
+                .where({ user_id: userId, course_id: lesson.course_id })
+                .update({ status: "COMPLETE", completed_at: pg.fn.now() })
+                .transacting(trx);
+            }
 
             const course = await pg("courses")
               .where({ id: lesson.course_id })

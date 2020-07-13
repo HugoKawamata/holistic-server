@@ -1,7 +1,7 @@
 /* @flow */
 import { gql } from "apollo-server-express";
 
-const KANA_LEVEL = `
+export const KANA_LESSON_IDS = `
   HIRAGANA_A
   HIRAGANA_KA
   HIRAGANA_GA
@@ -39,10 +39,6 @@ const KANA_LEVEL = `
 `;
 
 export const typeDefs = gql`
-  enum KanaLevel {
-    ${KANA_LEVEL}
-  }
-
   enum CourseLessonStatus {
     AVAILABLE
     COMPLETE
@@ -60,10 +56,11 @@ export const typeDefs = gql`
   enum TestableObject {
     CHARACTER
     WORD
-    SENTENCE
+    TESTABLE
   }
 
   enum QuestionType {
+    KANA_WORD
     J_WORD
     J_SENTENCE
     E_WORD
@@ -74,6 +71,7 @@ export const typeDefs = gql`
     ROMAJI
     HIRAGANA
     JAPANESE
+    ENGLISH
     MC
   }
 
@@ -89,14 +87,16 @@ export const typeDefs = gql`
 
   type User {
     id: ID!
-    picture: String
-    name: String
-    email: String
+    picture: String!
+    name: String!
+    email: String!
+    gender: String
     availableCourses: [Course]
     completedCourses: [Course]
     nextUnlockCourses: [Course]
     course(id: String!): Course
     createdAt: Float
+    splots: Splots
   }
 
   type Course {
@@ -129,9 +129,21 @@ export const typeDefs = gql`
   type Testable {
     objectId: ID!
     objectType: TestableObject!
+    context: Context
     question: Question!
     answer: Answer!
     introduction: String
+    wordId: Int
+    orderInLesson: Int
+  }
+
+  type Context {
+    person: String # conversation partner
+    location: String
+    speaker: String # name of speaker (plus details)
+    japanese: String
+    furigana: String
+    english: String
   }
 
   type Question {
@@ -139,11 +151,19 @@ export const typeDefs = gql`
     image: String
     emoji: String
     text: String!
+    furigana: String
+    prompt: String
   }
 
   type Answer {
     type: AnswerType!
     text: String!
+  }
+
+  type Splots {
+    me: String
+    meFuri: String
+    fname: String
   }
 
   input Result {
@@ -155,7 +175,12 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addLessonResults(results: [Result]!, userId: ID!, setLessonId: String!): Boolean
+    sendGender(userEmail: String!, gender: String!): User
+    addLessonResults(
+      results: [Result]!
+      userId: ID!
+      setLessonId: String!
+    ): Boolean
   }
 `;
 

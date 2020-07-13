@@ -8,13 +8,13 @@ import {
   nextUnlockLessonsResolver,
 } from "./lesson";
 
-const marshalUserCourse = (dbCourse, pg) => {
+const marshalUserCourse = (dbCourse, userId, pg) => {
   return {
     id: dbCourse.course_id,
     title: dbCourse.title,
-    availableLessons: availableLessonsResolver(dbCourse, pg),
-    nextUnlockLessons: nextUnlockLessonsResolver(dbCourse, pg),
-    completedLessons: completedLessonsResolver(dbCourse, pg),
+    availableLessons: availableLessonsResolver(dbCourse, userId, pg),
+    nextUnlockLessons: nextUnlockLessonsResolver(dbCourse, userId, pg),
+    completedLessons: completedLessonsResolver(dbCourse, userId, pg),
     lessons: lessonsResolver(dbCourse, pg),
   };
 };
@@ -38,7 +38,7 @@ export const completedCoursesResolver = (
       })
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
-    return courses.map((course) => marshalUserCourse(course, pg));
+    return courses.map((course) => marshalUserCourse(course, user.id, pg));
   };
 };
 
@@ -53,7 +53,7 @@ export const availableCoursesResolver = (
       })
       .join("courses", "courses.id", "=", "user_courses.course_id");
 
-    return courses.map((course) => marshalUserCourse(course, pg));
+    return courses.map((course) => marshalUserCourse(course, user.id, pg));
   };
 };
 
@@ -94,6 +94,6 @@ export const userCourseResolver = (
       .join("courses", "courses.id", "=", "user_courses.course_id")
       .then((c: UserCourseJoinCourseDB) => c[0]);
 
-    return marshalUserCourse(course, pg);
+    return marshalUserCourse(course, user.id, pg);
   };
 };

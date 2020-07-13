@@ -17,6 +17,15 @@ export type CharacterResultDB = {|
   character_id: number,
 |};
 
+export type TestableResultDB = {|
+  id: number,
+  created_at: mixed,
+  answers: string, // Comma separated
+  marks: Array<Mark>,
+  user_id: string,
+  testable_id: number,
+|};
+
 export type WordResultDB = {|
   id: number,
   created_at: mixed,
@@ -57,6 +66,17 @@ export type UserCourseDB = {|
   user_id: string,
   course_id: string,
   status: CourseLessonStatus,
+|};
+
+export type UserDB = {|
+  id: string,
+  name: string,
+  email: string,
+  created_at: number,
+  last_login: ?number,
+  google_id: ?string,
+  picture: ?string,
+  gender: ?string, // "M", "F", "X", null
 |};
 
 export type UserCourseJoinCourseDB = {|

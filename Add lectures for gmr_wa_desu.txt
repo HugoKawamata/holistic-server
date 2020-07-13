@@ -1,0 +1,50 @@
+insert into lectures (text, image, position, set_lesson_id, title)
+values (
+  'You already know a few words, but now it''s time to learn how to say your first sentence in Japanese: ''I am _something_''.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-1.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Your First Sentence Pattern'
+),
+(
+  'To say ''I am _something_'', you say\n''"{me_furi}"は　something　です''\n The word for ''I'' will be different depending on your gender.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-2.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Your First Sentence Pattern'
+),
+(
+  'You know "{me_furi}" is ''I'' or ''me'', and "です" is ''is'' or ''am''. So what is the "は"?',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-3.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Your First Sentence Pattern'
+),
+(
+  '"は" is a "particle". Particles are hiragana that get added to the end of a word to tell you what the word''s purpose is.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-4.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Particles'
+),
+(
+  '"は" is the particle that marks the topic of the sentence. When you say ''I am something'', *you* are the topic, so "は" goes after {me_furi}',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-4.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Particles'
+),
+(
+  'Also, "は" is pronounced wa, not ha - particles are the only place in Japanese where characters are pronounced differently.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-4.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Particles'
+),
+(
+  'To summarise with an example, ''{me_furi}は　{fname}　です'' literally translates to ''I {fname} am''. In Japanese, the topic comes first, and the verb always comes last.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1593401161/lessons/grammar_1/gmr_wa_desu/lecture-4.png',
+  'PRETEST',
+  'GMR_WA_DESU',
+  'Summary'
+)
