@@ -105,6 +105,7 @@ export const typeDefs = gql`
     availableLessons: [Lesson]
     completedLessons: [Lesson]
     nextUnlockLessons: [Lesson]
+    learnedWords: [Word]
     lessons: [Lesson]
     status: CourseLessonStatus
   }
@@ -164,6 +165,14 @@ export const typeDefs = gql`
     me: String
     meFuri: String
     fname: String
+  }
+
+  type Word {
+    id: ID
+    japanese: String
+    hiragana: String
+    english: String
+    emoji: String
   }
 
   input Result {

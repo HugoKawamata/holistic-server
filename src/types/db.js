@@ -17,6 +17,22 @@ export type CharacterResultDB = {|
   character_id: number,
 |};
 
+export type WordDB = {|
+  id: number,
+  introduction: string,
+  japanese: string,
+  hiragana: string,
+  english: string,
+  emoji: string,
+|};
+
+export type UserWordDB = {|
+  mnemonic: string,
+  proficiency: number,
+  user_id: string,
+  word_id: number,
+|};
+
 export type TestableResultDB = {|
   id: number,
   created_at: mixed,
@@ -82,4 +98,9 @@ export type UserDB = {|
 export type UserCourseJoinCourseDB = {|
   ...CourseDB,
   ...UserCourseDB,
+|};
+
+export type UserWordJoinWordDB = {|
+  ...WordDB,
+  ...UserWordDB,
 |};
