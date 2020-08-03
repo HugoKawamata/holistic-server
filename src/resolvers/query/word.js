@@ -23,7 +23,7 @@ export const courseLearnedWordsResolver = (
   return async (user: UserGQL) => {
     const words = await pg("user_words")
       .where({
-        user_id: user.id,
+        "user_words.user_id": user.id,
         status: "COMPLETED",
       })
       .join("words", "words.id", "=", "user_words.word_id")
