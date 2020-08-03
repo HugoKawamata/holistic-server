@@ -20,11 +20,11 @@ export const courseLearnedWordsResolver = (
   userId: string,
   pg: any // eslint-disable-line flowtype/no-weak-types
 ) => {
+  // eslint-disable-next-line no-unused-vars
   return async (user: UserGQL) => {
     const words = await pg("user_words")
       .where({
-        "user_words.user_id": user.id,
-        status: "COMPLETED",
+        "user_words.user_id": userId,
       })
       .join("words", "words.id", "=", "user_words.word_id")
       .join("set_lessons", "set_lessons.id", "=", "words.set_lesson_id")
