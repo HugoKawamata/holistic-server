@@ -290,8 +290,8 @@ export const normalLessonResolver = async (
         question: await getQuestion(testable, pg),
         answer: possibleAnswers,
         displayAnswer: {
-          text: displayAnswer?.japanese,
-          furigana: displayAnswer?.furigana,
+          text: (displayAnswer || {}).japanese,
+          furigana: (displayAnswer || {}).furigana,
         },
         introduction: testable.introduction, // will be non-null iff it's a word
         context: {
