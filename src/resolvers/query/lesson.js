@@ -179,7 +179,7 @@ const getAnswer = (testableWordJoin) => {
     };
   }
   return {
-    text: testableWordJoin.possible_answers,
+    text: parseWithHighlights(testableWordJoin.possible_answers),
     type: testableWordJoin.answer_type,
   };
 };
