@@ -164,8 +164,8 @@ export const typeDefs = gql`
 
   # The answer to be displayed if user gets it wrong
   type DisplayAnswer {
-    japanese: String!
-    furigana: String!
+    text: String!
+    furigana: String
   }
 
   type Splots {
