@@ -288,7 +288,7 @@ export const normalLessonResolver = async (
             : testable.testable_id,
         objectType: getObjectType(testable.question_type),
         question: await getQuestion(testable, pg),
-        answer: possibleAnswers,
+        answer,
         displayAnswer: {
           text: (displayAnswer || {}).japanese,
           furigana: (displayAnswer || {}).furigana,
