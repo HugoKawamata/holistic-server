@@ -171,7 +171,7 @@ const hiraganaToRomajiCSV = (hiragana) => {
   return splitQuestion.reduce((csv, kana) => `${csv},${kana}`);
 };
 
-const getAnswer = (testableWordJoin) => {
+const getAnswer = (testableWordJoin, pg) => {
   if (testableWordJoin.answer_type === "ROMAJI") {
     return {
       text: hiraganaToRomajiCSV(testableWordJoin.hiragana),
@@ -179,7 +179,7 @@ const getAnswer = (testableWordJoin) => {
     };
   }
   return {
-    text: parseWithHighlights(testableWordJoin.possible_answers),
+    text: parseWithHighlights(testableWordJoin.possible_answers, pg),
     type: testableWordJoin.answer_type,
   };
 };
@@ -282,7 +282,7 @@ export const normalLessonResolver = async (
             : testable.testable_id,
         objectType: getObjectType(testable.question_type),
         question: await getQuestion(testable, pg),
-        answer: getAnswer(testable),
+        answer: getAnswer(testable, pg),
         introduction: testable.introduction, // will be non-null iff it's a word
         context: {
           person: testable.person,
