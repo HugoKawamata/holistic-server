@@ -1,4 +1,5 @@
 /* @flow */
+import { AuthenticationError } from "apollo-server-express";
 import type { UserDB } from "../../types/db";
 
 const getFname = (name: string) => {
@@ -37,6 +38,12 @@ export const meResolver = (
       },
     }
   ) => {
+    if (
+      context.session.passport == null ||
+      context.session.passport.user == null
+    ) {
+      throw new AuthenticationError("must authenticate");
+    }
     if (context.session.passport.user == null) {
       // No user logged in, so do not get any data
       return null;
