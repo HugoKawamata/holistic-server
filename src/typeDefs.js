@@ -105,6 +105,7 @@ export const typeDefs = gql`
     availableLessons: [Lesson]
     completedLessons: [Lesson]
     nextUnlockLessons: [Lesson]
+    learnedWords: [Word]
     lessons: [Lesson]
     status: CourseLessonStatus
   }
@@ -132,6 +133,7 @@ export const typeDefs = gql`
     context: Context
     question: Question!
     answer: Answer!
+    displayAnswer: DisplayAnswer
     introduction: String
     wordId: Int
     orderInLesson: Int
@@ -160,10 +162,24 @@ export const typeDefs = gql`
     text: String!
   }
 
+  # The answer to be displayed if user gets it wrong
+  type DisplayAnswer {
+    text: String!
+    furigana: String
+  }
+
   type Splots {
     me: String
     meFuri: String
     fname: String
+  }
+
+  type Word {
+    id: ID
+    japanese: String
+    hiragana: String
+    english: String
+    emoji: String
   }
 
   input Result {

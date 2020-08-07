@@ -1,6 +1,7 @@
 /* @flow */
 import type { UserCourseJoinCourseDB } from "../../types/db";
 import type { UserGQL } from "../../types/gql";
+import { courseLearnedWordsResolver } from "./word";
 import {
   availableLessonsResolver,
   completedLessonsResolver,
@@ -16,6 +17,7 @@ const marshalUserCourse = (dbCourse, userId, pg) => {
     nextUnlockLessons: nextUnlockLessonsResolver(dbCourse, userId, pg),
     completedLessons: completedLessonsResolver(dbCourse, userId, pg),
     lessons: lessonsResolver(dbCourse, pg),
+    learnedWords: courseLearnedWordsResolver(dbCourse, userId, pg),
   };
 };
 

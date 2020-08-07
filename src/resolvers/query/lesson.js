@@ -275,6 +275,12 @@ export const normalLessonResolver = async (
         pg,
         testable.wordId
       );
+      const answer = getAnswer(testable);
+      const possibleAnswers = answer.text.split("/");
+      const displayAnswer =
+        possibleAnswers.type === "ENGLISH"
+          ? { japanese: possibleAnswers[0], furigana: null } // this is actually english
+          : await parseWithHighlights(possibleAnswers[0], pg);
       return {
         objectId:
           testable.question_type === "J_WORD"
@@ -282,7 +288,11 @@ export const normalLessonResolver = async (
             : testable.testable_id,
         objectType: getObjectType(testable.question_type),
         question: await getQuestion(testable, pg),
-        answer: getAnswer(testable),
+        answer,
+        displayAnswer: {
+          text: (displayAnswer || {}).japanese,
+          furigana: (displayAnswer || {}).furigana,
+        },
         introduction: testable.introduction, // will be non-null iff it's a word
         context: {
           person: testable.person,
