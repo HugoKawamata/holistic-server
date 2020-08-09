@@ -23,11 +23,17 @@ export const courseLearnedWordsResolver = (
   // eslint-disable-next-line no-unused-vars
   return async (user: UserGQL) => {
     const words = await pg("user_words")
+      .select([
+        "user_words.*",
+        "words.*",
+        "set_lessons.*",
+        "set_lesson.id as set_lesson_id",
+      ])
       .where({
         "user_words.user_id": userId,
       })
       .join("words", "words.id", "=", "user_words.word_id")
-      .join("set_lessons", "set_lessons.id", "=", "words.set_lesson_id")
+      .join("set_lessons", "set_lesson_id", "=", "words.set_lesson_id")
       .where({
         course_id: dbCourse.id,
       });
