@@ -33,11 +33,16 @@ export const courseLearnedWordsResolver = (
         "user_words.user_id": userId,
       })
       .join("words", "words.id", "=", "user_words.word_id")
-      .join("set_lessons", "set_lesson_id", "=", "words.set_lesson_id")
+      .join("set_lessons", "set_lessons.id", "=", "words.set_lesson_id")
       .where({
         course_id: dbCourse.id,
       });
 
-    return words.map((word) => marshalUserWord(word));
+    return words.map((word) =>
+      marshalUserWord({
+        ...word,
+        id: word.word_id,
+      })
+    );
   };
 };
