@@ -27,7 +27,7 @@ export const courseLearnedWordsResolver = (
         "user_words.*",
         "words.*",
         "set_lessons.*",
-        "set_lesson.id as set_lesson_id",
+        "set_lessons.id as set_lesson_id",
       ])
       .where({
         "user_words.user_id": userId,
