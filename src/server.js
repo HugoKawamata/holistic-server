@@ -207,6 +207,12 @@ app.post("/nuke_account", (req, res) => {
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/../src/static/index.html"));
 });
+app.get("/terms", (req, res) => {
+  res.sendFile(path.join(__dirname, "/../src/static/terms.html"));
+});
+app.get("/privacy", (req, res) => {
+  res.sendFile(path.join(__dirname, "/../src/static/privacy_policy.html"));
+});
 app.use(express.static("public"));
 
 // I don't yet know what cors actually does. Probably shouldn't enable it until I do...
