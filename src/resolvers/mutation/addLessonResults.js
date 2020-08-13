@@ -306,29 +306,33 @@ export const addLessonResultsResolver = (
               status: "AVAILABLE",
             }));
 
-            const lessonUnlock = {
-              user_id: userId,
-              set_lesson_id: course.first_set_lesson_id,
-              status: "AVAILABLE",
-            };
-
-            const addNewCourse = pg("user_courses")
+            const addNewCourses = pg("user_courses")
               .insert(unlocks)
               .transacting(trx);
 
             await pg
               .raw(
-                `${addNewCourse} ON CONFLICT (user_id, course_id) DO NOTHING`
+                `${addNewCourses} ON CONFLICT (user_id, course_id) DO NOTHING`
               )
               .transacting(trx);
 
-            const addNewLesson = pg("user_set_lessons")
-              .insert(lessonUnlock)
+            const newCourses = await pg("courses")
+              .whereIn("id", course.unlocks_ids.split(","))
+              .transacting(trx);
+
+            const lessonUnlocks = newCourses.map((newCourse) => ({
+              user_id: userId,
+              set_lesson_id: newCourse.first_set_lesson_id,
+              status: "AVAILABLE",
+            }));
+
+            const addNewLessons = pg("user_set_lessons")
+              .insert(lessonUnlocks)
               .transacting(trx);
 
             await pg
               .raw(
-                `${addNewLesson} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
+                `${addNewLessons} ON CONFLICT (user_id, set_lesson_id) DO NOTHING`
               )
               .transacting(trx);
           } else {
