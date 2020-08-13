@@ -297,7 +297,8 @@ export const addLessonResultsResolver = (
 
             const course = await pg("courses")
               .where({ id: lesson.course_id })
-              .transacting(trx);
+              .transacting(trx)
+              .then((courses) => courses[0]);
 
             const unlocks = course.unlocks_ids.split(",").map((unlockId) => ({
               user_id: userId,
