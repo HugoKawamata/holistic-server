@@ -322,7 +322,7 @@ export const addLessonResultsResolver = (
               )
               .transacting(trx);
 
-            const addNewLesson = pg("user_lessons")
+            const addNewLesson = pg("user_set_lessons")
               .insert(lessonUnlock)
               .transacting(trx);
 
