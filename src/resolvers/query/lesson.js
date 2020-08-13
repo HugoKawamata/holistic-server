@@ -6,7 +6,7 @@ import type {
   SetLessonDB,
   CourseDB,
 } from "../../types/db";
-import { hiraganaRomajiMap } from "../util";
+import { hiraganaRomajiMap, katakanaRomajiMap } from "../util";
 
 const getObjectType = (questionType) => {
   switch (questionType) {
@@ -147,6 +147,30 @@ const getQuestion = async (testableWordJoin, pg) => {
   };
 };
 
+const katakanaToRomajiCSV = (katakana) => {
+  let splitQuestion = [];
+  let mutateKatakana = katakana;
+
+  // We have to go backwards due to lya/lyu/lyo/sokuon
+  while (mutateKatakana.length > 0) {
+    let current = mutateKatakana[mutateKatakana.length - 1];
+    mutateKatakana = mutateKatakana.slice(0, mutateKatakana.length - 1);
+    if (Object.keys(katakanaRomajiMap).includes(current)) {
+      splitQuestion = [katakanaRomajiMap[current], ...splitQuestion];
+    } else if (current === "っ") {
+      // Strip the first character off the most recent romaji
+      splitQuestion = [splitQuestion[0][0], ...splitQuestion];
+    } else {
+      // It was a lya/lyu/lyo
+      current = `${mutateKatakana[mutateKatakana.length - 1]}${current}`;
+      // Remove the next hiragana character
+      mutateKatakana = mutateKatakana.slice(0, mutateKatakana.length - 1);
+      splitQuestion = [katakanaRomajiMap[current], ...splitQuestion];
+    }
+  }
+  return splitQuestion.reduce((csv, kana) => `${csv},${kana}`);
+};
+
 const hiraganaToRomajiCSV = (hiragana) => {
   let splitQuestion = [];
   let mutateHiragana = hiragana;
@@ -235,7 +259,10 @@ export const kanaLessonResolver = async (
     },
     answer: {
       type: "ROMAJI",
-      text: hiraganaToRomajiCSV(word.hiragana),
+      text:
+        lesson.course_id === "HIRAGANA"
+          ? hiraganaToRomajiCSV(word.hiragana)
+          : katakanaToRomajiCSV(word.hiragana),
     },
     introduction: word.introduction,
   }));
