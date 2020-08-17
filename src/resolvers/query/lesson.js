@@ -471,8 +471,8 @@ export const unavailableLessonsResolver = async (
     .where({
       "set_lessons.course_id": course.id,
       "user_set_lessons.user_id": userId,
-      "user_set_lessons.status": "AVAILABLE",
-    });
+    })
+    .whereIn("user_set_lessons.status", ["AVAILABLE", "COMPLETE"]);
 
   const lessons = await pg("set_lessons")
     .where("course_id", course.id)
