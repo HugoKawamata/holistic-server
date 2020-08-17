@@ -1,47 +1,43 @@
-INSERT INTO set_lessons (content, title, image, unlocks_ids, course_id)
-VALUES ('KATAKANA_1', 'Intro to Loanwords', '', 'KATAKANA');
+INSERT INTO set_lessons (id, title, image, unlocks_ids, course_id, skill_level, time_estimate)
+VALUES ('KATAKANA_11', 'Shirt, Ramune and more', '', 'NEXT_COURSE', 'KATAKANA', 'Beginner', 420);
 
 INSERT INTO lectures (text, image, position, set_lesson_id, title)
 VALUES (
-  'You can think of Katakana as being similar to capital letters in English. It''s the same alphabet, just a different way of writing it.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597309298/lessons/katakana/katakana-1/lecture-1.png',
+  'In this lesson, you''ll learn two katakana that might look a bit familiar: "シ" (shi) and "ソ" (so).',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597629604/lessons/katakana/katakana-9/lecture-1.png',
   'PRETEST',
-  'KATAKANA_1',
-  'Katakana - Japanese CAPSLOCK'
+  'KATAKANA_9',
+  'Very Similar Katakana'
 ),(
-  'Just like capitals, they tend to look less curvy and more angular, and are used to write sound effects like we do with ''"BANG!"'' and ''"SMASH!"''.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597309487/lessons/katakana/katakana-1/lecture-2.png',
+  'They look very similar to "ツ" (tsu) and "ン" (n). Here''s a little tip to help tell them apart (it''s still hard though).',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597629568/lessons/katakana/katakana-9/lecture-2.png',
   'PRETEST',
-  'KATAKANA_1',
-  'Katakana - Japanese CAPSLOCK'
+  'KATAKANA_9',
+  'Very Similar Katakana'
 ),(
-  'Also like capital letters, sometimes they look very similar to their hiragana version, and sometimes they look completely different.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597309764/lessons/katakana/katakana-1/lecture-3.png',
+  '"shi" and "n" are the same, just with one extra dash. And "tsu" and "so" are also the same, with one extra dash.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597629709/lessons/katakana/katakana-9/lecture-3.png',
   'PRETEST',
-  'KATAKANA_1',
-  'Katakana - Japanese CAPSLOCK'
+  'KATAKANA_9',
+  'Shi & N vs Tsu & So'
 ),(
-  'In addition to writing sound effects, they''re usually used to write loanwords - words that have been taken from English or other languages.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597310487/lessons/katakana/katakana-1/lecture-4.png',
+  'The difference is how they are handwritten: the pen strokes in "tsu" and "so" go downwards, while "shi" and "n" go to the right.',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597630090/lessons/katakana/katakana-9/lecture-4.png',
   'PRETEST',
-  'KATAKANA_1',
-  'Loanwords'
+  'KATAKANA_9',
+  'Shi & N vs Tsu & So'
 ),(
-  'Japan borrows a lot of words from English, which makes things a bit easier. Words like hot dog (hotto doggu) and apartment (apaato) are very common.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597310487/lessons/katakana/katakana-1/lecture-4.png',
+  'On a computer, the difference is a bit harder to see. If you practise reading enough, you''ll be able to tell them apart easily!',
+  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597630090/lessons/katakana/katakana-9/lecture-4.png',
   'PRETEST',
-  'KATAKANA_1',
-  'Loanwords'
-),(
-  'In this first lesson, you''ll learn 4 katakana (ko, hi, se, ru) and 4 commonly used Japanese words that started out as English words.',
-  'https://res.cloudinary.com/holistic-japanese/image/upload/v1597310487/lessons/katakana/katakana-1/lecture-4.png',
-  'PRETEST',
-  'KATAKANA_1',
-  'Loanwords'
+  'KATAKANA_9',
+  'Shi & N vs Tsu & So'
 );
 
-INSERT INTO words (japanese, hiragana, english, introduction, emoji)
-VALUES ('コーヒー', 'コーヒー', 'Coffee', 'This is coffee. Japanese doesn''t have a "fi" sound, so it''s "ko-hi-". The dash indicates a long vowel sound.', '☕️'),
-       ('ビール', 'ビール', 'Beer', 'This is beer: "bi-ru". Just like hiragana, katakana can get TenTens to change sound. "Hi" turns to "bi".', '🍺'),
-       ('ビル', 'ビル', 'Building', 'This is building, but it''s shortened to "biru". The only difference between this and "beer" is the long vowel dash!', '🏢'),
-       ('セール', 'セール', 'Sale', 'This is sale: "se-ru". Notice how similar katakana セ and hiragana せ are.', '💸');
+INSERT INTO words (japanese, hiragana, english, introduction, emoji, set_lesson_id)
+VALUES ('ボーナス', 'ボーナス', 'Bonus', 'This means "bonus". The new katakana is "na".', '🏅', 'KATAKANA_11'),
+       ('ヌードル', 'ヌードル', 'Noodle', 'This means "noodle", but Japanese also has a native word for it as well. The katakana "nu" is quite rare.', '🍝', 'KATAKANA_11'),
+       ('ラムネ', 'ラムネ', 'Ramune', '"Ramune" is a Japanese lemonade that is sealed with a marble (AKA marble soda). It comes from a corruption of the English "lemonade".', '🥤', 'KATAKANA_11'),
+       ('シャツ', 'シャツ', 'Shirt', 'This means "shirt". The new, small katakana is "ya", which combines with "shi" to make "sha". Careful of the "tsu", it''s not the same as "shi"!', '👕', 'KATAKANA_11');
+
+       ('サラダ', 'サラダ', 'Salad', 'This is "salad". The new letter is "ta" with a TenTen.', '🥗', 'KATAKANA_6');

@@ -156,8 +156,9 @@ const katakanaToRomajiCSV = (katakana) => {
     let current = mutateKatakana[mutateKatakana.length - 1];
     mutateKatakana = mutateKatakana.slice(0, mutateKatakana.length - 1);
     if (Object.keys(katakanaRomajiMap).includes(current)) {
+      // $FlowFixMe current is yelling about not being mapped to ッ, but we check above
       splitQuestion = [katakanaRomajiMap[current], ...splitQuestion];
-    } else if (current === "っ") {
+    } else if (current === "ッ") {
       // Strip the first character off the most recent romaji
       splitQuestion = [splitQuestion[0][0], ...splitQuestion];
     } else {
@@ -180,6 +181,7 @@ const hiraganaToRomajiCSV = (hiragana) => {
     let current = mutateHiragana[mutateHiragana.length - 1];
     mutateHiragana = mutateHiragana.slice(0, mutateHiragana.length - 1);
     if (Object.keys(hiraganaRomajiMap).includes(current)) {
+      // $FlowFixMe current is yelling about not being mapped to ッ, but we check above
       splitQuestion = [hiraganaRomajiMap[current], ...splitQuestion];
     } else if (current === "っ") {
       // Strip the first character off the most recent romaji
