@@ -105,6 +105,7 @@ export const typeDefs = gql`
     availableLessons: [Lesson]
     completedLessons: [Lesson]
     nextUnlockLessons: [Lesson]
+    unavailableLessons: [Lesson]
     learnedWords: [Word]
     lessons: [Lesson]
     status: CourseLessonStatus

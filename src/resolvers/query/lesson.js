@@ -455,3 +455,31 @@ export const nextUnlockLessonsResolver = async (
 
   return lessons.map((lesson) => lessonResolver(lesson, pg));
 };
+
+export const unavailableLessonsResolver = async (
+  course: UserCourseJoinCourseDB,
+  userId: string,
+  pg: any // eslint-disable-line flowtype/no-weak-types
+) => {
+  const availableLessons = await pg("set_lessons")
+    .join(
+      "user_set_lessons",
+      "user_set_lessons.set_lesson_id",
+      "=",
+      "set_lessons.id"
+    )
+    .where({
+      "set_lessons.course_id": course.id,
+      "user_set_lessons.user_id": userId,
+      "user_set_lessons.status": "AVAILABLE",
+    });
+
+  const lessons = await pg("set_lessons")
+    .where("course_id", course.id)
+    .whereNotIn(
+      "id",
+      availableLessons.map((les) => les.id)
+    );
+
+  return lessons.map((lesson) => lessonResolver(lesson, pg));
+};

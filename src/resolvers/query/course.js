@@ -7,6 +7,7 @@ import {
   completedLessonsResolver,
   lessonsResolver,
   nextUnlockLessonsResolver,
+  unavailableLessonsResolver,
 } from "./lesson";
 
 const marshalUserCourse = (dbCourse, userId, pg) => {
@@ -15,6 +16,7 @@ const marshalUserCourse = (dbCourse, userId, pg) => {
     title: dbCourse.title,
     availableLessons: availableLessonsResolver(dbCourse, userId, pg),
     nextUnlockLessons: nextUnlockLessonsResolver(dbCourse, userId, pg),
+    unavailableLessons: unavailableLessonsResolver(dbCourse, userId, pg),
     completedLessons: completedLessonsResolver(dbCourse, userId, pg),
     lessons: lessonsResolver(dbCourse, pg),
     learnedWords: courseLearnedWordsResolver(dbCourse, userId, pg),
