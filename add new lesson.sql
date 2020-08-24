@@ -1,34 +1,41 @@
 INSERT INTO set_lessons (id, title, image, unlocks_ids, course_id, skill_level, time_estimate)
-VALUES ('GMR_DESHITA', 'Past Tense', 'todo: add image link', 'GMR_JANAI', 'GRAMMAR_1', 'Beginner', 600);
+VALUES ('GMR_NO', 'Possessions and Belonging', 'todo: add image link', 'GMR_JANAI', 'GRAMMAR_1', 'Beginner', 600);
 
 INSERT INTO lectures (text, image, position, set_lesson_id, title)
 VALUES (
-  'Last time you learnt how to talk about multiple things at once. This lesson will cover how to use past tense.',
+  'Last time you learnt how to use past tense. This lesson you''ll learn how to say "''s" in Japanese.',
   'todo image',
   'PRETEST',
-  'GMR_DESHITA',
-  'Past Tense'
+  'GMR_NO',
+  'Apostrophe S'
 ),
 (
-  'The past tense of です (desu) is でした (deshita). Notice how the す character only _half_-changed. It became a し (shi), but stayed in the S hiragana set.',
+  'In English, you can express ownership of something by using "''s". E.g. Alice''s cat; Tom''s hat.',
   'todo image',
   'PRETEST',
-  'GMR_DESHITA',
-  'Half Changing a Character'
+  'GMR_NO',
+  'Apostrophe S'
 ),
 (
-  'Most past tense words in Japanese end in た. So it''s pretty easy to tell when something is past tense!',
+  'Ownership can also change a word completely: E.g. Me → My; Him → His; Germany → German',
   'todo image',
   'PRETEST',
-  'GMR_DESHITA',
-  'An Easy Shortcut'
+  'GMR_NO',
+  'Special Cases'
 ),
 (
-  'That means that でした means "was". For a quick example, "''おいしい でした''" would mean "''It was delicious''".',
+  'In Japanese, it''s much easier! All you do is add the particle "の" (no) to the end of the word.',
   'todo image',
   'PRETEST',
-  'GMR_DESHITA',
-  'Example'
+  'GMR_NO',
+  'Particle の'
+),
+(
+  'For example, to say "my", you would say "{me}の".',
+  'todo image',
+  'PRETEST',
+  'GMR_NO',
+  'Particle の'
 );
 
 X: "You went to New Zealand? How was it?"
@@ -43,11 +50,10 @@ X: "It was delicious!"
 A: "How was the show?"
 X: "It was fun!"
 
-INSERT INTO words (japanese, hiragana, english, introduction, emoji)
-VALUES ('美しい', 'うつくしい', 'Beautiful', 'This means "beautiful".', '‍😍'),
-       ('鳥', 'とり', 'Bird, chicken', 'This word means "bird", and sometimes more specifically, "chicken".', '🐓'),
-       ('焼鳥', 'やきとり', 'Yakitori', '"Yakitori" is a Japanese dish, so it doesn''t have a translation. They''re grilled chicken skewers, and they''re so good!', '🍗'),
-       ('楽しい', 'たのしい', 'Fun', 'This means "fun" or "enjoyable".', '😄');
+INSERT INTO words (japanese, hiragana, english, introduction, emoji, set_lesson_id)
+VALUES ('下手', 'へた', 'Bad at, poor, unskilled', 'This means "bad at", as in "unskilled" at something, like drawing or singing.', '‍🤦', 'GMR_NO'),
+       ('食べ物', 'たべもの', 'Food', 'This word means "food". The "Tabe" part literally means "eating", and the "mono" part means "thing".', '🍏', 'GMR_NO'),
+       ('友達', 'ともだち', 'Friend', 'This means "friend".', '👥', 'GMR_NO');
 
 insert into testables (
   set_lesson_id,
@@ -68,7 +74,7 @@ insert into testables (
 )
 values
 (
-  'GMR_DESHITA',
+  'GMR_NO',
   null,
   null,
   null,
@@ -77,7 +83,7 @@ values
   null,
   null,
   null,
-  86,
+  138,
   'J_WORD',
   1,
   null,
@@ -85,15 +91,15 @@ values
   null
 ),
 (
-  'GMR_DESHITA',
+  'GMR_NO',
   'YUJI_CHATTING',
   'HOSTEL_LOBBY',
   null,
   null,
-  'You''ve been to New Zealand? How was it?',
-  'It was beautiful/Beautiful',
-  '美しい　でした。',
-  'うつくしい　でした。',
+  'Can you speak English?',
+  'My English is bad/My English is poor/I''m bad at English/My English is pretty bad',
+  '僕.の　英語.は　下手　です。',
+  'ぼく.の　えいご.は　へた　です。',
   null,
   'J_SENTENCE',
   2,
@@ -102,7 +108,7 @@ values
   'Translate Yuji''s reply'
 ),
 (
-  'GMR_MO_DESU',
+  'GMR_NO',
   null,
   null,
   null,
@@ -111,7 +117,7 @@ values
   null,
   null,
   null,
-  87,
+  139,
   'J_WORD',
   3,
   null,
@@ -119,24 +125,24 @@ values
   null
 ),
 (
-  'GMR_DESHITA',
+  'GMR_NO',
   'HINAKO_CHATTING',
   'TOKYO_STREET',
   null,
   null,
-  'What was that?',
-  'It was a bird/That was a bird/A bird',
-  '鳥　でした',
-  'とり　でした',
+  'What''s authentic Japanese food like?',
+  'Japanese food is delicious',
+  '日本.の　食べ物.は　うまい　です！',
+  'にほん.の　たべもの.は　うまい　です！',
   null,
   'J_SENTENCE',
   4,
-  'You (hearing a sound)',
+  'You',
   'ENGLISH',
   'Translate Hinako''s reply'
 ),
 (
-  'GMR_DESHITA',
+  'GMR_NO',
   null,
   null,
   null,
@@ -145,7 +151,7 @@ values
   null,
   null,
   null,
-  88,
+  140,
   'J_WORD',
   5,
   null,
@@ -153,52 +159,69 @@ values
   null
 ),
 (
-  'GMR_DESHITA',
-  'YUJI_CHATTING',
+  'GMR_NO',
+  'HINAKO_CHATTING',
   'RESTAURANT',
-  '焼鳥.は　どう　でした？',
-  'やきとり.は　どう　でした？',
-  'What was the yakitori like?',
-  '焼鳥.は　美味しい　でした/やきとり.は　おいしい　でした/焼鳥.は　おいしい　でした/やきとり.は　美味しい　でした/焼き鳥.は　美味しい　でした/焼鳥.は　おいしい　でした/焼鳥.は　うまい　でした/やきとり.は　うまい　でした/焼き鳥.は　うまい　でした',
-  'The yakitori was delicious.',
+  null,
+  null,
+  'Wasn''t someone meeting us here?',
+  'Yeah, my friend is a bit late/Yes, my friend is a bit late/Yeah, my friend is a little late/Yes, my friend is a little late',
+  'はい、私の　友達は　ちょっと　遅い　です。',
+  'にほん.の　たべもの.は　うまい　です！',
+  null,
+  'J_SENTENCE',
+  6,
+  'You',
+  'ENGLISH',
+  'Translate Hinako''s reply'
+),
+(
+  'GMR_NO',
+  'YUJI_CHATTING',
+  'HOSTEL_LOBBY',
+  '君.の　日本語.は？',
+  'きみ.の　にほんご.は？',
+  'How''s your Japanese?',
+  '{me}.の　日本語.は　下手　です/{me_furi}.の　にほんご.は　へた　です/{me}.の　日本語.は　へた　です/{me}.の　にほんご.は　へた　です/{me}.の　にほんご.は　下手　です/{me_furi}.の　日本語.は　下手　です/{me_furi}.の　にほんご.は　下手　です/{me_furi}.の　日本語.は　へた　です',
+  'My Japanese is bad',
   null,
   null,
   'E_SENTENCE',
-  6,
+  7,
   'Yuji',
   'JAPANESE',
   'Write your reply in Japanese'
 ),
 (
-  'GMR_DESHITA',
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  89,
-  'J_WORD',
-  7,
-  null,
-  'ROMAJI',
-  null
-),
-(
-  'GMR_DESHITA',
-  'HINAKO_CHATTING',
-  'HOSTEL_LOBBY',
-  'コンサート.は　どう　でした.か？',
-  'コンサート.は、どう　でした.か？',
-  'How was the concert?',
-  '楽しい　でした/たのしい　でした',
-  'It was fun!',
+  'GMR_NO',
+  'HINAKO_EATING',
+  'RESTAURANT',
+  'どうして　そのよう.に　ラーメン.を　食べている.の？',
+  'どうして　そのよう.に　ラーメン.を　食べている.の？',
+  'Why is he eating his ramen like that?',
+  '{me}.の　友達.は　変　です/{me_furi}.の　ともだち.は　へん　です/{me}.の　友達.は　へん　です/{me}.の　ともだち.は　変　です/{me}.の　ともだち.は　へん　です/{me_furi}.の　友達.は　変　です/{me_furi}.の　友達.は　へん　です/{me_furi}.の　ともだち.は　変　です',
+  'My friend is weird...',
   null,
   null,
   'E_SENTENCE',
   8,
+  'Hinako',
+  'JAPANESE',
+  'Write your reply in Japanese.'
+),
+(
+  'GMR_NO',
+  'HINAKO_CHATTING',
+  'RESTAURANT',
+  'どう　思う？私.は　正しい　です.か？',
+  'どう　おもう？わたし.は　ただしい　です.か？',
+  'What do you think? Was I right?',
+  'はい、日本.の　食べ物.は　うまい　です/はい、にほん.の　たべもの.は　うまい　です/はい、にほん.の　食べ物.は　うまい　です/はい、日本.の　たべもの.は　うまい　です',
+  'Yeah, Japanese food is delicious!',
+  null,
+  null,
+  'E_SENTENCE',
+  9,
   'Hinako',
   'JAPANESE',
   'Write your reply in Japanese.'
